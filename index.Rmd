@@ -4,9 +4,9 @@ author: "Bill Perry"
 date: "2018/03/14"
 output:
   html_document:
-    toc: true
-    toc_depth: 2
-     # css: perrycustom.css
+    # toc: true
+    # toc_depth: 2
+     css: stats.css
 ---
 
 ##R Blog using Tidyverse to exmine data using both internal dataframes and stream and lake specific data.   
