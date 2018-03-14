@@ -1,0 +1,11 @@
+name: "R Data and Stats"
+output_dir: "."
+output:
+  html_document:
+navbar:
+  title: "R Data Stats"
+  left:
+    - text: "Bill's Homepage"
+      href: https://wlperry.github.io/index.html
+    - text: "2018 R and Stats"
+      href: index.html

@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+<meta name="author" content="Bill Perry" />
+
+
+<title>R Graphs, Data and Stats</title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 51px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+
+.section h2 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h3 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h4 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h5 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h6 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+
+<div class="container-fluid main-container">
+
+<!-- tabsets -->
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+</script>
+
+<!-- code folding -->
+
+
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">R Data Stats</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="https://wlperry.github.io/index.html">Bill's Homepage</a>
+</li>
+<li>
+  <a href="index.html">2018 R and Stats</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">R Graphs, Data and Stats</h1>
+<h4 class="author"><em>Bill Perry</em></h4>
+<h4 class="date"><em>2018/03/14</em></h4>
+
+</div>
+
+<div id="TOC">
+<ul>
+<li><a href="#r-blog-using-tidyverse-to-exmine-data-using-both-internal-dataframes-and-stream-and-lake-specific-data.">R Blog using Tidyverse to exmine data using both internal dataframes and stream and lake specific data.</a></li>
+<li><a href="#basics-of-datascience-and-organizing-projects"><a href="01_intro.html">Basics of datascience and organizing projects</a></a></li>
+<li><a href="#reading-in-files-and-ggplot"><a href="01_ggplot.html">Reading in files and GGPLOT</a></a></li>
+</ul>
+</div>
+
+<div id="r-blog-using-tidyverse-to-exmine-data-using-both-internal-dataframes-and-stream-and-lake-specific-data." class="section level2">
+<h2>R Blog using Tidyverse to exmine data using both internal dataframes and stream and lake specific data.</h2>
+<p>I am going to try to develo an introductory class specifically for aquatic biologists using streaming data, larger time based dataframes, but also data that is more traditional. I will be first following the approach of “<a href="http://r4ds.had.co.nz/">R for Data Science</a>” by Garrett Grolemund and Hadley Wickham.</p>
+<p><br></p>
+<p>This is also a selfish way to organize my code and snippets in a central place that I can find them and make is avaialbe to others that are struggling with R and dataframes.<br />
+<br></p>
+</div>
+<div id="basics-of-datascience-and-organizing-projects" class="section level2">
+<h2><a href="01_intro.html">Basics of datascience and organizing projects</a></h2>
+<p>Before working on a project, I have found it is useful to ponder what the data will look like, what you want the final dataframe to look like and what you want to do with it. So, first we will go over basics of organization.<br />
+- folders and structure<br />
+- file formats<br />
+- file structure<br />
+- output formats<br />
+- installing R and R studio - basics of the R interface - R projects - installing libraries</p>
+<p><br></p>
+</div>
+<div id="reading-in-files-and-ggplot" class="section level2">
+<h2><a href="01_ggplot.html">Reading in files and GGPLOT</a></h2>
+<p>This will be the introduction into reading in excel and csv files and then how to visualize the data using GGPlot2 or GGPlot. In this page, I go over how to load libraries and start to graph with GGplot. Understanding the basics is key and then I go from there. This file includes topics like:<br />
+- install and load libraries<br />
+- read in csv file<br />
+- xy graphs<br />
+- varaible versus time graphs<br />
+- working with time on axes<br />
+- modifiying graphical appearnance with theme settings</p>
+<!-- Global Site Tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-88373117-4"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments)};
+  gtag('js', new Date());
+
+  gtag('config', 'UA-88373117-4');
+</script>
+</div>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
