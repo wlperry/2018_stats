@@ -10,3 +10,266 @@ output:
    number_sections:  FALSE
    
 ---
+##Create Directories     
+So lets create a project with all of the subdirectories on your computer. Create a folder somewhere - I usually have the following format:      
+
+1. r_projects        
+
+    * 2018_stats      
+    
+        + archive      
+        + data     
+        + documents  
+        + scripts   
+        + figures   
+        + output   
+         
+
+##Create Project     
+
+Now click - ```File - New Project``` and creat a project in the 2018_stats folder. This is what you will open to start working on the project and then you can work with scripts in there.
+
+
+
+## Download Data      
+
+I have placed example data files below. You can also access the iris dataframe from within R using the code ```iris.df <- iris``` in your R script. You should download these files and put them in the data directory of your project.      
+
+[iris.csv](https://wlperry.github.io/2018_stats/data/iris.csv)     
+ 
+[iris_excel.xlsc](https://wlperry.github.io/2017stats/data/iris_excel.xlsx)    
+
+## Create R Script       
+
+Now to create the R Script that we will work with. Click ```File - New File - R Script```. This will open a file and you need to save it into the ```Scripts``` directory.    
+
+Now is where the fun begins.
+
+```{r, message=FALSE, warning=FALSE}
+# load the libraries each time you restart R
+library(tidyverse)
+library(lubridate)
+library(scales)
+library(skimr)
+
+# read in the csv file
+# note here we are using relative file paths to find the file
+# try hitting "" and then tab inside of the "" - this will bring up choices
+iris.df <- read_csv("data/iris.csv")
+
+```
+
+
+##View Data     
+Look at the data with glimpse
+
+```{r}
+glimpse(iris.df)
+```
+
+Look at the top or bottme of the data
+```{r}
+head(iris.df)
+# tail(iris.df)
+```
+
+##Plot data       
+So below I have added in data=, y= and x= but they are not really necessary
+```{r}
+ggplot(data=iris.df) +
+  geom_point(aes(x=Petal.Length, y=Petal.Width))
+```
+
+##Colors of points      
+Note in the above graph all of the points are black although we know there are three species. We can do two things with this. We can add a color to the graph
+
+```{r}
+ggplot(data=iris.df) +
+  geom_point(aes(x=Petal.Length, y=Petal.Width), color="blue")
+```
+
+This creates a color for all of the points. We can however map the colors to the species to make colors vary for each `Species`
+
+```{r}
+ggplot(data=iris.df) +
+  geom_point(aes(x=Petal.Length, y=Petal.Width, color=Species))
+```
+
+##Size of points   
+We can do the same thing with size of data points based on `Petal.Width` or other continuous variable.   
+
+```{r}
+ggplot(data=iris.df) +
+  geom_point(aes(x=Petal.Length, y=Petal.Width, size=Petal.Width))
+```
+
+We could also just make the point sizes all just larger by entering the size parameter outside of the aesthetics parentheses.
+```{r}
+ggplot(data=iris.df) +
+  geom_point(aes(x=Petal.Length, y=Petal.Width), size=3)
+```
+
+
+
+##Shapes of Points    
+We could also map the type of point shape to the species   
+
+```{r}
+ggplot(data=iris.df) +
+  geom_point(aes(x=Petal.Length, y=Petal.Width, shape=Species))
+```
+
+The shapes of the various options are:   
+![Shapes of various points.](images/point_shapes.png)
+
+
+The types of lines you can have are:    
+![Types of lines.](images/line_types.png)
+
+## Facetting 
+Now the cool thing to be able to look at data is to be able to facet or look at subplots of all of the data at once
+
+```{r}
+
+ggplot(data=iris.df) +
+  geom_point(aes(x=Petal.Length, y=Petal.Width, shape=Species, color=Species)) +
+  facet_grid(. ~ Species)
+  
+
+
+```
+
+or
+
+```{r}
+ggplot(data=iris.df) +
+  geom_point(aes(x=Petal.Length, y=Petal.Width, shape=Species, color=Species)) +
+  facet_grid(Species ~ ., scales = "free") 
+```
+
+
+
+Facet wrap is slightly different and will allow you to have all free scales and facet by species
+```{r}
+ggplot(data=iris.df) +
+  geom_point(aes(x=Petal.Length, y=Petal.Width, shape=Species, color=Species)) +
+  facet_wrap("Species", scales = "free")
+```
+
+## Adding Titles      
+Now to add in some of the basic things you might want to have on there to make it look nicer. We will work more on this later to get it publication quality but this is a start.  
+
+
+```{r}
+ggplot(data=iris.df) +
+  geom_point(aes(x=Petal.Length, y=Petal.Width, shape=Species, color=Species)) +
+  ggtitle("Petal Shape") +
+  labs(x="Petal Length", y="Petal Width")
+  # we will get into themes but this will center the title
+  # theme(plot.title = element_text(hjust = 0.5))
+```
+
+##Time series plots    
+Now its time to work with data like we usually use in data on buoys and sensors - time series plots. These can be a bit trickier but tidyverse and the scales package come into their own now.
+###Read in the data
+```{r}
+streams.df <- read_csv("data/streams_q_gage_no3.csv", guess_max = 10000)
+
+glimpse(streams.df)
+```
+
+##Basic time series plot
+```{r}
+ggplot(streams.df, aes(datetime, no3_mgl, color=site)) +
+  geom_point()
+```
+
+##Scales - time series
+```{r}
+ggplot(streams.df, aes(datetime, no3_mgl, color=site)) +
+  geom_point() +
+  scale_y_continuous()+ #expand=c(0,0), breaks=c(0,30,60)
+     scale_x_datetime(date_breaks = "1 month",
+                  limits = ymd_hms(c('2017-01-01 00:00:00','2017-12-31 00:00:00')),
+                  labels=date_format("%Y-%b-%d"), expand=c(0,0))
+```
+
+
+##Themes
+```{r before last}
+ggplot(streams.df, aes(datetime, no3_mgl, color=site)) +
+  geom_point() +
+  scale_y_continuous()+ #expand=c(0,0), breaks=c(0,30,60)
+     scale_x_datetime(date_breaks = "1 month",
+                  limits = ymd_hms(c('2017-01-01 00:00:00','2017-12-31 00:00:00')),
+                  labels=date_format("%Y-%b-%d"), expand=c(0,0)) +
+  theme_bw()
+```
+
+##Theme - adjust text
+```{r last code}
+ggplot(streams.df, aes(datetime, no3_mgl, color=site)) +
+  geom_point() +
+  scale_y_continuous()+ #expand=c(0,0), breaks=c(0,30,60)
+     scale_x_datetime(date_breaks = "1 month",
+                  limits = ymd_hms(c('2017-01-01 00:00:00','2017-12-31 00:00:00')),
+                  labels=date_format("%Y-%b-%d"), expand=c(0,0)) +
+  theme(
+       # LABLES APPEARANCE
+       axis.title.x=element_text(size=12, face="bold"),
+       axis.title.y=element_text(size=12, face="bold"),
+       axis.text.x = element_text(size=10, face="bold", angle=45, hjust=1),
+       axis.text.y = element_text(size=10, face="bold"))
+```
+
+
+##Final time series plot
+So lets make all the changes to the graph that we might want to do
+
+```{r eval=FALSE, include=FALSE}
+ggplot(streams.df, aes(datetime, no3_mgl, color=site)) +
+  geom_point() +
+  scale_y_continuous()+ #expand=c(0,0), breaks=c(0,30,60)
+     scale_x_datetime(date_breaks = "1 month",
+                  limits = ymd_hms(c('2017-01-01 00:00:00','2017-12-31 00:00:00')),
+                  labels=date_format("%Y-%b-%d"), expand=c(0,0)) +
+  scale_color_manual (name="Sites",
+                      labels=c("Indian Cr.", "Vermillion Cr."),
+                      values=c("red","darkblue")) +
+  labs(x = "", y = "Nitrate NO3 (mg L^-1")
+theme(
+    # LABLES APPEARANCE
+    axis.title.x=element_text(size=12, face="bold"),
+    axis.title.y=element_text(size=12, face="bold"),
+    axis.text.x = element_text(size=10, face="bold", angle=45, hjust=1),
+    axis.text.y = element_text(size=10, face="bold"),
+ # plot.title = element_text(hjust = 0.5, colour="black", size=22, face="bold"),
+ # LEGEND
+ # legend.position="none",
+ # LEGEND TEXT
+ legend.text = element_text(colour="black", size = 12, face = "bold"),
+ # LEGEND TITLE
+ legend.title = element_text(colour="black", size=14, face="bold"),
+ # LEGEND POSITION AND JUSTIFICATION
+ # legend.justification=c(0.1,1),
+ # legend.position=c(0.02,.99),
+ # PLOT COLORS
+ # REMOVE BOX BEHIND LEGEND SYMBOLS
+ # REMOVE LEGEND BOX
+  legend.key = element_rect(fill = "transparent", colour = "transparent"),
+ # REMOVE LEGEND BOX
+  legend.background = element_rect(fill = "transparent", colour = "transparent"),
+ # #REMOVE PLOT FILL AND GRIDS
+ # panel.background=element_rect(fill = "transparent", colour = "transparent"),
+ # # removes the window background
+ # plot.background=element_rect(fill="transparent",colour=NA),
+ # # removes the grid lines
+ # panel.grid.major = element_blank(),
+ # panel.grid.minor = element_blank(),
+ # ADD AXES LINES AND SIZE
+ axis.line.x = element_line(color="black", size = 0.3),
+ axis.line.y = element_line(color="black", size = 0.3),
+ # ADD PLOT BOX
+ panel.border = element_rect(colour = "black", fill=NA, size=0.3))
+```
+
