@@ -1,0 +1,11 @@
+---
+title: "Intermediate GGPlot"
+author: "Bill Perry"
+date: "2018/03/14"
+output:
+  html_document:
+    toc: true
+    toc_float: true
+---
+
+to be updated

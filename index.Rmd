@@ -30,16 +30,21 @@ Before working on a project, I have found it is useful to ponder what the data w
 
 <br>
 
-##[Reading in files and GGPLOT](01_ggplot.html)     
-This will be the introduction into reading in excel and csv files and then how to visualize the data using GGPlot2 or GGPlot.     In this page, I go over how to load libraries and start to graph with GGplot. Understanding the basics is key and then I go from there. This file includes topics like:    
-     - install and load libraries    
+##[Reading in files and GGPLOT intro](02_ggplot.html)     
+This will be the introduction into reading in excel and csv files and then how to visualize the data using GGPlot2 or GGPlot. In this page, I go over how to load libraries and start to graph with GGplot. Understanding the basics is key and then I go from there. This file includes topics like:    
      - read in csv file    
-     -  xy graphs   
-     - varaible versus time graphs    
-     - working with time on axes   
-     - modifiying graphical appearnance with theme settings    
-    
+     - simple graphs  
+     - geometries   
+     - colors and mapping   
+     - layers 
 
+##[GGPLOT intermediate plots and stats](03_ggplot_stats.html)    
+This will introduce you to the basic data exploratory graphs and statistics in graphs that will make life a lot easier
+      - box and whisker plot
+      - histograms
+      - mean and standard error plots
+      - time series plots
+      - 
 
 <!-- Global Site Tag (gtag.js) - Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=UA-88373117-4"></script>

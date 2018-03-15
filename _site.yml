@@ -2,10 +2,14 @@ name: "R Data and Stats"
 output_dir: "."
 output:
   html_document:
+    highlight: textmate
+    mathjax: null
 navbar:
-  title: "R Data Stats"
+  title: "Bill Perry"
   left:
     - text: "Bill's Homepage"
       href: https://wlperry.github.io/index.html
-    - text: "2018 R and Stats"
-      href: index.html
+    - text: "Stats and R Homepage"
+      href: https://wlperry.github.io/2018_stats/index.html      
+    - text: "About Bill"
+      href: about.html
