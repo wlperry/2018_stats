@@ -44,9 +44,7 @@ This will introduce you to the basic data exploratory graphs and statistics in g
       - histograms
       - mean and standard error plots
       - time series plots
-      - 
-      
-                         
+    
 ##[Dataframe modification](04_data_modification.html)    
 This will show you how to modify the dataframe.   
 
