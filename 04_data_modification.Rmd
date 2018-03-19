@@ -76,3 +76,27 @@ Lets assume you wanted to select all petal varaibles you can use things like:
 petal.df <- iris.df %>% select(species, species, starts_with("petal"))
 ```
 
+
+
+
+
+
+
+
+
+
+
+
+
+   
+   
+
+<!-- Global Site Tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-88373117-4"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments)};
+  gtag('js', new Date());
+
+  gtag('config', 'UA-88373117-4');
+</script>
