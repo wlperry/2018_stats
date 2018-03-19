@@ -47,7 +47,7 @@ This will introduce you to the basic data exploratory graphs and statistics in g
       - 
       
                          
-##[Dataframe modificatin](04_data_modification.html)    
+##[Dataframe modification](04_data_modification.html)    
 This will show you how to modify the dataframe.   
 
 
