@@ -56,7 +56,7 @@ glimpse(iris.df)
 ```
 
 ##Selecting variables
-What if you wanted to select only certian variables? Now lets use two ways to do the same thing.....
+What if you wanted to select only certain variables? Now lets use two ways to do the same thing.....
 
 ```{r}
 petal_width.df <- select(iris.df, species, petal_width)
@@ -69,7 +69,7 @@ You can do the same thing with the pipe command
 petal_width.df <- iris.df %>% select(species, petal_width)
 ```
 
-Lets assume you wanted to select all petal varaibles you can use things like: 
+Lets assume you wanted to select all petal variables you can use things like: 
 ````starts_with(), ends_with(), contains(),  everything()```` in various combinations such as
 
 ```{r}

@@ -10,11 +10,11 @@ output:
 
 ##R and Tidyverse      
 
-I am going to try to develo an introductory class specifically for aquatic biologists using streaming data, larger time based dataframes, but also data that is more traditional. I will be first following the approach of "[R for Data Science](http://r4ds.had.co.nz/)" by Garrett Grolemund and Hadley Wickham.  
+I am going to try to develop an introductory class specifically for aquatic biologists using streaming data, larger time based dataframes, but also data that is more traditional. I will be first following the approach of "[R for Data Science](HTTP://r4ds.had.co.nz/)" by Garrett Grolemund and Hadley Wickham.  
   
 <br>   
 
-This is also a selfish way to organize my code and snippets in a central place that I can find them and make is avaialbe to others that are struggling with R and dataframes.     
+This is also a selfish way to organize my code and snippets in a central place that I can find them and make is available to others that are struggling with R and dataframes.     
 <br>
 
 ##[Basics of datascience and organizing projects](01_intro.html)     

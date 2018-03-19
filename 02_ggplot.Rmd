@@ -27,7 +27,7 @@ So lets create a project with all of the subdirectories on your computer. Create
 
 ##Create Project     
 
-Now click - ```File - New Project``` and creat a project in the 2018_stats folder. This is what you will open to start working on the project and then you can work with scripts in there.
+Now click - ```File - New Project``` and create a project in the 2018_stats folder. This is what you will open to start working on the project and then you can work with scripts in there.
 
 
 
@@ -37,7 +37,7 @@ I have placed example data files below. You can also access the iris dataframe f
 
 [iris.csv](https://wlperry.github.io/2018_stats/data/iris.csv)     
  
-[iris_excel.xlsc](https://wlperry.github.io/2017stats/data/iris_excel.xlsx)    
+[iris_excel.xlsx](https://wlperry.github.io/2017stats/data/iris_excel.xlsx)    
 
 ## Create R Script       
 
@@ -67,7 +67,7 @@ Look at the data with glimpse
 glimpse(iris.df)
 ```
 
-Look at the top or bottme of the data
+Look at the top or bottle of the data
 ```{r}
 head(iris.df)
 # tail(iris.df)

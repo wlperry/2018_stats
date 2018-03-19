@@ -44,7 +44,7 @@ So the first thing to think about in my opinion is the workflow or dataflow:
 ##Data Source Format
 ###Controlled vocabulary and units   
 
-Thinking about your data source first is important. Using a controlled vocabulary to reference the varaibles is critical and will save huge amounts of time when modifying the code later on. I find it helpful to have a meta data document with the vocabulary and the units for each term so that future users can figure out what your code means. 
+Thinking about your data source first is important. Using a controlled vocabulary to reference the variables is critical and will save huge amounts of time when modifying the code later on. I find it helpful to have a meta data document with the vocabulary and the units for each term so that future users can figure out what your code means. 
 
 ###Transformations    
 
@@ -58,7 +58,7 @@ R uses a column format and all the data in a column has to be of the same type. 
   + Character - text fields
   + Factors - displayed often as text but is as levels behind the scenes
   + Date - date format or POSIXLT
-      - note this is in days since 1970-01-01 I beleive
+      - note this is in days since 1970-01-01 I believe
   + Date time - date and time format together or POSIXCT 
       - this is in seconds since 1970-01-01 00:00:00
       - this will be critical for many of you
@@ -69,7 +69,7 @@ R uses a column format and all the data in a column has to be of the same type. 
   
 ###Output     
 
-I find it useful to maintain a read only file of the original data and never write to this file otehr than the original QA/QC flagging of the data if even then. I usually read from this file and save it to the finalized data folder where the data has been cleaned formatted and basic calcualtions done on it.
+I find it useful to maintain a read only file of the original data and never write to this file other than the original QA/QC flagging of the data if even then. I usually read from this file and save it to the finalized data folder where the data has been cleaned formatted and basic calculations done on it.
 
 ##Data Flow    
 
@@ -77,19 +77,19 @@ It is often very helpful prior to doing any code work to think about what the fi
 
 ###Wide format original data    
 
-Typically when we enter data it is in **wide format** where an identifier is down the first column and the various variables are in separate columns. This is what is often easiest to enter into excel or whereever it is entered originally. 
+Typically when we enter data it is in **wide format** where an identifier is down the first column and the various variables are in separate columns. This is what is often easiest to enter into excel or wherever it is entered originally. 
 
-This format is often more difficult to work with in R and GGPlot so it is converted to **long format** where there is a column of identifiers, a column of varaible names, and a column of values. The switch between these formats is often rather easy so it does not matter what format it is in.
+This format is often more difficult to work with in R and GGPlot so it is converted to **long format** where there is a column of identifiers, a column of variable names, and a column of values. The switch between these formats is often rather easy so it does not matter what format it is in.
 
 ##Annotations and metadata files    
 
-For the love of all that is good - be sure to annotate you code using the # and whatever text helps describe the process you are doing - it will make the code easier to read and evaluate later when you are trying to figure out somehting really fast. You can also use it to search for code snippets as you are going along.
+For the love of all that is good - be sure to annotate you code using the # and whatever text helps describe the process you are doing - it will make the code easier to read and evaluate later when you are trying to figure out something really fast. You can also use it to search for code snippets as you are going along.
 
-Metadata files that document what you are doing and why and what the various conversions and statistical transfomrations are can be of great use later on as well. It is often challenging to figure out what the units are in for various variables or what they actually mean.
+Metadata files that document what you are doing and why and what the various conversions and statistical transformations are can be of great use later on as well. It is often challenging to figure out what the units are in for various variables or what they actually mean.
 
 ##Directory structure    
 
-Having a consiste directroy sturucture where code, data, and text is stored makes it easy to look at different directories and find what you are looking for. That is why I use the following structure. Choose what works for you and stick with it... please   
+Having a consistent directory structure where code, data, and text is stored makes it easy to look at different directories and find what you are looking for. That is why I use the following structure. Choose what works for you and stick with it... please   
 
  + R Project Directory
         - Scripts
@@ -99,7 +99,7 @@ Having a consiste directroy sturucture where code, data, and text is stored make
         - Finalized D    
         
         
-Using projects in R is super useful and you dont have to worry about setting directories between a mac and windows machine and all the paths are relative in there when you reference data or output directories and is the same on windows and mac.
+Using projects in R is super useful and you don't have to worry about setting directories between a mac and windows machine and all the paths are relative in there when you reference data or output directories and is the same on windows and mac.
 
 
 ##File names
@@ -121,19 +121,19 @@ From the site [File organization and best practices](https://andrewbtran.github.
 You can write a comment `#` and then follow it with `text` and then 4 dashes `----` or `####` and it will create a note in the outline view
 
 ###Comment your code     
-You should use comments `#` with text behind it to annotate the purpose of what your are doing and what is happeing in the code chunk below.
+You should use comments `#` with text behind it to annotate the purpose of what your are doing and what is happening in the code chunk below.
 
 ##Installing R
 So lets start installing R and R studio    
-R is its own program and can be retreived from [R Cran](https://cran.r-project.org/)   
+R is its own program and can be retrieved from [R Cran](https://cran.r-project.org/)   
 <br>   
-R Studio is a program that makes the interface and usability of R easier in my opinion and can be retreived here [R Studio](https://www.rstudio.com/products/rstudio/download/)    
+R Studio is a program that makes the interface and usability of R easier in my opinion and can be retrieved here [R Studio](https://www.rstudio.com/products/rstudio/download/)    
 
 <br>
-When you get these intalled we can load up R studio and look at the interface.   
+When you get these installed we can load up R studio and look at the interface.   
 
 ###R interface 
-Start R stduio and you should see:
+Start R studio and you should see:
 ![r interface](images/setup_1.png)
 
 ###Project Setup
@@ -143,10 +143,10 @@ Click:
 2. New Project
 ![Project set up](images/setup_2.png)
    
-   You can select `New Directory` or you can select existing directory - lets say you choos new directory
+   You can select `New Directory` or you can select existing directory - lets say you choose new directory
    ![File New Project New Directory](images/setup_3.png)   
    
- For now you are doign a `New Project `.  We will talk about Github at a later date    
+ For now you are doing a `New Project `.  We will talk about Github at a later date    
  
  ![Direcotry Name for Porject](images/setup_4.png)
    
