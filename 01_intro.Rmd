@@ -102,9 +102,117 @@ Having a consiste directroy sturucture where code, data, and text is stored make
 Using projects in R is super useful and you dont have to worry about setting directories between a mac and windows machine and all the paths are relative in there when you reference data or output directories and is the same on windows and mac.
 
 
+##File names
+From the site [File organization and best practices](https://andrewbtran.github.io/NICAR/2018/workflow/docs/01-workflow_intro.html?utm_content=buffer858fd&utm_medium=social&utm_source=twitter.com&utm_campaign=buffer) and [Prime Hints](https://kkulma.github.io/2018-03-18-Prime-Hints-for-Running-a-data-project-in-R/)  naming files has many good practices. Of these the main theme is:    
 
+1. Use a consistent naming theme
+  a. use date_term1_term2.xxx
+  b. no spaces or other fancy characters
+  c. make the names human understandable
+2. Use natural ordering of files
+  a. use date at front or somewhere so you know the version
+  b. use logical ordering like 01_ 02_ 03_
+3. Avoid things like 
+  a. final thesis proposal.docx - I deal with many students and this is not helpful
+  
+
+##RStudio Specifics     
+###Outline your code to navigate    
+You can write a comment `#` and then follow it with `text` and then 4 dashes `----` or `####` and it will create a note in the outline view
+
+###Comment your code     
+You should use comments `#` with text behind it to annotate the purpose of what your are doing and what is happeing in the code chunk below.
+
+##Installing R
+So lets start installing R and R studio    
+R is its own program and can be retreived from [R Cran](https://cran.r-project.org/)   
+<br>   
+R Studio is a program that makes the interface and usability of R easier in my opinion and can be retreived here [R Studio](https://www.rstudio.com/products/rstudio/download/)    
+
+<br>
+When you get these intalled we can load up R studio and look at the interface.   
+
+###R interface 
+Start R stduio and you should see:
+![r interface](images/setup_1.png)
+
+###Project Setup
+Now to set up a new project - this is if the directory does not exist
+Click:
+1. File 
+2. New Project
+![Project set up](images/setup_2.png)
+   
+   You can select `New Directory` or you can select existing directory - lets say you choos new directory
+   ![File New Project New Directory](images/setup_3.png)   
+   
+ For now you are doign a `New Project `.  We will talk about Github at a later date    
+ 
+ ![Direcotry Name for Porject](images/setup_4.png)
+   
+   
+  Interface changes only slightly - look in the upper right    
+   ![What has changed](images/setup_5.png)    
+   
+   
+###Scripts       
+Now we can create a new script      
+
+1. File 
+2. New file
+3. R Script
+
+ ![New Script](images/setup_6.png)
+ 
+ Now the interface looks like
+  ![Scriptst](images/setup_7.png)
+   
+###Install Libraries
+The key to R in my opinion is to install libraries. We will practice with one and your homework is to install the others.     
+
+You will type:     
+`#install libraires ----`      
+`install.packages("tidyverse")`     
+
+`#load libraries----`     
+`library(tidyverse)`     
+   
+   
+Then after each you will hit command or control return and it will run the command or you can click run.
+
+Here is a list of packages I have found useful     
+
+ 
+`tidyverse     `    
+`lubridate     `    
+`readxl     `   
+`scales     `    
+`patchwork    `    
+`janitor    `     
+`skimr`            
+
+
+
+others not loaded each time:     
+`reshape2`          
+
+
+other specialties    
+`devtools`          
+
+
+
+A different type of installation for the USGS data      
+`install_github("USGS-R/dataRetrieval")`        
+`install.packages("dataRetrieval")`      
+`install.packages("dataRetrieval",`       
+`repos=c("http://owi.usgs.gov/R",`       
+`getOption("repos")))`   
+                
+                
 
    
+
    
 
 <!-- Global Site Tag (gtag.js) - Google Analytics -->
