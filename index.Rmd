@@ -45,6 +45,14 @@ This will introduce you to the basic data exploratory graphs and statistics in g
       - mean and standard error plots
       - time series plots
       - 
+      
+      
+##[Dataframe modificatin](04_data_modification.htlm)    
+This will show you how to modify the dataframe.   
+
+
+   
+   
 
 <!-- Global Site Tag (gtag.js) - Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=UA-88373117-4"></script>
