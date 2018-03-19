@@ -226,7 +226,7 @@ ggplot(streams.df, aes(datetime, no3_mgl, color=site)) +
 ##Final time series plot
 So lets make all the changes to the graph that we might want to do
 
-```{r eval=FALSE, include=FALSE}
+```{r}
 ggplot(streams.df, aes(datetime, no3_mgl, color=site)) +
   geom_point() +
   scale_y_continuous()+ #expand=c(0,0), breaks=c(0,30,60)
@@ -236,7 +236,7 @@ ggplot(streams.df, aes(datetime, no3_mgl, color=site)) +
   scale_color_manual (name="Sites",
                       labels=c("Indian Cr.", "Vermillion Cr."),
                       values=c("red","darkblue")) +
-  labs(x = "", y = "Nitrate NO3 (mg L^-1")
+  labs(x = "", y = "Nitrate NO3 (mg L^-1") +
 theme(
     # LABLES APPEARANCE
     axis.title.x=element_text(size=12, face="bold"),

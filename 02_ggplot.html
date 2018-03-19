@@ -519,6 +519,52 @@ iris.df &lt;- read_csv(&quot;data/iris.csv&quot;)</code></pre>
 <div id="final-time-series-plot" class="section level2">
 <h2>Final time series plot</h2>
 <p>So lets make all the changes to the graph that we might want to do</p>
+<pre class="r"><code>ggplot(streams.df, aes(datetime, no3_mgl, color=site)) +
+  geom_point() +
+  scale_y_continuous()+ #expand=c(0,0), breaks=c(0,30,60)
+     scale_x_datetime(date_breaks = &quot;1 month&quot;,
+                  limits = ymd_hms(c(&#39;2017-01-01 00:00:00&#39;,&#39;2017-12-31 00:00:00&#39;)),
+                  labels=date_format(&quot;%Y-%b-%d&quot;), expand=c(0,0)) +
+  scale_color_manual (name=&quot;Sites&quot;,
+                      labels=c(&quot;Indian Cr.&quot;, &quot;Vermillion Cr.&quot;),
+                      values=c(&quot;red&quot;,&quot;darkblue&quot;)) +
+  labs(x = &quot;&quot;, y = &quot;Nitrate NO3 (mg L^-1&quot;) +
+theme(
+    # LABLES APPEARANCE
+    axis.title.x=element_text(size=12, face=&quot;bold&quot;),
+    axis.title.y=element_text(size=12, face=&quot;bold&quot;),
+    axis.text.x = element_text(size=10, face=&quot;bold&quot;, angle=45, hjust=1),
+    axis.text.y = element_text(size=10, face=&quot;bold&quot;),
+ # plot.title = element_text(hjust = 0.5, colour=&quot;black&quot;, size=22, face=&quot;bold&quot;),
+ # LEGEND
+ # legend.position=&quot;none&quot;,
+ # LEGEND TEXT
+ legend.text = element_text(colour=&quot;black&quot;, size = 12, face = &quot;bold&quot;),
+ # LEGEND TITLE
+ legend.title = element_text(colour=&quot;black&quot;, size=14, face=&quot;bold&quot;),
+ # LEGEND POSITION AND JUSTIFICATION
+ # legend.justification=c(0.1,1),
+ # legend.position=c(0.02,.99),
+ # PLOT COLORS
+ # REMOVE BOX BEHIND LEGEND SYMBOLS
+ # REMOVE LEGEND BOX
+  legend.key = element_rect(fill = &quot;transparent&quot;, colour = &quot;transparent&quot;),
+ # REMOVE LEGEND BOX
+  legend.background = element_rect(fill = &quot;transparent&quot;, colour = &quot;transparent&quot;),
+ # #REMOVE PLOT FILL AND GRIDS
+ # panel.background=element_rect(fill = &quot;transparent&quot;, colour = &quot;transparent&quot;),
+ # # removes the window background
+ # plot.background=element_rect(fill=&quot;transparent&quot;,colour=NA),
+ # # removes the grid lines
+ # panel.grid.major = element_blank(),
+ # panel.grid.minor = element_blank(),
+ # ADD AXES LINES AND SIZE
+ axis.line.x = element_line(color=&quot;black&quot;, size = 0.3),
+ axis.line.y = element_line(color=&quot;black&quot;, size = 0.3),
+ # ADD PLOT BOX
+ panel.border = element_rect(colour = &quot;black&quot;, fill=NA, size=0.3))</code></pre>
+<pre><code>## Warning: Removed 23 rows containing missing values (geom_point).</code></pre>
+<p><img src="02_ggplot_files/figure-html/unnamed-chunk-17-1.png" width="672" /></p>
 </div>
 
 

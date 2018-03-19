@@ -12,7 +12,7 @@
 <meta name="author" content="Bill Perry" />
 
 
-<title>Intermediate GGPlot</title>
+<title>Intermediate GGPlot Stats</title>
 
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -297,14 +297,189 @@ div.tocify {
 
 
 
-<h1 class="title toc-ignore">Intermediate GGPlot</h1>
+<h1 class="title toc-ignore">Intermediate GGPlot Stats</h1>
 <h4 class="author"><em>Bill Perry</em></h4>
 <h4 class="date"><em>2018/03/14</em></h4>
 
 </div>
 
 
-<p>to be updated</p>
+<div id="load-libraries" class="section level2">
+<h2>Load libraries</h2>
+</div>
+<div id="read-files" class="section level2">
+<h2>Read files</h2>
+<pre class="r"><code># One new package for summary stats
+#install.packages(&quot;psych&quot;)
+
+# load the libraries each time you restart R
+library(tidyverse)
+library(lubridate)
+library(scales)
+library(skimr)
+
+
+# read in the file
+iris.df &lt;- read_csv(&quot;data/iris.csv&quot;)
+
+glimpse(iris.df)</code></pre>
+<pre><code>## Observations: 150
+## Variables: 5
+## $ Sepal.Length &lt;dbl&gt; 5.1, NA, 4.7, 4.6, 5.0, 5.4, 4.6, 5.0, 4.4, 4.9, ...
+## $ Sepal.Width  &lt;dbl&gt; 3.5, 3.0, 3.2, 3.1, 3.6, 3.9, 3.4, 3.4, 2.9, 3.1,...
+## $ Petal.Length &lt;dbl&gt; 1.4, 1.4, 1.3, 1.5, 1.4, 1.7, 1.4, 1.5, 1.4, 1.5,...
+## $ Petal.Width  &lt;dbl&gt; 0.2, 0.2, 0.2, 0.2, 0.2, 0.4, 0.3, 0.2, 0.2, 0.1,...
+## $ Species      &lt;chr&gt; &quot;setosa&quot;, &quot;setosa&quot;, &quot;setosa&quot;, &quot;setosa&quot;, &quot;setosa&quot;,...</code></pre>
+</div>
+<div id="simple-histograms" class="section level2">
+<h2>Simple histograms</h2>
+<pre class="r"><code>#Hitograms with GGPLOT
+ggplot(data=iris.df, aes(iris.df$Sepal.Length)) + 
+  geom_histogram() +
+  labs (title=&quot;Sepal Length&quot;, x=&quot;Sepal Length&quot;, y=&quot;Count&quot;)</code></pre>
+<pre><code>## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
+<pre><code>## Warning: Removed 1 rows containing non-finite values (stat_bin).</code></pre>
+<p><img src="03_ggplot_stats_files/figure-html/unnamed-chunk-2-1.png" width="672" /></p>
+</div>
+<div id="histogram-binwiths" class="section level2">
+<h2>Histogram binwiths</h2>
+<pre class="r"><code>#Hitograms with GGPLOT
+ggplot(data=iris.df, aes(iris.df$Sepal.Length)) + 
+  geom_histogram(col=&quot;blue&quot;, fill=&quot;blue&quot;, alpha=.7, binwidth = 1) +
+  labs (title=&quot;Sepal Length&quot;, x=&quot;Sepal Length&quot;, y=&quot;Count&quot;)</code></pre>
+<pre><code>## Warning: Removed 1 rows containing non-finite values (stat_bin).</code></pre>
+<p><img src="03_ggplot_stats_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
+</div>
+<div id="fccetted-histograms" class="section level2">
+<h2>Fccetted histograms</h2>
+<pre class="r"><code>###What if you want to look at all of the species separately
+ggplot(data=iris.df, aes(iris.df$Sepal.Length)) + 
+  geom_histogram(binwidth = .5,  col=&quot;blue&quot;, fill=&quot;blue&quot;, alpha=.7) +
+  labs (title=&quot;Sepal Length&quot;, x=&quot;Sepal Length&quot;, y=&quot;Count&quot;) + 
+  facet_wrap(~Species, scales = &quot;free&quot;) # allows the scales to be free and you can comment this out to see what happens</code></pre>
+<pre><code>## Warning: Removed 1 rows containing non-finite values (stat_bin).</code></pre>
+<p><img src="03_ggplot_stats_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
+</div>
+<div id="other-visualizations" class="section level2">
+<h2>Other visualizations</h2>
+<div id="dot-plots" class="section level3">
+<h3>Dot plots</h3>
+<pre class="r"><code>ggplot(data=iris.df, aes(x= Species, y=Sepal.Length)) + 
+  geom_dotplot(binwidth=0.1, col=&quot;blue&quot;, fill=&quot;blue&quot;, alpha=.7, stackdir = &quot;center&quot;, binaxis = &quot;y&quot;) +
+  labs (title=&quot;Sepal Length&quot;, x=&quot;Sepal Length&quot;, y=&quot;Count&quot;) </code></pre>
+<pre><code>## Warning: Removed 1 rows containing non-finite values (stat_bindot).</code></pre>
+<p><img src="03_ggplot_stats_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+</div>
+<div id="box-and-whisker" class="section level3">
+<h3>Box and Whisker</h3>
+<pre class="r"><code># Box and Whisker plots with limits ####
+ggplot(iris.df, aes(x = Species, y = Sepal.Length))+
+  geom_boxplot() </code></pre>
+<pre><code>## Warning: Removed 1 rows containing non-finite values (stat_boxplot).</code></pre>
+<p><img src="03_ggplot_stats_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
+</div>
+<div id="vioin-plots" class="section level3">
+<h3>Vioin plots</h3>
+<pre class="r"><code>ggplot(data=iris.df, aes(x= Species, y=Sepal.Length)) + 
+  geom_violin(col=&quot;blue&quot;, fill=&quot;blue&quot;, alpha=.7, stackdir = &quot;center&quot;, binaxis = &quot;y&quot;) +
+  labs (title=&quot;Sepal Length&quot;)+
+  labs (x=&quot;Sepal Length&quot;, y=&quot;Count&quot;) </code></pre>
+<pre><code>## Warning: Ignoring unknown parameters: stackdir, binaxis</code></pre>
+<pre><code>## Warning: Removed 1 rows containing non-finite values (stat_ydensity).</code></pre>
+<p><img src="03_ggplot_stats_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
+</div>
+<div id="saving-plots" class="section level3">
+<h3>Saving plots</h3>
+<pre class="r"><code>violin.plot &lt;- ggplot(data=iris.df, aes(x= Species, y=Sepal.Length)) + 
+  geom_violin(col=&quot;blue&quot;, fill=&quot;blue&quot;, alpha=.7) +
+  labs (title=&quot;Sepal Length&quot;)+
+  labs (x=&quot;Sepal Length&quot;, y=&quot;Count&quot;) 
+violin.plot</code></pre>
+<pre><code>## Warning: Removed 1 rows containing non-finite values (stat_ydensity).</code></pre>
+<p><img src="03_ggplot_stats_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
+<pre class="r"><code>#Save the file with sizes
+ggsave(&quot;figures/violin.plot.tiff&quot;,plot=violin.plot, width=6, height=6, dpi = 300)</code></pre>
+<pre><code>## Warning: Removed 1 rows containing non-finite values (stat_ydensity).</code></pre>
+</div>
+</div>
+<div id="statistical-plots" class="section level2">
+<h2>Statistical plots</h2>
+<p>So now lets try to do a few plots that are useful for publication. the first will be a mean and standard error plot and we will try this with mutliple data in wide format</p>
+</div>
+<div id="plotting-multiple-variables---wide-format" class="section level1">
+<h1>Plotting multiple variables - wide format</h1>
+<p>First lets just plot Species verus Sepal Length.</p>
+<pre class="r"><code>ggplot(iris.df, aes(x=Species)) +
+  geom_point(aes(y=Sepal.Length))</code></pre>
+<pre><code>## Warning: Removed 1 rows containing missing values (geom_point).</code></pre>
+<p><img src="03_ggplot_stats_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
+<p>Now lets add Sepal.Width</p>
+<pre class="r"><code>ggplot(iris.df, aes(x=Species)) +
+  geom_point(aes(y=Sepal.Length), color=&quot;blue&quot;) +
+  geom_point(aes(y=Sepal.Width), color=&quot;red&quot;)</code></pre>
+<pre><code>## Warning: Removed 1 rows containing missing values (geom_point).</code></pre>
+<p><img src="03_ggplot_stats_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
+<div id="means" class="section level2">
+<h2>Means</h2>
+<p>Now what if you wanted only to show the means</p>
+<pre class="r"><code>ggplot(iris.df, aes(x=Species))+
+  stat_summary(aes(y=Sepal.Length), fun.y=mean, geom=&#39;point&#39;, shape=23, size=3, color=&quot;red&quot;, fill=&quot;red&quot;) </code></pre>
+<pre><code>## Warning: Removed 1 rows containing non-finite values (stat_summary).</code></pre>
+<p><img src="03_ggplot_stats_files/figure-html/unnamed-chunk-11-1.png" width="672" /></p>
+<p>Add in the second mean Now what if you wanted only to show the means</p>
+<pre class="r"><code>ggplot(iris.df, aes(x=Species))+
+  stat_summary(aes(y=Sepal.Length), fun.y=mean, geom=&#39;point&#39;, shape=23, size=3, color=&quot;red&quot;, fill=&quot;red&quot;) +
+    stat_summary(aes(y=Sepal.Width), fun.y=mean, geom=&#39;point&#39;, shape=23, size=3, color=&quot;red&quot;, fill=&quot;blue&quot;) </code></pre>
+<pre><code>## Warning: Removed 1 rows containing non-finite values (stat_summary).</code></pre>
+<p><img src="03_ggplot_stats_files/figure-html/unnamed-chunk-12-1.png" width="672" /></p>
+<p>Now your boss of course wants standard error bars on each mean… no problem</p>
+<pre class="r"><code>ggplot(iris.df, aes(x=Species))+
+  stat_summary(aes(y=Sepal.Length), fun.y=mean, geom=&#39;point&#39;, shape=23, size=3, color=&quot;red&quot;, fill=&quot;red&quot;) +
+    stat_summary(aes(y=Sepal.Width), fun.y=mean, geom=&#39;point&#39;, shape=23, size=3, color=&quot;blue&quot;, fill=&quot;blue&quot;) +
+   stat_summary(aes(y=Sepal.Length), fun.data = mean_se, geom = &quot;errorbar&quot;, color=&quot;red&quot;, width=.1) +
+    stat_summary(aes(y=Sepal.Width),fun.data = mean_se, geom = &quot;errorbar&quot;, color=&quot;blue&quot;, width=.1) </code></pre>
+<pre><code>## Warning: Removed 1 rows containing non-finite values (stat_summary).
+
+## Warning: Removed 1 rows containing non-finite values (stat_summary).</code></pre>
+<p><img src="03_ggplot_stats_files/figure-html/unnamed-chunk-13-1.png" width="672" /></p>
+<p>you could also do standard deviation</p>
+<pre class="r"><code>ggplot(iris.df, aes(x=Species))+
+  stat_summary(aes(y=Sepal.Length), fun.y=mean, geom=&#39;point&#39;, shape=23, size=3, color=&quot;red&quot;, fill=&quot;red&quot;) +
+    stat_summary(aes(y=Sepal.Width), fun.y=mean, geom=&#39;point&#39;, shape=23, size=3, color=&quot;blue&quot;, fill=&quot;blue&quot;) +
+   stat_summary(aes(y=Sepal.Length), fun.data = mean_sdl, geom = &quot;errorbar&quot;, color=&quot;red&quot;, width=.1) +
+    stat_summary(aes(y=Sepal.Width),fun.data = mean_sdl, geom = &quot;errorbar&quot;, color=&quot;blue&quot;, width=.1) </code></pre>
+<pre><code>## Warning: Removed 1 rows containing non-finite values (stat_summary).
+
+## Warning: Removed 1 rows containing non-finite values (stat_summary).</code></pre>
+<p><img src="03_ggplot_stats_files/figure-html/unnamed-chunk-14-1.png" width="672" /></p>
+<div id="position_dodge---move-points" class="section level3">
+<h3>Position_dodge - move points</h3>
+<p>Now you boss says great but the error bars overlap… can you fix this?</p>
+<pre class="r"><code>ggplot(iris.df, aes(x=Species))+
+  stat_summary(aes(y=Sepal.Length), fun.y=mean, geom=&#39;point&#39;, shape=23, size=3, color=&quot;red&quot;, 
+               fill=&quot;red&quot;, position=position_nudge(x = 0.12, y = 0)) +
+    stat_summary(aes(y=Sepal.Width), fun.y=mean, geom=&#39;point&#39;, shape=23, size=3, color=&quot;blue&quot;, 
+                 fill=&quot;blue&quot;) +
+   stat_summary(aes(y=Sepal.Length), fun.data = mean_sdl, geom = &quot;errorbar&quot;, color=&quot;red&quot;, width=0.1,
+                position=position_nudge(x = 0.12, y = 0)) +
+    stat_summary(aes(y=Sepal.Width),fun.data = mean_sdl, geom = &quot;errorbar&quot;, color=&quot;blue&quot;, width=0.1) </code></pre>
+<pre><code>## Warning: Removed 1 rows containing non-finite values (stat_summary).
+
+## Warning: Removed 1 rows containing non-finite values (stat_summary).</code></pre>
+<p><img src="03_ggplot_stats_files/figure-html/unnamed-chunk-15-1.png" width="672" /></p>
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-88373117-2', 'auto');
+  ga('send', 'pageview');
+
+</script>
+</div>
+</div>
+</div>
 
 
 
