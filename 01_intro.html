@@ -368,10 +368,14 @@ div.tocify {
 <br> ###Variable names<br />
 As part of controlled voabulary, the way you type the variable names is also important and also important to be consistent</p>
 <ol style="list-style-type: decimal">
-<li>snake case - looks_like_this - separated by _ and all lower case and often most popular</li>
-<li>period separated - looks.like.this - separated by periods - may get confused with other commands</li>
-<li>lower camel case - looksLikeThis - ever word is capitilized after the first - often harder to type with all the shift caps</li>
-<li>upper camel case - LooksLikeThis - all words capitilized</li>
+<li>snake case - looks_like_this - separated by _ and all lower case and often most popular<br />
+</li>
+<li>period separated - looks.like.this - separated by periods - may get confused with other commands<br />
+</li>
+<li>lower camel case - looksLikeThis - ever word is capitilized after the first - often harder to type with all the shift caps<br />
+</li>
+<li>upper camel case - LooksLikeThis - all words capitilized<br />
+</li>
 <li>all lower case - lookslikethis - I find it messy and hard to read<br />
 <br></li>
 </ol>
@@ -388,16 +392,21 @@ As part of controlled voabulary, the way you type the variable names is also imp
 <p>R uses a column format and all the data in a column has to be of the same type. You can, however, refernece data by row and column as in excel.<br />
 <br> The most common data formats you will run into are:</p>
 <ul>
-<li>Numeric - can be double or integer but that is not as important</li>
-<li>Character - text fields</li>
-<li>Factors - displayed often as text but is as levels behind the scenes</li>
+<li>Numeric - can be double or integer but that is not as important<br />
+</li>
+<li>Character - text fields<br />
+</li>
+<li>Factors - displayed often as text but is as levels behind the scenes<br />
+</li>
 <li>Date - date format or POSIXLT
 <ul>
-<li>note this is in days since 1970-01-01 I believe</li>
+<li>note this is in days since 1970-01-01 I believe<br />
+</li>
 </ul></li>
 <li>Date time - date and time format together or POSIXCT
 <ul>
-<li>this is in seconds since 1970-01-01 00:00:00</li>
+<li>this is in seconds since 1970-01-01 00:00:00<br />
+</li>
 <li>this will be critical for many of you</li>
 </ul></li>
 </ul>
@@ -410,8 +419,21 @@ As part of controlled voabulary, the way you type the variable names is also imp
 <br><br />
 wide format:<br />
 This is how you would likely enter it in excel<br />
-Columns would be:<br />
-* individual * species * petal length * petal width * sepal lenght * sepal width <br></p>
+Columns would be:</p>
+<ul>
+<li>individual<br />
+</li>
+<li>species<br />
+</li>
+<li>petal length<br />
+</li>
+<li>petal width<br />
+</li>
+<li>sepal lenght<br />
+</li>
+<li>sepal width<br />
+<br></li>
+</ul>
 <p>long format:<br />
 This would condense this format to fewer columns:</p>
 <ul>
@@ -436,9 +458,22 @@ This would condense this format to fewer columns:</p>
 <div id="directory-structure" class="section level2">
 <h2>Directory structure</h2>
 <p>Having a consistent directory structure where code, data, and text is stored makes it easy to look at different directories and find what you are looking for. That is why I use the following structure. Choose what works for you and stick with it… please</p>
+<blockquote>
 <ul>
-<li>R Project Directory - Scripts - Documents - Data - Figures / output - Finalized D</li>
+<li>r_projects
+<ul>
+<li>scripts<br />
+</li>
+<li>documents<br />
+</li>
+<li>data<br />
+</li>
+<li>figures or output<br />
+</li>
+<li>final_data</li>
+</ul></li>
 </ul>
+</blockquote>
 <p>Using projects in R is super useful and you don’t have to worry about setting directories between a mac and windows machine and all the paths are relative in there when you reference data or output directories and is the same on windows and mac.</p>
 </div>
 <div id="file-names" class="section level2">
@@ -448,19 +483,26 @@ This would condense this format to fewer columns:</p>
 <li>Use a consistent naming theme</li>
 </ol>
 <ol style="list-style-type: lower-alpha">
-<li>use date_term1_term2.xxx</li>
-<li>no spaces or other fancy characters</li>
-<li>make the names human understandable</li>
+<li>use date_term1_term2.xxx<br />
+</li>
+<li>no spaces or other fancy characters<br />
+</li>
+<li>make the names human understandable<br />
+</li>
 </ol>
 <ol start="2" style="list-style-type: decimal">
-<li>Use natural ordering of files</li>
+<li>Use natural ordering of files<br />
+</li>
 </ol>
 <ol style="list-style-type: lower-alpha">
-<li>use date at front or somewhere so you know the version</li>
-<li>use logical ordering like 01_ 02_ 03_</li>
+<li>use date at front or somewhere so you know the version<br />
+</li>
+<li>use logical ordering like 01_ 02_ 03_<br />
+</li>
 </ol>
 <ol start="3" style="list-style-type: decimal">
-<li>Avoid things like</li>
+<li>Avoid things like<br />
+</li>
 </ol>
 <ol style="list-style-type: lower-alpha">
 <li>final thesis proposal.docx - I deal with many students and this is not helpful</li>

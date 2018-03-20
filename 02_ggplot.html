@@ -329,28 +329,48 @@ div.tocify {
 </div>
 <div id="create-project" class="section level2">
 <h2>Create Project</h2>
-<p>Now click - <code>File - New Project</code> and create a project in the 2018_stats folder. This is what you will open to start working on the project and then you can work with scripts in there.</p>
+<p>Now click - <code>File - New Project</code> and create a project called 2018_stats in your R Projects Folder. This is what you will open to start working on the project and then you can work with scripts in there.</p>
+<p>Try doing this based on what we did last week.<br />
+Remember to creat the sub directories manually in the <em><code>files pane</code></em></p>
+<blockquote>
+<p>scripts<br />
+data<br />
+documents<br />
+figures<br />
+final_data</p>
+</blockquote>
 </div>
 <div id="download-data" class="section level2">
 <h2>Download Data</h2>
 <p>I have placed example data files below. You can also access the iris dataframe from within R using the code <code>iris.df &lt;- iris</code> in your R script. You should download these files and put them in the data directory of your project.</p>
 <p><a href="https://wlperry.github.io/2018_stats/data/iris.csv">iris.csv</a></p>
 <p><a href="https://wlperry.github.io/2017stats/data/iris_excel.xlsx">iris_excel.xlsx</a></p>
+<p>R script we might get through in class <a href="https://wlperry.github.io/2017stats/02_ggplot_script.R">GGplot R Script</a></p>
 </div>
 <div id="create-r-script" class="section level2">
 <h2>Create R Script</h2>
-<p>Now to create the R Script that we will work with. Click <code>File - New File - R Script</code>. This will open a file and you need to save it into the <code>Scripts</code> directory.</p>
+<p>Now to create the R Script that we will work with. Click <code>File - New File - R Script</code>. This will open a file and you need to save it into the <code>Scripts</code> directory.<br />
+Click <code>File - Save As</code> and name the file what you want and save it in your scripts folder. What will you name the file?</p>
 <p>Now is where the fun begins.</p>
 <pre class="r"><code># load the libraries each time you restart R
 library(tidyverse)
 library(lubridate)
+library(readxl)
 library(scales)
 library(skimr)
 
 # read in the csv file
 # note here we are using relative file paths to find the file
 # try hitting &quot;&quot; and then tab inside of the &quot;&quot; - this will bring up choices
-iris.df &lt;- read_csv(&quot;data/iris.csv&quot;)</code></pre>
+iris.df &lt;- read_csv(&quot;data/iris.csv&quot;)
+
+#&#39;Lets read in the iris excel file
+#&#39;The only thing that you might need to do is specify the sheet if you use 
+#&#39;multiple sheets
+#&#39;
+
+iris_excel.df &lt;- read_excel(&quot;data/iris_excel.xlsx&quot;, sheet=&quot;iris_excel&quot;) 
+# if there is only one sheet - no worries</code></pre>
 </div>
 <div id="view-data" class="section level2">
 <h2>View Data</h2>
@@ -379,38 +399,47 @@ iris.df &lt;- read_csv(&quot;data/iris.csv&quot;)</code></pre>
 <div id="plot-data" class="section level2">
 <h2>Plot data</h2>
 <p>So below I have added in data=, y= and x= but they are not really necessary</p>
-<pre class="r"><code>ggplot(data=iris.df) +
-  geom_point(aes(x=Petal.Length, y=Petal.Width))</code></pre>
+<pre class="r"><code>ggplot(data=iris.df, aes(x=Petal.Length, y=Petal.Width)) +  
+  geom_point()  </code></pre>
 <p><img src="02_ggplot_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
+<p>This creates the same image. You are just putting the aestetics in the geometry section</p>
+<pre class="r"><code>#&#39; This is the same as the above plot but puts the aesthetics in the geometry
+ggplot(data=iris.df) +  
+  geom_point(aes(x=Petal.Length, y=Petal.Width))    </code></pre>
+<p><img src="02_ggplot_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+<p>What is the advantage of doing the above method? How could you add a set of points for <code>Sepal.Length</code> and <code>Sepal.Width</code> to the existing graph:</p>
+<pre class="r"><code>ggplot(data=iris.df) +  
+  geom_point(aes(x=Petal.Length, y=Petal.Width))    </code></pre>
+<p><img src="02_ggplot_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
 </div>
 <div id="colors-of-points" class="section level2">
 <h2>Colors of points</h2>
 <p>Note in the above graph all of the points are black although we know there are three species. We can do two things with this. We can add a color to the graph</p>
-<pre class="r"><code>ggplot(data=iris.df) +
-  geom_point(aes(x=Petal.Length, y=Petal.Width), color=&quot;blue&quot;)</code></pre>
-<p><img src="02_ggplot_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+<pre class="r"><code>ggplot(data=iris.df, aes(x=Petal.Length, y=Petal.Width)) +  
+  geom_point(color=&quot;blue&quot;)  </code></pre>
+<p><img src="02_ggplot_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
 <p>This creates a color for all of the points. We can however map the colors to the species to make colors vary for each <code>Species</code></p>
-<pre class="r"><code>ggplot(data=iris.df) +
-  geom_point(aes(x=Petal.Length, y=Petal.Width, color=Species))</code></pre>
-<p><img src="02_ggplot_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
+<pre class="r"><code>ggplot(data=iris.df, aes(x=Petal.Length, y=Petal.Width, color=Species)) +   
+  geom_point()  </code></pre>
+<p><img src="02_ggplot_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
 </div>
 <div id="size-of-points" class="section level2">
 <h2>Size of points</h2>
-<p>We can do the same thing with size of data points based on <code>Petal.Width</code> or other continuous variable.</p>
-<pre class="r"><code>ggplot(data=iris.df) +
-  geom_point(aes(x=Petal.Length, y=Petal.Width, size=Petal.Width))</code></pre>
-<p><img src="02_ggplot_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
 <p>We could also just make the point sizes all just larger by entering the size parameter outside of the aesthetics parentheses.</p>
-<pre class="r"><code>ggplot(data=iris.df) +
-  geom_point(aes(x=Petal.Length, y=Petal.Width), size=3)</code></pre>
-<p><img src="02_ggplot_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
+<pre class="r"><code>ggplot(data=iris.df, aes(x=Petal.Length, y=Petal.Width, color=Species)) +   
+  geom_point(size=3)    </code></pre>
+<p><img src="02_ggplot_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
+<p>We can do the same thing with size of data points based on <code>Petal.Width</code> or other continuous variable.</p>
+<pre class="r"><code>ggplot(data=iris.df, aes(x=Petal.Length, y=Petal.Width, color=Species)) +   
+  geom_point(size=4)    </code></pre>
+<p><img src="02_ggplot_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
 </div>
 <div id="shapes-of-points" class="section level2">
 <h2>Shapes of Points</h2>
 <p>We could also map the type of point shape to the species</p>
-<pre class="r"><code>ggplot(data=iris.df) +
-  geom_point(aes(x=Petal.Length, y=Petal.Width, shape=Species))</code></pre>
-<p><img src="02_ggplot_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
+<pre class="r"><code>ggplot(data=iris.df, aes(x=Petal.Length, y=Petal.Width, shape=Species)) +
+  geom_point(size=4)</code></pre>
+<p><img src="02_ggplot_files/figure-html/unnamed-chunk-11-1.png" width="672" /></p>
 <p>The shapes of the various options are:<br />
 <img src="images/point_shapes.png" alt="Shapes of various points." /></p>
 <p>The types of lines you can have are:<br />
@@ -422,26 +451,26 @@ iris.df &lt;- read_csv(&quot;data/iris.csv&quot;)</code></pre>
 <pre class="r"><code>ggplot(data=iris.df) +
   geom_point(aes(x=Petal.Length, y=Petal.Width, shape=Species, color=Species)) +
   facet_grid(. ~ Species)</code></pre>
-<p><img src="02_ggplot_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
+<p><img src="02_ggplot_files/figure-html/unnamed-chunk-12-1.png" width="672" /></p>
 <p>or</p>
 <pre class="r"><code>ggplot(data=iris.df) +
   geom_point(aes(x=Petal.Length, y=Petal.Width, shape=Species, color=Species)) +
   facet_grid(Species ~ ., scales = &quot;free&quot;) </code></pre>
-<p><img src="02_ggplot_files/figure-html/unnamed-chunk-11-1.png" width="672" /></p>
+<p><img src="02_ggplot_files/figure-html/unnamed-chunk-13-1.png" width="672" /></p>
 <p>Facet wrap is slightly different and will allow you to have all free scales and facet by species</p>
 <pre class="r"><code>ggplot(data=iris.df) +
   geom_point(aes(x=Petal.Length, y=Petal.Width, shape=Species, color=Species)) +
   facet_wrap(&quot;Species&quot;, scales = &quot;free&quot;)</code></pre>
-<p><img src="02_ggplot_files/figure-html/unnamed-chunk-12-1.png" width="672" /></p>
+<p><img src="02_ggplot_files/figure-html/unnamed-chunk-14-1.png" width="672" /></p>
 </div>
 <div id="adding-titles" class="section level2">
 <h2>Adding Titles</h2>
 <p>Now to add in some of the basic things you might want to have on there to make it look nicer. We will work more on this later to get it publication quality but this is a start.</p>
-<pre class="r"><code>ggplot(data=iris.df) +
-  geom_point(aes(x=Petal.Length, y=Petal.Width, shape=Species, color=Species)) +
+<pre class="r"><code>ggplot(data=iris.df, aes(x=Petal.Length, y=Petal.Width, shape=Species, color=Species)) +
+  geom_point() +
   ggtitle(&quot;Petal Shape&quot;) +
   labs(x=&quot;Petal Length&quot;, y=&quot;Petal Width&quot;)</code></pre>
-<p><img src="02_ggplot_files/figure-html/unnamed-chunk-13-1.png" width="672" /></p>
+<p><img src="02_ggplot_files/figure-html/unnamed-chunk-15-1.png" width="672" /></p>
 <pre class="r"><code>  # we will get into themes but this will center the title
   # theme(plot.title = element_text(hjust = 0.5))</code></pre>
 </div>
@@ -459,7 +488,10 @@ iris.df &lt;- read_csv(&quot;data/iris.csv&quot;)</code></pre>
 ##   gage_ht_ft = col_double(),
 ##   no3_mgl = col_double()
 ## )</code></pre>
-<pre class="r"><code>glimpse(streams.df)</code></pre>
+<pre class="r"><code># Guess max extends the deault guessing of column type for a longer time than the 
+# default if there are mssing values down the column
+
+glimpse(streams.df)</code></pre>
 <pre><code>## Observations: 57,492
 ## Variables: 7
 ## $ agency        &lt;chr&gt; &quot;USGS&quot;, &quot;USGS&quot;, &quot;USGS&quot;, &quot;USGS&quot;, &quot;USGS&quot;, &quot;USGS&quot;, ...
@@ -474,7 +506,7 @@ iris.df &lt;- read_csv(&quot;data/iris.csv&quot;)</code></pre>
 <h2>Basic time series plot</h2>
 <pre class="r"><code>ggplot(streams.df, aes(datetime, no3_mgl, color=site)) +
   geom_point()</code></pre>
-<p><img src="02_ggplot_files/figure-html/unnamed-chunk-15-1.png" width="672" /></p>
+<p><img src="02_ggplot_files/figure-html/unnamed-chunk-17-1.png" width="672" /></p>
 </div>
 <div id="scales---time-series" class="section level2">
 <h2>Scales - time series</h2>
@@ -485,7 +517,7 @@ iris.df &lt;- read_csv(&quot;data/iris.csv&quot;)</code></pre>
                   limits = ymd_hms(c(&#39;2017-01-01 00:00:00&#39;,&#39;2017-12-31 00:00:00&#39;)),
                   labels=date_format(&quot;%Y-%b-%d&quot;), expand=c(0,0))</code></pre>
 <pre><code>## Warning: Removed 23 rows containing missing values (geom_point).</code></pre>
-<p><img src="02_ggplot_files/figure-html/unnamed-chunk-16-1.png" width="672" /></p>
+<p><img src="02_ggplot_files/figure-html/unnamed-chunk-18-1.png" width="672" /></p>
 </div>
 <div id="themes" class="section level2">
 <h2>Themes</h2>
@@ -564,7 +596,7 @@ theme(
  # ADD PLOT BOX
  panel.border = element_rect(colour = &quot;black&quot;, fill=NA, size=0.3))</code></pre>
 <pre><code>## Warning: Removed 23 rows containing missing values (geom_point).</code></pre>
-<p><img src="02_ggplot_files/figure-html/unnamed-chunk-17-1.png" width="672" /></p>
+<p><img src="02_ggplot_files/figure-html/unnamed-chunk-19-1.png" width="672" /></p>
 <!-- Global Site Tag (gtag.js) - Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=UA-88373117-4"></script>
 <script>

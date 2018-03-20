@@ -27,7 +27,16 @@ So lets create a project with all of the subdirectories on your computer. Create
 
 ##Create Project     
 
-Now click - ```File - New Project``` and create a project in the 2018_stats folder. This is what you will open to start working on the project and then you can work with scripts in there.
+Now click - ```File - New Project``` and create a project called 2018_stats in your R Projects Folder. This is what you will open to start working on the project and then you can work with scripts in there.      
+
+Try doing this based on what we did last week.    
+Remember to creat the sub directories manually in the *`files pane`*     
+
+> scripts   
+> data    
+> documents     
+> figures    
+> final_data   
 
 
 
@@ -39,9 +48,13 @@ I have placed example data files below. You can also access the iris dataframe f
  
 [iris_excel.xlsx](https://wlperry.github.io/2017stats/data/iris_excel.xlsx)    
 
+R script we might get through in class
+[GGplot R Script](https://wlperry.github.io/2017stats/02_ggplot_script.R)    
+
 ## Create R Script       
 
-Now to create the R Script that we will work with. Click ```File - New File - R Script```. This will open a file and you need to save it into the ```Scripts``` directory.    
+Now to create the R Script that we will work with. Click ```File - New File - R Script```. This will open a file and you need to save it into the ```Scripts``` directory.      
+Click ```File - Save As``` and name the file what you want and save it in your scripts folder. What will you name the file?      
 
 Now is where the fun begins.
 
@@ -49,6 +62,7 @@ Now is where the fun begins.
 # load the libraries each time you restart R
 library(tidyverse)
 library(lubridate)
+library(readxl)
 library(scales)
 library(skimr)
 
@@ -56,6 +70,15 @@ library(skimr)
 # note here we are using relative file paths to find the file
 # try hitting "" and then tab inside of the "" - this will bring up choices
 iris.df <- read_csv("data/iris.csv")
+
+#'Lets read in the iris excel file
+#'The only thing that you might need to do is specify the sheet if you use 
+#'multiple sheets
+#'
+
+iris_excel.df <- read_excel("data/iris_excel.xlsx", sheet="iris_excel")	
+# if there is only one sheet - no worries
+
 
 ```
 
@@ -76,37 +99,60 @@ head(iris.df)
 ##Plot data       
 So below I have added in data=, y= and x= but they are not really necessary
 ```{r}
-ggplot(data=iris.df) +
-  geom_point(aes(x=Petal.Length, y=Petal.Width))
+ggplot(data=iris.df, aes(x=Petal.Length, y=Petal.Width)) +	
+  geom_point()	
+```
+
+This creates the same image. You are just putting the aestetics in the geometry section         
+```{r}
+#' This is the same as the above plot but puts the aesthetics in the geometry
+ggplot(data=iris.df) +	
+  geom_point(aes(x=Petal.Length, y=Petal.Width))	
+
+```
+
+ 
+What is the advantage of doing the above method? 
+How could you add a set of points for `Sepal.Length` and `Sepal.Width` to the 
+existing graph:    
+
+```{r}
+ggplot(data=iris.df) +	
+  geom_point(aes(x=Petal.Length, y=Petal.Width))	
 ```
 
 ##Colors of points      
 Note in the above graph all of the points are black although we know there are three species. We can do two things with this. We can add a color to the graph
 
 ```{r}
-ggplot(data=iris.df) +
-  geom_point(aes(x=Petal.Length, y=Petal.Width), color="blue")
+ggplot(data=iris.df, aes(x=Petal.Length, y=Petal.Width)) +	
+  geom_point(color="blue")	
 ```
 
 This creates a color for all of the points. We can however map the colors to the species to make colors vary for each `Species`
 
 ```{r}
-ggplot(data=iris.df) +
-  geom_point(aes(x=Petal.Length, y=Petal.Width, color=Species))
+ggplot(data=iris.df, aes(x=Petal.Length, y=Petal.Width, color=Species)) +	
+  geom_point()	
+
 ```
 
 ##Size of points   
-We can do the same thing with size of data points based on `Petal.Width` or other continuous variable.   
-
-```{r}
-ggplot(data=iris.df) +
-  geom_point(aes(x=Petal.Length, y=Petal.Width, size=Petal.Width))
-```
 
 We could also just make the point sizes all just larger by entering the size parameter outside of the aesthetics parentheses.
 ```{r}
-ggplot(data=iris.df) +
-  geom_point(aes(x=Petal.Length, y=Petal.Width), size=3)
+ggplot(data=iris.df, aes(x=Petal.Length, y=Petal.Width, color=Species)) +	
+  geom_point(size=3)	
+
+```
+
+
+We can do the same thing with size of data points based on `Petal.Width` or other continuous variable.   
+
+```{r}
+ggplot(data=iris.df, aes(x=Petal.Length, y=Petal.Width, color=Species)) +	
+  geom_point(size=4)	
+
 ```
 
 
@@ -115,8 +161,8 @@ ggplot(data=iris.df) +
 We could also map the type of point shape to the species   
 
 ```{r}
-ggplot(data=iris.df) +
-  geom_point(aes(x=Petal.Length, y=Petal.Width, shape=Species))
+ggplot(data=iris.df, aes(x=Petal.Length, y=Petal.Width, shape=Species)) +
+  geom_point(size=4)
 ```
 
 The shapes of the various options are:   
@@ -161,8 +207,8 @@ Now to add in some of the basic things you might want to have on there to make i
 
 
 ```{r}
-ggplot(data=iris.df) +
-  geom_point(aes(x=Petal.Length, y=Petal.Width, shape=Species, color=Species)) +
+ggplot(data=iris.df, aes(x=Petal.Length, y=Petal.Width, shape=Species, color=Species)) +
+  geom_point() +
   ggtitle("Petal Shape") +
   labs(x="Petal Length", y="Petal Width")
   # we will get into themes but this will center the title
@@ -174,6 +220,8 @@ Now its time to work with data like we usually use in data on buoys and sensors 
 ###Read in the data
 ```{r}
 streams.df <- read_csv("data/streams_q_gage_no3.csv", guess_max = 10000)
+# Guess max extends the deault guessing of column type for a longer time than the 
+# default if there are mssing values down the column
 
 glimpse(streams.df)
 ```

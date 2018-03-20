@@ -49,11 +49,11 @@ Thinking about your data source first is important. Using a controlled vocabular
 ###Variable names    
 As part of controlled voabulary, the way you type the variable names is also important and also important to be consistent      
 
-1. snake case - looks_like_this - separated by _ and all lower case and often most popular
-2. period separated - looks.like.this - separated by periods - may get confused with other commands
-3. lower camel case - looksLikeThis - ever word is capitilized after the first - often harder to type with all the shift caps 
-4. upper camel case - LooksLikeThis - all words capitilized 
-3. all lower case - lookslikethis - I find it messy and hard to read    
+1. snake case - looks_like_this - separated by _ and all lower case and often most popular      
+2. period separated - looks.like.this - separated by periods - may get confused with other       commands     
+3. lower camel case - looksLikeThis - ever word is capitilized after the first - often harder to type with all the shift caps      
+4. upper camel case - LooksLikeThis - all words capitilized      
+3. all lower case - lookslikethis - I find it messy and hard to read        
  <br>
 
 the key is that you should have no spaces or special characters. If you do have spaces you use the back tick **`**on either side of the variable to call it.     
@@ -73,14 +73,14 @@ R uses a column format and all the data in a column has to be of the same type. 
 <br>
 The most common data formats you will run into are:        
 
-  + Numeric - can be double or integer but that is not as important
-  + Character - text fields
-  + Factors - displayed often as text but is as levels behind the scenes
-  + Date - date format or POSIXLT
-      - note this is in days since 1970-01-01 I believe
-  + Date time - date and time format together or POSIXCT 
-      - this is in seconds since 1970-01-01 00:00:00
-      - this will be critical for many of you
+  + Numeric - can be double or integer but that is not as important      
+  + Character - text fields      
+  + Factors - displayed often as text but is as levels behind the scenes      
+  + Date - date format or POSIXLT      
+      - note this is in days since 1970-01-01 I believe      
+  + Date time - date and time format together or POSIXCT       
+      - this is in seconds since 1970-01-01 00:00:00      
+      - this will be critical for many of you      
       
       
   **Note that if you mix formats within a column some of the variables will be converted to NA if say you have a column that is a character column which has mixed numbers and text and is then converted to numeric**     
@@ -95,21 +95,22 @@ This format is often more difficult to work with in R and GGPlot so it is conver
 wide format:    
 This is how you would likely enter it in excel    
 Columns would be:      
-* individual
-* species
-* petal length
-* petal width
-* sepal lenght
-* sepal width
+
+* individual      
+* species      
+* petal length      
+* petal width      
+* sepal lenght      
+* sepal width      
 <br>   
 
 long format:   
-This would condense this format to fewer columns:    
+This would condense this format to fewer columns:      
 
-* individual   
-* species   
-* trait all in one colunm (petal length, petal width, sepal length , sepal width)    
-* value (the values of each of the resprective traits)    
+* individual         
+* species        
+* trait all in one colunm (petal length, petal width, sepal length , sepal width)          
+* value (the values of each of the resprective traits)          
 
 ###Output     
 I find it useful to maintain a read only file of the original data and never write to this file other than the original QA/QC flagging of the data if even then. I usually read from this file and save it to the finalized data folder where the data has been cleaned formatted and basic calculations done on it.
@@ -122,27 +123,31 @@ It is often very helpful prior to doing any code work to think about what the fi
      
 Having a consistent directory structure where code, data, and text is stored makes it easy to look at different directories and find what you are looking for. That is why I use the following structure. Choose what works for you and stick with it... please   
 
- + R Project Directory
-        - Scripts
-        - Documents
-        - Data
-        - Figures / output
-        - Finalized D    
-        
+>
+ + r_projects      
+>        - scripts      
+>        - documents      
+>        - data      
+>        - figures or output      
+>        - final_data          
+>
+
+
 Using projects in R is super useful and you don't have to worry about setting directories between a mac and windows machine and all the paths are relative in there when you reference data or output directories and is the same on windows and mac.
 
 ##File names
 From the site [File organization and best practices](https://andrewbtran.github.io/NICAR/2018/workflow/docs/01-workflow_intro.html?utm_content=buffer858fd&utm_medium=social&utm_source=twitter.com&utm_campaign=buffer) and [Prime Hints](https://kkulma.github.io/2018-03-18-Prime-Hints-for-Running-a-data-project-in-R/)  naming files has many good practices. Of these the main theme is:    
 
-1. Use a consistent naming theme
-  a. use date_term1_term2.xxx
-  b. no spaces or other fancy characters
-  c. make the names human understandable
-2. Use natural ordering of files
-  a. use date at front or somewhere so you know the version
-  b. use logical ordering like 01_ 02_ 03_
-3. Avoid things like 
-  a. final thesis proposal.docx - I deal with many students and this is not helpful
+1. Use a consistent naming theme      
+
+  a. use date_term1_term2.xxx      
+  b. no spaces or other fancy characters      
+  c. make the names human understandable      
+2. Use natural ordering of files      
+  a. use date at front or somewhere so you know the version      
+  b. use logical ordering like 01_ 02_ 03_      
+3. Avoid things like      
+  a. final thesis proposal.docx - I deal with many students and this is not helpful      
   
 ##Annotations and metadata files    
 
