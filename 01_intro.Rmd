@@ -44,7 +44,25 @@ So the first thing to think about in my opinion is the workflow or dataflow:
 ##Data Source Format
 ###Controlled vocabulary and units   
 <br>
-Thinking about your data source first is important. Using a controlled vocabulary to reference the variables is critical and will save huge amounts of time when modifying the code later on. I find it helpful to have a meta data document with the vocabulary and the units for each term so that future users can figure out what your code means. 
+Thinking about your data source first is important. Using a controlled vocabulary to reference the variables is critical and will save huge amounts of time when modifying the code later on. I find it helpful to have a meta data document with the vocabulary and the units for each term so that future users can figure out what your code means.      
+<br>
+###Variable names    
+As part of controlled voabulary, the way you type the variable names is also important and also important to be consistent      
+
+1. snake case - looks_like_this - separated by _ and all lower case and often most popular
+2. period separated - looks.like.this - separated by periods - may get confused with other commands
+3. lower camel case - looksLikeThis - ever word is capitilized after the first - often harder to type with all the shift caps 
+4. upper camel case - LooksLikeThis - all words capitilized 
+3. all lower case - lookslikethis - I find it messy and hard to read    
+ <br>
+
+the key is that you should have no spaces or special characters. If you do have spaces you use the back tick **`**on either side of the variable to call it.     
+<br>
+Special characters are often coded differently in mac and pc computers and will cause more headaches than you have after St. Patricks Day.   
+
+<br>
+
+
 
 ###Transformations    
 
