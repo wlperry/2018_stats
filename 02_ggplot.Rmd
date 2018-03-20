@@ -46,10 +46,10 @@ I have placed example data files below. You can also access the iris dataframe f
 
 [iris.csv](https://wlperry.github.io/2018_stats/data/iris.csv)     
  
-[iris_excel.xlsx](https://wlperry.github.io/2017stats/data/iris_excel.xlsx)    
+[iris_excel.xlsx](https://wlperry.github.io/2018_stats/data/iris_excel.xlsx)    
 
 R script we might get through in class
-[GGplot R Script](https://wlperry.github.io/2017stats/02_ggplot_script.R)    
+[GGplot R Script](https://wlperry.github.io/2018_stats/02_ggplot_script.R)    
 
 ## Create R Script       
 
