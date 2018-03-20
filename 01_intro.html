@@ -311,7 +311,7 @@ div.tocify {
 <ol style="list-style-type: decimal">
 <li>What is the source and format of your data?
 <ul>
-<li>what are the variables</li>
+<li>what are the variables and units and how will you name them</li>
 <li>controlled vocabulary list</li>
 <li>data structure in columns</li>
 </ul></li>
@@ -351,11 +351,11 @@ div.tocify {
 <ul>
 <li>R Project Directory
 <ul>
-<li>Scripts</li>
-<li>Documents</li>
-<li>Data</li>
-<li>Figures / output</li>
-<li>Finalized Data</li>
+<li>scripts</li>
+<li>documents</li>
+<li>data</li>
+<li>figures / output</li>
+<li>final_ized_data</li>
 </ul></li>
 </ul></li>
 </ol>
@@ -364,7 +364,7 @@ div.tocify {
 <h2>Data Source Format</h2>
 <div id="controlled-vocabulary-and-units" class="section level3">
 <h3>Controlled vocabulary and units</h3>
-<p>Thinking about your data source first is important. Using a controlled vocabulary to reference the variables is critical and will save huge amounts of time when modifying the code later on. I find it helpful to have a meta data document with the vocabulary and the units for each term so that future users can figure out what your code means.</p>
+<p><br> Thinking about your data source first is important. Using a controlled vocabulary to reference the variables is critical and will save huge amounts of time when modifying the code later on. I find it helpful to have a meta data document with the vocabulary and the units for each term so that future users can figure out what your code means.</p>
 </div>
 <div id="transformations" class="section level3">
 <h3>Transformations</h3>
@@ -372,7 +372,8 @@ div.tocify {
 </div>
 <div id="data-structure-and-format" class="section level3">
 <h3>Data structure and format</h3>
-<p>R uses a column format and all the data in a column has to be of the same type. The most common data formats you will run into are:</p>
+<p>R uses a column format and all the data in a column has to be of the same type. You can, however, refernece data by row and column as in excel.<br />
+<br> The most common data formats you will run into are:</p>
 <ul>
 <li>Numeric - can be double or integer but that is not as important</li>
 <li>Character - text fields</li>
@@ -389,6 +390,27 @@ div.tocify {
 </ul>
 <p><strong>Note that if you mix formats within a column some of the variables will be converted to NA if say you have a column that is a character column which has mixed numbers and text and is then converted to numeric</strong></p>
 </div>
+<div id="wide-format-original-data" class="section level3">
+<h3>Wide format original data</h3>
+<p>Typically when we enter data it is in <strong>wide format</strong> where an identifier is down the first column and the various variables are in separate columns. This is what is often easiest to enter into excel or wherever it is entered originally.</p>
+<p>This format is often more difficult to work with in R and GGPlot so it is converted to <strong>long format</strong> where there is a column of identifiers, a column of variable names, and a column of values. The switch between these formats is often rather easy so it does not matter what format it is in.<br />
+<br><br />
+wide format:<br />
+This is how you would likely enter it in excel<br />
+Columns would be:<br />
+* individual * species * petal length * petal width * sepal lenght * sepal width <br></p>
+<p>long format:<br />
+This would condense this format to fewer columns:</p>
+<ul>
+<li>individual<br />
+</li>
+<li>species<br />
+</li>
+<li>trait all in one colunm (petal length, petal width, sepal length , sepal width)<br />
+</li>
+<li>value (the values of each of the resprective traits)</li>
+</ul>
+</div>
 <div id="output" class="section level3">
 <h3>Output</h3>
 <p>I find it useful to maintain a read only file of the original data and never write to this file other than the original QA/QC flagging of the data if even then. I usually read from this file and save it to the finalized data folder where the data has been cleaned formatted and basic calculations done on it.</p>
@@ -397,16 +419,6 @@ div.tocify {
 <div id="data-flow" class="section level2">
 <h2>Data Flow</h2>
 <p>It is often very helpful prior to doing any code work to think about what the final output will look like and what the original data looks like and the steps between these two points.</p>
-<div id="wide-format-original-data" class="section level3">
-<h3>Wide format original data</h3>
-<p>Typically when we enter data it is in <strong>wide format</strong> where an identifier is down the first column and the various variables are in separate columns. This is what is often easiest to enter into excel or wherever it is entered originally.</p>
-<p>This format is often more difficult to work with in R and GGPlot so it is converted to <strong>long format</strong> where there is a column of identifiers, a column of variable names, and a column of values. The switch between these formats is often rather easy so it does not matter what format it is in.</p>
-</div>
-</div>
-<div id="annotations-and-metadata-files" class="section level2">
-<h2>Annotations and metadata files</h2>
-<p>For the love of all that is good - be sure to annotate you code using the # and whatever text helps describe the process you are doing - it will make the code easier to read and evaluate later when you are trying to figure out something really fast. You can also use it to search for code snippets as you are going along.</p>
-<p>Metadata files that document what you are doing and why and what the various conversions and statistical transformations are can be of great use later on as well. It is often challenging to figure out what the units are in for various variables or what they actually mean.</p>
 </div>
 <div id="directory-structure" class="section level2">
 <h2>Directory structure</h2>
@@ -440,6 +452,11 @@ div.tocify {
 <ol style="list-style-type: lower-alpha">
 <li>final thesis proposal.docx - I deal with many students and this is not helpful</li>
 </ol>
+</div>
+<div id="annotations-and-metadata-files" class="section level2">
+<h2>Annotations and metadata files</h2>
+<p><strong>For the love of all that is good</strong> - be sure to annotate you code using the <code>#</code> and whatever text helps describe the process you are doing - it will make the code easier to read and evaluate later when you are trying to figure out something really fast. You can also use it to search for code snippets as you are going along.</p>
+<p>Metadata files that document what you are doing and why and what the various conversions and statistical transformations are can be of great use later on as well. It is often challenging to figure out what the units are in for various variables or what they actually mean.</p>
 </div>
 <div id="rstudio-specifics" class="section level2">
 <h2>RStudio Specifics</h2>
