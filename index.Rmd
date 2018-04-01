@@ -51,7 +51,7 @@ This will show you how to modify the dataframe.
 ##[Dataframe wide to long](05_dataframe_widelong.html)    
 This will show you how to modify the dataframe from wide to long and back. Also it has how to spread and unite values... 
 
-##[Correlation and Regression](06_dcorrelation_regression.html)    
+##[Correlation and Regression](06_correlation_regression.html)    
 Correlations and Regressions. More to come but code is done.    
 
 
