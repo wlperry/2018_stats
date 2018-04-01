@@ -309,15 +309,15 @@ div.tocify {
 </div>
 <div id="read-files" class="section level2">
 <h2>Read files</h2>
-<pre class="r"><code># One new package for summary stats
-#install.packages(&quot;psych&quot;)
+<pre class="r"><code># install.packages(&quot;devtools&quot;)
+# devtools::install_github(&quot;thomasp85/patchwork&quot;)
 
 # load the libraries each time you restart R
 library(tidyverse)
 library(lubridate)
 library(scales)
 library(skimr)
-
+library(patchwork)
 
 # read in the file
 iris.df &lt;- read_csv(&quot;data/iris.csv&quot;)
@@ -331,6 +331,48 @@ glimpse(iris.df)</code></pre>
 ## $ Petal.Width  &lt;dbl&gt; 0.2, 0.2, 0.2, 0.2, 0.2, 0.4, 0.3, 0.2, 0.2, 0.1,...
 ## $ Species      &lt;chr&gt; &quot;setosa&quot;, &quot;setosa&quot;, &quot;setosa&quot;, &quot;setosa&quot;, &quot;setosa&quot;,...</code></pre>
 </div>
+<div id="here-is-the-r-script" class="section level2">
+<h2>Here is the R script</h2>
+<p>R script we might get through in class <a href="https://wlperry.github.io/2018_stats/03_ggplot_stats.R">GGplot 3 R Script</a></p>
+</div>
+<div id="simple-summary-statistics" class="section level2">
+<h2>Simple summary statistics</h2>
+<p>We can use the skimr package to get simple summary statitstics but these are often not that helpful to look at the data</p>
+<pre class="r"><code>skim(iris.df)</code></pre>
+<pre><code>## Skim summary statistics
+##  n obs: 150 
+##  n variables: 5 
+## 
+## Variable type: character 
+##  variable missing complete   n min max empty n_unique
+##   Species       0      150 150   6  10     0        3
+## 
+## Variable type: numeric 
+##      variable missing complete   n mean   sd  p0 p25 median p75 p100
+##  Petal.Length       0      150 150 3.76 1.77 1   1.6   4.35 5.1  6.9
+##   Petal.Width       0      150 150 1.2  0.76 0.1 0.3   1.3  1.8  2.5
+##  Sepal.Length       1      149 150 5.85 0.83 4.3 5.1   5.8  6.4  7.9
+##   Sepal.Width       0      150 150 3.06 0.44 2   2.8   3    3.3  4.4
+##      hist
+##  ▇▁▁▂▅▅▃▁
+##  ▇▁▁▅▃▃▂▂
+##  ▂▇▅▇▆▅▂▂
+##  ▁▂▅▇▃▂▁▁</code></pre>
+</div>
+<div id="skim_to_wide-wide-stats" class="section level2">
+<h2>Skim_to_wide wide stats</h2>
+<pre class="r"><code>skim_to_wide(iris.df)</code></pre>
+<pre><code>## # A tibble: 5 x 17
+##   type   variable  missing complete n     min   max   empty n_unique mean 
+##   &lt;chr&gt;  &lt;chr&gt;     &lt;chr&gt;   &lt;chr&gt;    &lt;chr&gt; &lt;chr&gt; &lt;chr&gt; &lt;chr&gt; &lt;chr&gt;    &lt;chr&gt;
+## 1 chara… Species   0       150      150   6     10    0     3        &lt;NA&gt; 
+## 2 numer… Petal.Le… 0       150      150   &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;     3.76 
+## 3 numer… Petal.Wi… 0       150      150   &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;     &quot;1.2…
+## 4 numer… Sepal.Le… 1       149      150   &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;     5.85 
+## 5 numer… Sepal.Wi… 0       150      150   &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;     3.06 
+## # ... with 7 more variables: sd &lt;chr&gt;, p0 &lt;chr&gt;, p25 &lt;chr&gt;, median &lt;chr&gt;,
+## #   p75 &lt;chr&gt;, p100 &lt;chr&gt;, hist &lt;chr&gt;</code></pre>
+</div>
 <div id="simple-histograms" class="section level2">
 <h2>Simple histograms</h2>
 <pre class="r"><code>#Hitograms with GGPLOT
@@ -339,7 +381,7 @@ ggplot(data=iris.df, aes(iris.df$Sepal.Length)) +
   labs (title=&quot;Sepal Length&quot;, x=&quot;Sepal Length&quot;, y=&quot;Count&quot;)</code></pre>
 <pre><code>## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
 <pre><code>## Warning: Removed 1 rows containing non-finite values (stat_bin).</code></pre>
-<p><img src="03_ggplot_stats_files/figure-html/unnamed-chunk-2-1.png" width="672" /></p>
+<p><img src="03_ggplot_stats_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
 </div>
 <div id="histogram-binwiths" class="section level2">
 <h2>Histogram binwiths</h2>
@@ -348,7 +390,7 @@ ggplot(data=iris.df, aes(iris.df$Sepal.Length)) +
   geom_histogram(col=&quot;blue&quot;, fill=&quot;blue&quot;, alpha=.7, binwidth = 1) +
   labs (title=&quot;Sepal Length&quot;, x=&quot;Sepal Length&quot;, y=&quot;Count&quot;)</code></pre>
 <pre><code>## Warning: Removed 1 rows containing non-finite values (stat_bin).</code></pre>
-<p><img src="03_ggplot_stats_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
+<p><img src="03_ggplot_stats_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
 </div>
 <div id="fccetted-histograms" class="section level2">
 <h2>Fccetted histograms</h2>
@@ -358,7 +400,7 @@ ggplot(data=iris.df, aes(iris.df$Sepal.Length)) +
   labs (title=&quot;Sepal Length&quot;, x=&quot;Sepal Length&quot;, y=&quot;Count&quot;) + 
   facet_wrap(~Species, scales = &quot;free&quot;) # allows the scales to be free and you can comment this out to see what happens</code></pre>
 <pre><code>## Warning: Removed 1 rows containing non-finite values (stat_bin).</code></pre>
-<p><img src="03_ggplot_stats_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
+<p><img src="03_ggplot_stats_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
 </div>
 <div id="other-visualizations" class="section level2">
 <h2>Other visualizations</h2>
@@ -368,7 +410,7 @@ ggplot(data=iris.df, aes(iris.df$Sepal.Length)) +
   geom_dotplot(binwidth=0.1, col=&quot;blue&quot;, fill=&quot;blue&quot;, alpha=.7, stackdir = &quot;center&quot;, binaxis = &quot;y&quot;) +
   labs (title=&quot;Sepal Length&quot;, x=&quot;Sepal Length&quot;, y=&quot;Count&quot;) </code></pre>
 <pre><code>## Warning: Removed 1 rows containing non-finite values (stat_bindot).</code></pre>
-<p><img src="03_ggplot_stats_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+<p><img src="03_ggplot_stats_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
 </div>
 <div id="box-and-whisker" class="section level3">
 <h3>Box and Whisker</h3>
@@ -376,7 +418,7 @@ ggplot(data=iris.df, aes(iris.df$Sepal.Length)) +
 ggplot(iris.df, aes(x = Species, y = Sepal.Length))+
   geom_boxplot() </code></pre>
 <pre><code>## Warning: Removed 1 rows containing non-finite values (stat_boxplot).</code></pre>
-<p><img src="03_ggplot_stats_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
+<p><img src="03_ggplot_stats_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
 </div>
 <div id="vioin-plots" class="section level3">
 <h3>Vioin plots</h3>
@@ -386,7 +428,7 @@ ggplot(iris.df, aes(x = Species, y = Sepal.Length))+
   labs (x=&quot;Sepal Length&quot;, y=&quot;Count&quot;) </code></pre>
 <pre><code>## Warning: Ignoring unknown parameters: stackdir, binaxis</code></pre>
 <pre><code>## Warning: Removed 1 rows containing non-finite values (stat_ydensity).</code></pre>
-<p><img src="03_ggplot_stats_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
+<p><img src="03_ggplot_stats_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
 </div>
 <div id="saving-plots" class="section level3">
 <h3>Saving plots</h3>
@@ -396,7 +438,7 @@ ggplot(iris.df, aes(x = Species, y = Sepal.Length))+
   labs (x=&quot;Sepal Length&quot;, y=&quot;Count&quot;) 
 violin.plot</code></pre>
 <pre><code>## Warning: Removed 1 rows containing non-finite values (stat_ydensity).</code></pre>
-<p><img src="03_ggplot_stats_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
+<p><img src="03_ggplot_stats_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
 <pre class="r"><code>#Save the file with sizes
 ggsave(&quot;figures/violin.plot.tiff&quot;,plot=violin.plot, width=6, height=6, dpi = 300)</code></pre>
 <pre><code>## Warning: Removed 1 rows containing non-finite values (stat_ydensity).</code></pre>
@@ -412,26 +454,26 @@ ggsave(&quot;figures/violin.plot.tiff&quot;,plot=violin.plot, width=6, height=6,
 <pre class="r"><code>ggplot(iris.df, aes(x=Species)) +
   geom_point(aes(y=Sepal.Length))</code></pre>
 <pre><code>## Warning: Removed 1 rows containing missing values (geom_point).</code></pre>
-<p><img src="03_ggplot_stats_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
+<p><img src="03_ggplot_stats_files/figure-html/unnamed-chunk-11-1.png" width="672" /></p>
 <p>Now lets add Sepal.Width</p>
 <pre class="r"><code>ggplot(iris.df, aes(x=Species)) +
   geom_point(aes(y=Sepal.Length), color=&quot;blue&quot;) +
   geom_point(aes(y=Sepal.Width), color=&quot;red&quot;)</code></pre>
 <pre><code>## Warning: Removed 1 rows containing missing values (geom_point).</code></pre>
-<p><img src="03_ggplot_stats_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
+<p><img src="03_ggplot_stats_files/figure-html/unnamed-chunk-12-1.png" width="672" /></p>
 <div id="means" class="section level2">
 <h2>Means</h2>
 <p>Now what if you wanted only to show the means</p>
 <pre class="r"><code>ggplot(iris.df, aes(x=Species))+
   stat_summary(aes(y=Sepal.Length), fun.y=mean, geom=&#39;point&#39;, shape=23, size=3, color=&quot;red&quot;, fill=&quot;red&quot;) </code></pre>
 <pre><code>## Warning: Removed 1 rows containing non-finite values (stat_summary).</code></pre>
-<p><img src="03_ggplot_stats_files/figure-html/unnamed-chunk-11-1.png" width="672" /></p>
+<p><img src="03_ggplot_stats_files/figure-html/unnamed-chunk-13-1.png" width="672" /></p>
 <p>Add in the second mean Now what if you wanted only to show the means</p>
 <pre class="r"><code>ggplot(iris.df, aes(x=Species))+
   stat_summary(aes(y=Sepal.Length), fun.y=mean, geom=&#39;point&#39;, shape=23, size=3, color=&quot;red&quot;, fill=&quot;red&quot;) +
     stat_summary(aes(y=Sepal.Width), fun.y=mean, geom=&#39;point&#39;, shape=23, size=3, color=&quot;red&quot;, fill=&quot;blue&quot;) </code></pre>
 <pre><code>## Warning: Removed 1 rows containing non-finite values (stat_summary).</code></pre>
-<p><img src="03_ggplot_stats_files/figure-html/unnamed-chunk-12-1.png" width="672" /></p>
+<p><img src="03_ggplot_stats_files/figure-html/unnamed-chunk-14-1.png" width="672" /></p>
 <p>Now your boss of course wants standard error bars on each mean… no problem</p>
 <pre class="r"><code>ggplot(iris.df, aes(x=Species))+
   stat_summary(aes(y=Sepal.Length), fun.y=mean, geom=&#39;point&#39;, shape=23, size=3, color=&quot;red&quot;, fill=&quot;red&quot;) +
@@ -441,7 +483,7 @@ ggsave(&quot;figures/violin.plot.tiff&quot;,plot=violin.plot, width=6, height=6,
 <pre><code>## Warning: Removed 1 rows containing non-finite values (stat_summary).
 
 ## Warning: Removed 1 rows containing non-finite values (stat_summary).</code></pre>
-<p><img src="03_ggplot_stats_files/figure-html/unnamed-chunk-13-1.png" width="672" /></p>
+<p><img src="03_ggplot_stats_files/figure-html/unnamed-chunk-15-1.png" width="672" /></p>
 <p>you could also do standard deviation</p>
 <pre class="r"><code>ggplot(iris.df, aes(x=Species))+
   stat_summary(aes(y=Sepal.Length), fun.y=mean, geom=&#39;point&#39;, shape=23, size=3, color=&quot;red&quot;, fill=&quot;red&quot;) +
@@ -451,7 +493,7 @@ ggsave(&quot;figures/violin.plot.tiff&quot;,plot=violin.plot, width=6, height=6,
 <pre><code>## Warning: Removed 1 rows containing non-finite values (stat_summary).
 
 ## Warning: Removed 1 rows containing non-finite values (stat_summary).</code></pre>
-<p><img src="03_ggplot_stats_files/figure-html/unnamed-chunk-14-1.png" width="672" /></p>
+<p><img src="03_ggplot_stats_files/figure-html/unnamed-chunk-16-1.png" width="672" /></p>
 <div id="position_dodge---move-points" class="section level3">
 <h3>Position_dodge - move points</h3>
 <p>Now you boss says great but the error bars overlap… can you fix this?</p>
@@ -466,7 +508,7 @@ ggsave(&quot;figures/violin.plot.tiff&quot;,plot=violin.plot, width=6, height=6,
 <pre><code>## Warning: Removed 1 rows containing non-finite values (stat_summary).
 
 ## Warning: Removed 1 rows containing non-finite values (stat_summary).</code></pre>
-<p><img src="03_ggplot_stats_files/figure-html/unnamed-chunk-15-1.png" width="672" /></p>
+<p><img src="03_ggplot_stats_files/figure-html/unnamed-chunk-17-1.png" width="672" /></p>
 <script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
   (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),

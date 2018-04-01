@@ -7,9 +7,12 @@ output:
     toc: true
     toc_float: true
 ---
+## Data Modification and cleaning
+So the pattern of this set of code so far has been how to look at the data visually and how it looks and to see outliers.  The next goal is to be able to clean the data or remove, reoranize or reformat the data and add new transformed varaibles.     
+
 
 ##Load libraries
-##Read files
+We will read in the main files and load the libraries as we have worked with so far.   
 
 ```{r, message=FALSE, warning=FALSE}
 # One new package for summary stats
@@ -20,8 +23,8 @@ library(tidyverse)
 library(lubridate)
 library(scales)
 library(skimr)
-
 library(janitor)
+library(patchwork)
 
 # read in the file
 iris.df <- read_csv("data/iris.csv")
@@ -29,39 +32,41 @@ iris.df <- read_csv("data/iris.csv")
 glimpse(iris.df)
 ```
 
+##Clean data     
+So lets finally use the *janitor* pacakge to clean up this data. This will make working with data sets from other users a bit easier to work with quickly rather than reformatting all the values manually.    
+<br>    
+Note that this will get rid of empty columns and rows if from an excel sheet and will clean up the variable names.   
+
+```{r}
+iris.df <- iris.df %>%
+  clean_names() %>%
+  remove_empty(c("rows", "cols")) 
+
+```
+
+
 ##The pipe
-So lets start thinking about how to string a lot of commands together. We do this using the pipe command ```%>%```. This takes what is on the left and passes it to the right.    
+So lets start thinking about how to string a lot of commands together. Before this we have assigned items to a name or environmental varaible with ```<-``` bu now what we want to do is sort of the opposite.  We want to take an object or output of an object and pass it to the right to do new things with the output. We do this using the pipe command ```%>%```. This takes what is on the left and passes it to the right.    
 
 <br>    
-  
+
+##Pipes and ggplot  
 Lets try this with a plot.  What happens here is it takes the dataframe and then passes it to the ggplot commands. So the dataframe is removed from the ggplot commands. I will show you why in a second that this is really cool.
 
 ```{r}
 iris.df %>% 
-  ggplot(aes(Sepal.Width)) +
-  geom_histogram()
+  ggplot(aes(sepal_width)) +
+  geom_histogram(binwidth  = 0.25)
 ```
 
 
-##Janitor     
-So there is a package Janitor that will clean up the dataframe you read in and make it easier to work with. The ```clean_names()``` will remove all odd characters, convert periods to _ and make all lower case. This is often easier to work with. 
-Lets first fix all those crazy names
-```{r}
-iris.df <- read_csv("data/iris.csv") %>% clean_names()
-  # remove_empty_rows() %>% # removes empty rows if they are thee
-  # remove_empty_cols() # removes the empty column is they are there
-
-glimpse(iris.df)
-
-```
 
 ##Selecting variables
-What if you wanted to select only certain variables? Now lets use two ways to do the same thing.....
+What if you wanted to select only certain variables to work with? Now lets use two ways to do the same thing.....   
 
 ```{r}
 petal_width.df <- select(iris.df, species, petal_width)
 ```
-
 
 
 You can do the same thing with the pipe command   
@@ -77,10 +82,54 @@ petal.df <- iris.df %>% select(species, species, starts_with("petal"))
 ```
 
 
+#Filtering data   
+What if you wanted to work with only one species for each of the charactes. This will select only those individuals that are setosa. Note that in this you need *`= = `*. 
+```{r}
+setosa.df <- iris.df %>% filter(species=="setosa")
+```
+<br>
+##Boolean search terms of interest    
+```{r table2, echo=FALSE, message=FALSE, warnings=FALSE, results='asis'}
+tabl <- "  # create a simple table # should be a dataframe to make it with kable
+| Search                    | code        |  
+|---------------------------|-------------|
+| greater than              |   `>`       |
+| greater than or equal to  |   `>=`      |  
+| less than                 |   `<`       |
+| less than or equal to     |   `<=`      | 
+| is NA                     |   is.na     |
+| is not NA                 |   !is.na    |
+| is not equal to           |   !=        |
+| is not x                  |   !x        |
+| x | y                     |	x OR y      |  
+| x & y                     |	x AND y     |  
 
 
 
 
+"
+cat(tabl) # output the table in a format good for HTML/PDF/docx conversion
+```
+<br>
+
+```{r}
+petal_width_lessthan.df <- iris.df %>% filter(sepal_width < 3.5)
+```
+
+
+```{r}
+petal_width_lessthanequal.df <- iris.df %>% filter(sepal_width <= 3.5)
+```
+
+##What if you wanted to combine different filters - you can use *`&` or `|`*    
+```{r}
+petal_width_combined <- iris.df %>% filter(sepal_width > 2 & sepal_width < 3)
+```
+
+##What if you wanted see all NA values
+```{r}
+iris.df %>% filter(is.na(sepal_length))
+```
 
 
 

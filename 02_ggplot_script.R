@@ -161,7 +161,7 @@ ggplot(streams.df, aes(datetime, no3_mgl, color=site)) +
   scale_color_manual (name="Sites",	
                       labels=c("Indian Cr.", "Vermillion Cr."),	
                       values=c("red","darkblue")) +	
-  labs(x = "", y = "Nitrate NO3 (mg L^-1") +	
+  labs(x = "", y = "Nitrate NO3 (mg L^-1)") +	
 theme(	
     # LABLES APPEARANCE	
     axis.title.x=element_text(size=12, face="bold"),	

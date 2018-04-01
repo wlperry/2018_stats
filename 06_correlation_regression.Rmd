@@ -1,0 +1,381 @@
+---
+title: "Data Modification"
+author: "Bill Perry"
+date: "2018/03/14"
+output:
+  html_document:
+    toc: true
+    toc_float: true
+---
+## Correlation and Regression
+
+
+##Load libraries
+We will read in the main files and load the libraries as we have worked with so far.   
+
+```{r, message=FALSE, warning=FALSE}
+# One new package for summary stats
+#install.packages("broom")
+# install.packages("GGally")
+# install.packages("car")
+# install.packages("gvlma")
+
+
+# load the libraries each time you restart R
+library(tidyverse)
+library(lubridate)
+library(scales)
+library(skimr)
+library(janitor)
+library(patchwork)
+# library(reshape2)
+library(broom)
+library(GGally)
+library(corrplot)
+library(car)
+library(gvlma)
+
+# read in the file
+iris.df <- read_csv("data/iris.csv") %>%
+  clean_names() %>%
+  remove_empty(c("rows", "cols")) 
+
+glimpse(iris.df)
+```
+
+##An excellent description of the stats for AOV and regression is here:  
+https://www.zoology.ubc.ca/~schluter/R/fit-model/
+
+###Summary Statistics for the better look
+###So this is a lot different than thinking about data from excel    
+Lets try to do the summary stats on the data now and see how it differs
+```{r}
+# the data you want to look at
+
+skim(iris.df)
+
+```
+   
+```{r}
+iris.df %>% group_by(species) %>% skim_to_wide()
+
+```
+
+## Wide to long format
+```{r}
+# this will add an index to the dataframe so you know what individual is which
+iris_long.df <- iris.df %>% 
+  mutate(individual = row_number()) %>% 
+  gather(trait, measure, -species, - individual)
+
+```
+
+
+## Outliers
+
+```{r}
+# Box Plots of data
+iris_long.df %>% group_by(species, trait) %>% 
+  ggplot( aes(x = species, y = measure, color = species, fill=species, alpha=0.3))+
+  geom_boxplot() 
+```
+
+
+## Test for normality of data and using the broom package     
+So I think this is premature but some people like to test the normality of the data but really you should be assessing the normality of the residuals. But here it goes...
+
+```{r}
+# turn off scientific notaton
+options(scipen = 999)
+# to turn back on 
+#options(scipen = 0)
+
+# Test for normality of each group and store in shapirowilktests
+# This uses the broom package to get clean output of the test 
+iris_long.df %>% group_by(species, trait) %>% do(tidy(shapiro.test(.$measure)))
+
+#You can do this on all variables faster with if there was only one grouping
+# tapply(iris_long.df$measure, iris_long.df$species, shapiro.test)
+```  
+
+
+
+
+## Correlations Plots    
+This info is from:     
+http://stackoverflow.com/questions/29697009/correlation-matrix-plot-with-ggplot2      
+and    
+https://www.r-bloggers.com/plot-matrix-with-the-r-package-ggally/     
+and   
+http://ggobi.github.io/ggally/#canonical_correlation_analysis     
+```{r message=TRUE, warning=TRUE}
+
+
+ggpairs(iris.df[,1:4])
+
+
+```
+
+```{r}
+# if you only wanted to do this on a single species
+# Correlation graphs of one species
+setosa.df <- iris.df %>% #na.omit() %>%
+  filter(species=="setosa")   
+
+ggpairs(setosa.df[,1:4])
+
+```
+
+
+
+##Look at the correlation matrix
+```{r}
+# correlation matrix of the data with only the numeric data in a dataframe
+# the old way - the same really
+# cor(setosa.df[,1:4], method = "pearson") # , method = c("pearson", "kendall", "spearman")
+# need to only have numeric varaibles
+iris.df %>% select(-species) %>% cor() 
+
+```
+
+##Linear Regression  
+Linear regression models    
+```{r}
+# Fit our regression model
+# regression formula and dataframte
+
+sepal.model <- lm(data=setosa.df, sepal_length ~ sepal_width) 
+
+# Summarize and print the results
+summary(sepal.model) # show regression coefficients table
+
+```
+
+##AOV table of regression
+```{r}
+anova(sepal.model)
+
+```
+
+```{r}
+# # # # # # # # # # # # # # # # # # 
+# TYPE II SUM OF SQUARES
+#
+#
+# # # # # # # # # # # # # # # # # # 
+Anova(sepal.model, type="II")
+```
+
+```{r}
+# # # # # # # # # # # # # # # # # # 
+# TYPE III SUM OF SQUARES
+#
+## # # # # # # # # # # # # # # # # # 
+Anova(sepal.model, type="III")
+# NOTE THERE IS NO DIFFERENCE
+
+```
+
+###Plot of the Regression {#simple_regplot}
+```{r}
+plot(data=setosa.df, sepal_length ~ sepal_width, main="Regression Plot")
+abline(sepal.model, col="red")
+```
+
+###Regression plot with GGPLOT which is a bit nicer in my opinion {#ggplot_regplot}
+```{r}
+ggplot(setosa.df, aes(x = sepal_width, y = sepal_length)) + 
+  geom_smooth(method = "lm") +
+  geom_point()
+```
+
+###We can use this to get more information about the model fit
+```{r}
+# Confidence intervals for the sepal model
+confint(sepal.model)
+```
+
+##Linear Regresson Assumptions  
+Ordinary least squares regression relies on several assumptions   
+1. residuals are normally distributed and homoscedastic   
+2. errors are independent    
+3. relationships are linear     
+Investigate these assumptions visually by plotting your model:  
+
+##Histogram of residuals
+```{r}
+# histogram of residuals
+hist(residuals(sepal.model))
+```
+
+##Diagnostic Plots
+```{r}
+par(mar = c(4, 4, 2, 2), mfrow = c(1, 2)) 
+plot(sepal.model, which = c(1, 2)) # "which" argument optional
+```
+
+
+###Non‐constant Error Variance or Homoscedasticity 
+```{r}
+# Evaluate homoscedasticity
+# non-constant error variance test
+ncvTest(sepal.model)
+```
+
+###Test for normality of residuals      
+to confirm the qqplot  
+```{r}
+#Test for normality of residuals
+shapiro.test(sepal.model$res)
+
+```  
+   
+## Save residuals for further analyses 
+```{r}
+# # now to put the residuals next to the data and make sure that NAs are included
+# Not sure why it has an error but it works.
+setosa.df$residuals[!is.na(setosa.df$sepal_length)]<-residuals(lm(data=setosa.df, sepal_length ~ sepal_width, na.action=na.omit))
+
+head(setosa.df)
+```
+  
+
+##Now to add in the predicted values    
+you could also do this with a formula from the output of the model  
+```{r}
+# this produces the fitted values for the model
+
+fitted(sepal.model)
+```
+
+
+##Store fitted values in dataframe 
+```{r}
+# now to see a plot of fitted and observed-----
+setosa.df$fitted[!is.na(setosa.df$sepal_length)]<-fitted(lm(data=setosa.df, sepal_length ~ sepal_width, na.action=na.omit))
+
+head(setosa.df)
+
+ggplot(setosa.df)  +
+    geom_point(aes(x = sepal_width, y = sepal_length), color="blue")+
+     geom_point(aes(x = sepal_width, y = fitted), color="red")+
+    geom_line(aes(x = sepal_width, y = fitted), color="red")
+```
+    
+##Other packages that do similiar things maybe better.       
+    
+###The gvlma package can do a lot of this automatically {#gvlma}
+```{r}
+ #install.packages("gvlma")
+# library(gvlma)
+
+# Global test of model assumptions
+gvmodel <- gvlma(sepal.model)
+summary(gvmodel)
+```    
+    
+    
+  
+  
+  
+  
+##Advanced    
+This is all secondary and more advanced items that you may or may not wish to deal with.  
+   
+   
+### We can also look to see what is in the model that is stored as Values   
+ 
+```{r}
+class(sepal.model)
+names(sepal.model)
+methods(class = class(sepal.model))[1:9]
+```
+
+
+
+The code above came from    
+http://tutorials.iq.harvard.edu/R/Rstatistics/Rstatistics.html    
+there are a lot of good examples of comparing models and a lot more about regression not included here.
+
+###Different code for a QQPlot for normality
+
+```{r}
+qqPlot(sepal.model, main="QQ Plot") #qq plot for studentized resid
+```
+
+
+###leverage plots  
+```{r}
+leveragePlots(sepal.model) # leverage plots
+```
+
+###Assess the role of outliers 
+
+```{r}
+# Assessing Outliers
+outlierTest(sepal.model) # Bonferonni p-value for most extreme obs
+
+```
+
+###Examine the influence plot using Cook's Distance
+```{r}
+# Influence Plot
+influencePlot(sepal.model, id.method="identify", main="Influence Plot", sub="Circle
+size is proportial to Cook's Distance" )
+
+```
+
+
+
+   
+###Plot studentized residuals vs. fitted values  
+  
+```{r}
+# plot studentized residuals vs. fitted values
+spreadLevelPlot(sepal.model)
+```
+  
+Non‐independence of Errors  
+```{r}
+# Test for Autocorrelated Errors
+durbinWatsonTest(sepal.model)
+```
+
+
+
+
+
+
+###STANDARDIZED REGRESSION - CONVERTED TO Z SCORES
+
+```{r}
+# # Regression analyses, standardized
+sepal_z.model <- lm(scale(setosa.df$sepal_length) ~ scale(setosa.df$sepal_width))
+summary(sepal_z.model)
+
+# # The function fitted returns predicted scores whereas the function resid returns residuals
+# # THIS IS HOW TO SAVE THE RESIDUALS INTO THE VARIABLE E FOR EROR
+# ex$e <- resid(modelweight_lenght.z)
+```
+
+###Confidence intervals of the standardized regression
+```{r}
+confint(sepal_z.model)
+```
+
+
+
+
+
+
+   
+
+<!-- Global Site Tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-88373117-4"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments)};
+  gtag('js', new Date());
+
+  gtag('config', 'UA-88373117-4');
+</script>

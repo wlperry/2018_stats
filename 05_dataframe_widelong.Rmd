@@ -1,0 +1,109 @@
+---
+title: "Data Modification"
+author: "Bill Perry"
+date: "2018/03/14"
+output:
+  html_document:
+    toc: true
+    toc_float: true
+---
+## Dataframe wide to long and long to wide 
+
+
+##Load libraries
+We will read in the main files and load the libraries as we have worked with so far.   
+
+```{r, message=FALSE, warning=FALSE}
+# One new package for summary stats
+#install.packages("psych")
+
+# load the libraries each time you restart R
+library(tidyverse)
+library(lubridate)
+library(scales)
+library(skimr)
+library(janitor)
+library(patchwork)
+library(reshape2)
+
+# read in the file
+iris.df <- read_csv("data/iris.csv") %>%
+  clean_names() %>%
+  remove_empty(c("rows", "cols")) 
+
+glimpse(iris.df)
+```
+
+##Add a unique idenitifier
+```{r}
+# this will add an index to the dataframe so you know what individual is which
+iris.df <- iris.df %>% mutate(individual = row_number())
+```
+
+## now the idea of reformatting a dataframe    
+
+How to make a database into long format.     
+
+```{r}
+
+iris_long.df <- iris.df %>% gather(trait, measure, -species, - individual)
+
+```
+
+##Reshape 2
+Sometimes I use this and it might make more sense to some and does about the same thing.
+```{r}
+iris_long_reshape2.df <- iris.df %>%
+                melt(
+                     variable.name = "trait",
+                     value.names = "meausre",
+                     id.vars = c("species", "individual")
+                     )
+```
+
+
+##Long to Wide format    
+
+
+Using tidyr
+```{r}
+iris_wide.dff <- iris_long.df %>% 
+  spread(trait, measure)
+```
+
+
+Using Reshape2
+```{r}
+iris_wide_reshape.dff <- iris_long.df %>% 
+  dcast(individual + species ~ trait, value.var = "measure")
+```
+
+
+##Spread and Unite
+
+unite
+```{r}
+iris_unite.df <- iris.df %>% 
+  unite("ind_species", individual, species, sep="_")
+```
+
+separate
+```{r}
+iris_spread.df <- iris_unite.df %>% 
+  separate(ind_species, into=c("individual", "species"), sep="_")
+```
+
+
+
+   
+   
+
+<!-- Global Site Tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-88373117-4"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments)};
+  gtag('js', new Date());
+
+  gtag('config', 'UA-88373117-4');
+</script>

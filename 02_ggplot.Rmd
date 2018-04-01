@@ -65,6 +65,10 @@ library(lubridate)
 library(readxl)
 library(scales)
 library(skimr)
+library(patchwork)
+
+# install.packages("devtools")
+# devtools::install_github("thomasp85/patchwork")
 
 # read in the csv file
 # note here we are using relative file paths to find the file
