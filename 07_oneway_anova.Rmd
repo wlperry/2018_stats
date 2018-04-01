@@ -1,0 +1,312 @@
+---
+title: "Data Modification"
+author: "Bill Perry"
+date: "2018/03/14"
+output:
+  html_document:
+    toc: true
+    toc_float: true
+---
+## One way Anova
+
+## Great Reading
+A Great coverage of this material is Dolph Schluters page
+https://www.zoology.ubc.ca/~schluter/R/fit-model/
+
+The key thing here is the use of the car package as it is essential for unbalanced designs and the use of Type III sum of squares otherwise Type I sum of squares are used which is rarely good. Weather to use Type II or III is a contentious issue and we will just go with Type III for all of our work
+
+##Load libraries
+We will read in the main files and load the libraries as we have worked with so far.   
+
+```{r, message=FALSE, warning=FALSE}
+# One new package for summary stats
+#install.packages("broom")
+# install.packages("GGally")
+# install.packages("car")
+# install.packages("gvlma")
+
+
+# load the libraries each time you restart R
+library(tidyverse)
+library(lubridate)
+library(scales)
+library(skimr)
+library(janitor)
+library(patchwork)
+# library(reshape2)
+library(broom)
+library(GGally)
+library(corrplot)
+library(car)
+
+
+# read in the file
+iris.df <- read_csv("data/iris.csv") %>%
+  clean_names() %>%
+  remove_empty(c("rows", "cols")) 
+
+glimpse(iris.df)
+```
+
+
+###Summary Statistics for the better look
+###So this is a lot different than thinking about data from excel    
+Lets try to do the summary stats on the data now and see how it differs
+```{r}
+# the data you want to look at
+
+skim(iris.df)
+
+```
+   
+```{r}
+iris.df %>% group_by(species) %>% skim_to_wide()
+```
+
+## Wide to long format
+```{r}
+# this will add an index to the dataframe so you know what individual is which
+iris_long.df <- iris.df %>% 
+  mutate(individual = row_number()) %>% 
+  gather(trait, measure, -species, - individual)
+
+```
+
+
+## Outliers
+```{r}
+# Box Plots of data
+iris_long.df %>% group_by(species, trait) %>% 
+  ggplot( aes(x = trait, y = measure, color = species, fill=species))+
+  geom_boxplot(aes(alpha=0.3)) 
+```
+
+
+These look good for the most part with only one or two significant. Your choice to transform or not.       
+
+##Factors     
+Make sure the categorical variable is a factor    
+Rearrange the order of groups so that control group is first, followed by treatment groups.     
+you can do this by:
+```{r}
+# Make Factors from the different levels long way
+# iris_long.df$species <- as.factor(iris_long.df$species)  
+# iris_long.df$trait <- as.factor(iris_long.df$trait) 
+
+# Make Factors dplyr
+iris_long.df <- iris_long.df %>%
+  mutate(
+   sex = factor(species, 
+                  labels = c("setosa", "versicolor", "virginica")),
+    trait = factor(trait, 
+                  labels = c("sepal_length", "sepal_width", "petal_length", "petal_width"))
+  )
+
+
+
+```
+
+When doing this with Type 1 sum of squares putting the control first is critical
+`data$categories <- factor(data$categories, levels=c("c","a","b","d") `
+
+
+##Separate out the traits to new dataframes for analyses.  
+First lets subset the data into the respective traits to analyze one of them at a time  
+```{r}
+# # THIS IS THE BEST WAY TO SUBSET DATAFRAMES!!!! WOW!! ----
+# list2env(split(iris_long.df, iris_long.df$trait), envir = .GlobalEnv)
+# 
+# 
+# # # THIS IS HOW TO DO IT WITH TREATMENTS - MAKING SEPARATE DATAFRAMES
+# # t <- unique(iris_long.df$trait)
+# # for (i in trait){
+# #   x <- dplyr::filter(iris_long.df, trait == i)
+# #   t<-paste("trait","_",i, sep="")
+# #   assign(t,x)
+# #   }
+# # rm(x, t, i, trait)
+```
+
+
+
+## Test for normality of data and using the broom package     
+So I think this is premature but some people like to test the normality of the data but really you should be assessing the normality of the residuals. But here it goes...
+
+```{r}
+# turn off scientific notaton
+options(scipen = 999)
+# to turn back on 
+#options(scipen = 0)
+
+# Test for normality of each group and store in shapirowilktests
+# This uses the broom package to get clean output of the test 
+iris_long.df %>% group_by(species, trait) %>% do(tidy(shapiro.test(.$measure)))
+
+#You can do this on all variables faster with if there was only one grouping
+# tapply(iris_long.df$measure, iris_long.df$species, shapiro.test)
+```  
+
+
+##Test for homogenetiy of variances       
+
+Best to use the Levenes test compared to the Bartlet test    
+uses the car package      
+
+http://www.cookbook-r.com/Statistical_analysis/Homogeneity_of_variance/   
+
+Note however that this is doing the homogeneity test on all traits and not each one which is what you really should do and is not often done. Need to check on this though.
+
+```{r}
+#Test for homogeneity of variances by groups
+leveneTest(sepal_length ~ species, data=iris.df)
+
+#Compared to the Bartlet test
+bartlett.test(sepal_length ~ species, data=iris.df)
+
+# Bartlett test with interaction
+# bartlett.test(measure ~ interaction(species,trait), data=iris.df)
+```
+
+
+
+###The ONE WAY ANOVA  
+The AOV Method is rather straight forward.  
+```{r}
+#Run the anova and store it in the model in Values
+sepal_lenght.model.lm = lm(sepal_length ~ species, data = iris.df)
+
+#Obtain the anova table
+summary(sepal_lenght.model.lm)
+```
+
+```{r}
+#Obtain the summary of the model
+#This is the AOV summary
+anova(sepal_lenght.model.lm)
+```
+
+##AOV
+The anova method is also rather straight forward they give essentialy the same information 
+
+```{r}
+#Run the anova and store it in the model in Values
+sepal.length.model.aov = aov(sepal_length ~ species, data = iris.df)
+
+#Obtain the anova table
+anova(sepal.length.model.aov)
+```
+
+
+####What is hard to understand here is how to interpret this table.   
+Crawley 2012 The R book does a good job at this and it has been paraphrased here.   
+The coefficients table has as many rows as there are parameters in the model.  
+The top row, labelled (Intercept), is the only mean value in the table: it is the mean for the factor level that comes first in the alphabet.  
+The other four rows are differences between means (each mean compared to the control mean in this example).   
+The second column contains the unreliability estimates. The first row contains the standard error of a mean (28.75). The other four rows contain the standard error of the difference between two means. The significance stars are highly misleading, suggesting wrongly that there are significant contrasts for this model. The problem arises because the default ‘Treatment contrasts’ in R are not orthogonal. The lower rows are being compared with the first row. Pages 428 Ccrawley   
+
+
+###Confidence intervals of treatment parameters   
+https://www.r-bloggers.com/one-way-analysis-of-variance-anova/
+The function confint returns confidence intervals on the treatment parameters which are by default 95% confidence intervals:    
+not sure why the test requires aov and wont work on lm   {#confidence}
+```{r}
+#Confidence intervals of the values
+confint(sepal.length.model.aov)
+```
+
+###We can look at effect sizes  
+not sure why the test requires aov and wont work on lm  {#effectsize} 
+```{r}
+#Effect sizes of the variables
+model.tables(sepal.length.model.aov,se=T)
+
+```
+
+###You can also look at the means of the values from the AOV.  
+not sure why the test requires aov and wont work on lm  
+```{r}
+#Means of the values from the AOV
+model.tables(sepal.length.model.aov, "means", se=T)
+```
+
+###Now to plot model residuals versus fitted values to investigate the model assumptions.    
+
+###The base R approach {#plots}
+```{r}
+#Base R plots
+plot(fitted(sepal.length.model.aov), residuals(sepal.length.model.aov))
+```
+
+###Histogram of residuals
+```{r}
+#Histogram of residuals
+hist(residuals(sepal.length.model.aov), 
+     col="darkgray")
+```
+
+###Visual check for normality of residuals
+```{r}
+# check for normally distributed data
+qqnorm(sepal.length.model.aov$res)
+```
+
+###Test for normality of residuals {#residnormality}
+```{r}
+#Test for normality of residuals
+shapiro.test(sepal.length.model.aov$res)
+
+```  
+
+
+
+###Post hoc comparisons {#posthoc}
+```{r}
+library(lsmeans)
+# Comparisons of species
+lsm = lsmeans(sepal.length.model.aov, 
+              "species",
+              adjust="bonferroni")
+### Means sharing a letter in .group are not significantly different
+cld(lsm, 
+    alpha=.05,
+    Letters=letters)
+```
+
+###Examine the distribution of the data for each group of Sepal.Length
+```{r}
+
+#Examine the distribution of the data for each group of Sepal.Length
+iris_long.df %>% filter(trait=="sepal_length")  %>% ggplot(aes(x= species, y=measure))+ 
+  geom_boxplot() +
+  annotate("text", x="setosa", y=8, label= "A",fontface="bold", size=10 ) + 
+  annotate("text", x="versicolor", y=8, label= "B",fontface="bold", size=10 ) + 
+  annotate("text", x="virginica", y=8, label= "C", fontface="bold", size=10) +
+  labs(y="Sepal Length")
+```
+
+#Now to GEEK OUT!!! We can do this on all at the same time
+##HOLY MACKAREL THIS IS COOL!!! and it can save as a clean dataframe but does not save as models so it is not that helpful {#geek}
+```{r}
+# WOW JUST WOW
+library(broom)
+iris_long.df  %>%
+  group_by(trait) %>%
+  do(model = aov(measure ~ species, data = .)) %>% 
+  glance(model) # or tidy(model) - this is to see the data in a clean way
+
+```
+
+
+
+
+   
+
+<!-- Global Site Tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-88373117-4"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments)};
+  gtag('js', new Date());
+
+  gtag('config', 'UA-88373117-4');
+</script>
