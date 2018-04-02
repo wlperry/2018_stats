@@ -1,0 +1,412 @@
+---
+title: "Data Modification"
+author: "Bill Perry"
+date: "2018/03/14"
+output:
+  html_document:
+    toc: true
+    toc_float: true
+---
+## Two Way Anovas
+
+###Ok so this is a completely fake dataset that I will update soon to make it more useful to illustrate Type I vs Type III errors but for now we will go with it.
+
+
+
+###This section is for TWO WAY ANOVAs   
+#### The items covered in this page are       
+1. [Load libraries](#load)    
+2. [Make separate Dataframes](#make)  
+3. [Make one dataframe and clean up](#bind)    
+4. [Get ready for ANOVA](#factors)       
+5. [Boxplots](#box)    
+6. [Test for homogeneity of variances](#homogeneity)   
+7. [Tests for normality](#normality)     
+8. [New summary statistics with RMISC](#summary_stats)  
+9. [Effect plots](#plots)   
+    i. [main effects](#main_effects)  
+    ii. [Interaction Plots ](#interact_plots)  
+10. [Finally the two way ANOVA](#two_way_aov)
+    i. [AOV summary](#summary)
+    ii. [Type I - WRONG if unblaanced](#type_I)
+11. [Assumptions of the model](#assumptions)
+12. [Post Hoc tests](#post_hoc)
+    i. Main effects only
+    ii. [Interaction effects ](#post_hoc_interact)
+
+####An absolutley great coverage of this material is Dolph Schluters page at:
+https://www.zoology.ubc.ca/~schluter/R/fit-model/
+
+The key thing here is the use of the car package as it is essential for unbalanced designs and the use of Type III sum of squares otherwise Type I sum of squares are used which is rarely good. Weather to use Type II or III is a contentious issue and we will just go with Type III for all of our work
+
+###Load the libraries and data {#load}
+```{r, message=FALSE, warning=FALSE}
+# Standard use packages
+library(tidyverse)
+library(ggplot2)
+library(dplyr)
+library(tidyr)
+library(readr)
+
+
+#specific to anova and 2 way anova
+library(broom)
+library(car)
+library(Rmisc)
+library(Hmisc)
+library(lsmeans)
+# library(pwr)
+# library(multcompView) # interferes with DPLYR load at the very end if we need to
+
+
+# so rather han load data we are going to make it up from scratch:
+# set up the sample sizes for each of the fixed varaibles we have
+# male OR in lakes
+orml=50
+# female OR in lakes
+orfl=50
+# male OR in streams
+orms=50
+# female OR in streams
+orfs=50
+```
+
+###Now to make separate dataframes {#make}
+```{r}
+# DATASET 1 ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
+#make dataframe for lake male OR
+# create 50 random numbes between 34 and 55
+
+set.seed(3)
+cl <- rnorm(orml, 38, 1.85)
+sp <- replicate(orml, "or")
+habitat <- replicate(orml, "lake")
+sex <- replicate(orml, "male")
+or_m_lake <- cbind(habitat, sp, sex, cl)
+
+# DATASET 2 ---- ---- ---- ---- ---- ---- ---- ----
+#make dataframe for lake female OR
+# create 50 random numbes between 34 and 60
+set.seed(55)
+cl <- rnorm(orfl, 39, 1.75)
+sp <- replicate(orfl, "or")
+habitat <- replicate(orfl, "lake")
+sex <- replicate(orfl, "female")
+or_f_lake <- cbind(habitat, sp, sex, cl)
+
+# DATASET 3 ---- ---- ---- ---- ---- ---- ---- ----
+#make dataframe for stream male OR
+# create 50 random numbes between 28 and 38
+set.seed(95)
+cl <- rnorm(orms, 33, 1.5)
+sp <- replicate(orms, "or")
+habitat <- replicate(orms, "stream")
+sex <- replicate(orms, "male")
+or_m_stream <- cbind(habitat, sp, sex, cl)
+
+# DATASET 4 ---- ---- ---- ---- ---- ---- ---- ----
+#make dataframe for stream female OR
+# create 50 random numbes between 28 and 50
+set.seed(75)
+cl <- rnorm(orfs, 36, 2.5)
+sp <- replicate(orfs, "or")
+habitat <- replicate(orfs, "stream")
+sex <- replicate(orfs, "female")
+or_f_stream <- cbind(habitat, sp, sex, cl)
+```
+
+
+
+###Now to bind the dataframes together and clean up the code a bit {#bind}
+```{r}
+# Bind the dataframes together ----
+#Rbind merges things top to bottom
+or_ls.df <- as.data.frame(rbind(or_f_lake, or_m_lake, or_f_stream, or_m_stream))
+
+# Make some new columns ----
+#make a new column for some things below
+or_ls.df <- unite_(or_ls.df, "sp_sex_habitat", c("sp", "sex","habitat"), sep="_", remove=FALSE)
+
+#Get ride of all the garbage----
+rm(cl, habitat, sex, sp, or_f_lake, or_m_lake, or_f_stream, or_m_stream)
+
+#check dataframe and notice that cl is a factor
+# sapply(or_ls.df, class)
+
+# to convert to numeric takes this to make sure the number is preserved
+# note this is a pain but it is how it has to be done.
+or_ls.df$cl <- as.numeric(as.character(or_ls.df$cl))
+
+# take the log of the carapace length
+or_ls.df$logcl <- log(or_ls.df$cl)
+
+head(or_ls.df)
+```
+
+###Now to look at the mechanics of a 2 WAY ANOVA - the set up {#factors}
+```{r}
+###NOW to two way anova ----
+# need to make the categroical variable into factors 
+or_ls.df$sex <- as.factor(or_ls.df$sex)
+or_ls.df$sp <- as.factor(or_ls.df$sp)
+or_ls.df$habitat <- as.factor(or_ls.df$habitat)
+or_ls.df$sp_sex_habitat <- as.factor(or_ls.df$sp_sex_habitat)
+```
+
+###Boxplots {#box}
+```{r}
+# Look at the data with box plots
+or_ls.df %>%
+  ggplot() +
+  geom_boxplot(aes(x= sp_sex_habitat, y=cl)) +
+  labs(y="Carapace length")
+```
+
+###Test for homogenetiy of variances {#homogeneity} 
+```{r}
+
+# Best to use the Levenes test compared to the Bartlet test    
+# uses the car package   
+
+# http://www.cookbook-r.com/Statistical_analysis/Homogeneity_of_variance/    
+ 
+# #Test for homogeneity of variances by groups
+leveneTest(cl ~ sp_sex_habitat, data=or_ls.df)
+
+#Compared to the Bartlet test
+bartlett.test(cl ~ sp_sex_habitat, data=or_ls.df)
+```
+
+THIS IS FOR 2 Way AOV
+With multiple independent variables, the interaction() function 
+ must be used to collapse the IV’s into a single variable with all 
+ combinations of the factors. If it is not used, then the will be the 
+ wrong degrees of freedom, and the p-value will be wrong.
+
+###Test for normality of data {#normality}
+
+```{r}
+# SHAPIRO_WILK TEST FOR NORMALITY----
+# turn off scientific notaton
+options(scipen = 999)
+# to turn back on
+#options(scipen = 0)
+
+# Test for normality of each group and store in shapirowilktests
+# This uses the broom package to get clean output of the test
+or_ls.df %>% group_by(sex, habitat) %>% do(tidy(shapiro.test(.$cl)))
+# they are a bit off surprisingly but go with it anyway and test residuals
+# to see if the result is the same
+
+```
+
+### Some basic Statistics in a new way {#summary_stats}
+
+```{r}
+#Summary Stats----
+# Do this to get the for N, Means Sd, Se, and CI
+# need Rmisc library installed to do this
+summary = summarySE(or_ls.df, 
+                measurevar="cl", 
+                groupvars=c("habitat","sex"))
+summary
+```
+
+### Lets look at the basic plots of the effects and interactions{#main_effects}
+```{r}
+#Simple box plot of main effect and interaction
+# this is the main effect of sit and season
+boxplot(cl ~ sex,
+        data = or_ls.df,
+        xlab = "Sex",
+        ylab = "carapace length")
+```
+
+```{r}
+#Simple box plot of main effect and interaction
+# this is the main effect of sit and season
+boxplot(cl ~ habitat,
+        data = or_ls.df,
+        xlab = "Habitat",
+        ylab = "carapace length")
+```
+
+```{r}
+# box plots of the site and season
+boxplot(cl ~ habitat:sex,
+        data = or_ls.df,
+        xlab = "Habitat",
+        ylab = "carapace length")
+```
+
+###Interaction Plots {#interact_plots}
+```{r}
+# Interaction Plots----
+# This will generate two plots to compare groups according to the 
+# and examine interactions
+# par(mfrow=c(1,3)) could use this to make multiple per page but is not great
+interaction.plot(or_ls.df$habitat, or_ls.df$sex, or_ls.df$cl)
+```
+
+```{r}
+interaction.plot(or_ls.df$sex,  or_ls.df$habitat, or_ls.df$cl)
+```
+
+
+###TWO WAY AOV MODEL----  
+ This is the two way ANOVA  
+What you are looking for in here is the * after the value. if that is there then
+it is signficant. Below you would first look at the one where it is
+site:season - because if this is signifcant this is all you will analyze in
+the post anova or post F tests. If the interaction of site:season is not
+significant you would then look at the individual factors of season or site
+indiependently.   
+   
+The way to read the results below is that the interaction and sites are
+not significant but season is significant and since there are only two you
+really dont need to do the post F test as it will just say the same thing but
+it woudl be differnet if you and more than one season for instance.   
+   
+    
+### NOW FOR THE 2 WAY ANOVA {#two_way_aov}
+```{r}
+#THE TWO WAY AOV----
+# Here is a two way AOV looking at site and season with the pairwise comparisons at the end
+# Setting something as FACTOR makes it so that you are looking at these as categorical varaibles to compare the means of the two
+# Type III is used for unbalanced designs when there are unequal numbers of samples in teh various categories or groups which is an unbalanced design
+
+
+# Set it up for Type III SS ANOVA
+options(contrasts = c("contr.sum", "contr.poly"))
+
+# Fit the linear model and conduct ANOVA
+model = lm(cl ~ sex*habitat, data=or_ls.df)
+Anova(model, type="III")       # Use type="III" ALWAYS!!!!
+
+
+```
+
+
+###Now a summary of the model {#summary}
+```{r}
+# Are they the same? = Try running model with different data
+
+# this produces R-Squared and overall p-value and parameter estimates
+summary(model)     # Produces r-square, overall p-value, parameter estimates
+
+```
+
+{#type_I}
+```{r}
+## THIS WILL DO A TYPE I ANOVA
+ anova(model)      # does the type I ANOVA 
+# NOTICE THE LOWER CASE A!!!!!
+ 
+```
+
+
+### Checking assumptions of the model   {#assumptions}
+#### Histogram of residuals from a linear model.    
+#  The distribution of these residuals should be approximately normal.
+```{r}
+hist(residuals(model), 
+     col="darkgray")
+```
+
+
+### Graphic test for normal residuals
+```{r}
+qqnorm(model$res)
+```
+
+
+### test for normality----
+```{r}
+shapiro.test(model$res)
+```
+
+# A plot of residuals vs. predicted values.
+# The residuals should be unbiased and homoscedastic.
+# For an illustration of these properties, see this diagram by
+# Steve Jost at DePaul University:
+#  # condor.depaul.edu/sjost/it223/documents/resid-plots.gif.
+```{r}  
+plot(model,1)
+```
+
+#Equality of variances with Levenes
+# Check for equality of variance across the two groups. 
+# If this is signficant we will have to transform the data. 
+# The Levene's test uses the library(car)
+```{r}
+leveneTest(or_ls.df$cl ~ or_ls.df$sex * or_ls.df$habitat)
+```
+
+### POST HOC ANALYSIS {#post_hoc}
+# One advantage of the using the  package for post-hoc tests is that it  
+# can produce comparisons for interaction effects.
+```{r}
+lsmseason = pairs(lsmeans(model,"habitat"), adjust="bonferroni")
+
+### Means sharing a letter in .group are not significantly different
+# when more than one categorical varaible
+# cld(lsmseason, 
+#     alpha=.05, 
+#     Letters=letters)
+
+test(lsmseason)
+```
+
+```{r}
+lsmseason.sex = pairs(lsmeans(model,"sex"), adjust="bonferroni")
+
+### Means sharing a letter in .group are not significantly different
+# when more than one categorical varaible
+# cld(lsmseason, 
+#     alpha=.05, 
+#     Letters=letters)
+
+test(lsmseason.sex)
+```
+
+### POST HOC ANALYSIS {#post_hoc_interact}
+# One advantage of the using the  package for post-hoc tests is that it  
+# can produce comparisons for interaction effects.
+```{r}
+lsminteraction = lsmeans(model, 
+                         pairwise ~ habitat:sex,
+                         adjust="bonferroni")
+
+lsminteraction$contrasts
+### Means sharing a letter in .group are not significantly different
+# when more than one categorical varaible
+cld(lsminteraction,
+    alpha=.05,
+    Letters=letters)
+# test(lsmsite)
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- Global Site Tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-88373117-4"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments)};
+  gtag('js', new Date());
+
+  gtag('config', 'UA-88373117-4');
+</script>

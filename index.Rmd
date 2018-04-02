@@ -54,9 +54,14 @@ This will show you how to modify the dataframe from wide to long and back. Also 
 ##[Correlation and Regression](06_correlation_regression.html)  
 Correlations and Regressions. More to come but code is done.    
 
-##[One way ANOVA](07_oneway_anova.html)  
+##[T Tests](07_ttests.html)  
+T tests....
+
+##[One way ANOVA](08_oneway_anova.html)  
 One way anovas  
 
+##[Two way ANOVA](09_twoway_anovas.html)  
+One way anovas  
 
 
 

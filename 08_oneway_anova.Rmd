@@ -196,6 +196,12 @@ sepal.length.model.aov = aov(sepal_length ~ species, data = iris.df)
 anova(sepal.length.model.aov)
 ```
 
+##Save Anova Table to excel
+```{r}
+tidy_sepal_length <- tidy(sepal.length.model.aov)
+write_csv(tidy_sepal_length, "tidy_sepal_lenght_anova.csv")
+```
+
 
 ####What is hard to understand here is how to interpret this table.   
 Crawley 2012 The R book does a good job at this and it has been paraphrased here.   
@@ -271,6 +277,11 @@ cld(lsm,
     alpha=.05,
     Letters=letters)
 ```
+
+
+
+
+
 
 ###Examine the distribution of the data for each group of Sepal.Length
 ```{r}
