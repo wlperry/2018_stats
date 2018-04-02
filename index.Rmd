@@ -63,6 +63,10 @@ One way anovas
 ##[9. Two way ANOVA](09_twoway_anovas.html)  
 One way anovas  
 
+##[10. ANCOVA](10_ancova.html)  
+Ancova and the fun and joy of interactions
+
+
 
 
 

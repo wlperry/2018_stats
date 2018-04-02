@@ -1,0 +1,55 @@
+---
+title: "Data Modification"
+author: "Bill Perry"
+date: "2018/03/14"
+output:
+  html_document:
+    toc: true
+    toc_float: true
+---
+## ANCOVA
+
+Still working on this one and need a dataframe that is appropriate
+
+
+
+
+```{r, message=FALSE, warning=FALSE}
+# One new package for summary stats
+#install.packages("broom")
+# install.packages("GGally")
+# install.packages("car")
+# install.packages("gvlma")
+
+
+# load the libraries each time you restart R
+library(tidyverse)
+library(lubridate)
+library(scales)
+library(skimr)
+library(janitor)
+library(patchwork)
+library(broom)
+library(car)
+
+
+# read in the file
+iris.df <- read_csv("data/iris.csv") %>%
+  clean_names() %>%
+  remove_empty(c("rows", "cols")) 
+
+glimpse(iris.df)
+```
+
+
+
+
+<!-- Global Site Tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-88373117-4"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments)};
+  gtag('js', new Date());
+
+  gtag('config', 'UA-88373117-4');
+</script>

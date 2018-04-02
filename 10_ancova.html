@@ -12,7 +12,7 @@
 <meta name="author" content="Bill Perry" />
 
 
-<title>R Graphs, Data and Stats</title>
+<title>Data Modification</title>
 
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -297,70 +297,47 @@ div.tocify {
 
 
 
-<h1 class="title toc-ignore">R Graphs, Data and Stats</h1>
+<h1 class="title toc-ignore">Data Modification</h1>
 <h4 class="author"><em>Bill Perry</em></h4>
 <h4 class="date"><em>2018/03/14</em></h4>
 
 </div>
 
 
-<div id="r-and-tidyverse" class="section level2">
-<h2>R and Tidyverse</h2>
-<p>I am going to try to develop an introductory class specifically for aquatic biologists using streaming data, larger time based dataframes, but also data that is more traditional. I will be first following the approach of “<a href="HTTP://r4ds.had.co.nz/">R for Data Science</a>” by Garrett Grolemund and Hadley Wickham.</p>
-<p><br></p>
-<p>This is also a selfish way to organize my code and snippets in a central place that I can find them and make is available to others that are struggling with R and dataframes.<br />
-<br></p>
-</div>
-<div id="basics-of-projects-and-data" class="section level2">
-<h2><a href="01_intro.html">1. Basics of projects and data</a></h2>
-<p>Before working on a project, I have found it is useful to ponder what the data will look like, what you want the final dataframe to look like and what you want to do with it. So, first we will go over basics of organization.<br />
-- folders and structure<br />
-- file formats<br />
-- file structure<br />
-- output formats<br />
-- installing R and R studio - basics of the R interface - R projects - installing libraries</p>
-<p><br></p>
-</div>
-<div id="reading-files-and-ggplot" class="section level2">
-<h2><a href="02_ggplot.html">2. Reading files and GGPLOT</a></h2>
-<p>This will be the introduction into reading in excel and csv files and then how to visualize the data using GGPlot2 or GGPlot. In this page, I go over how to load libraries and start to graph with GGplot. Understanding the basics is key and then I go from there. This file includes topics like:<br />
-- read in csv file<br />
-- simple graphs<br />
-- geometries<br />
-- colors and mapping<br />
-- layers</p>
-</div>
-<div id="ggplot-stats-plots" class="section level2">
-<h2><a href="03_ggplot_stats.html">3. GGPLOT stats plots</a></h2>
-<p>This will introduce you to the basic data exploratory graphs and statistics in graphs that will make life a lot easier - box and whisker plot - histograms - mean and standard error plots - time series plots</p>
-</div>
-<div id="dataframe-modification" class="section level2">
-<h2><a href="04_data_modification.html">4. Dataframe modification</a></h2>
-<p>This will show you how to modify the dataframe.</p>
-</div>
-<div id="dataframe-wide-to-long" class="section level2">
-<h2><a href="05_dataframe_widelong.html">5. Dataframe wide to long</a></h2>
-<p>This will show you how to modify the dataframe from wide to long and back. Also it has how to spread and unite values…</p>
-</div>
-<div id="correlation-and-regression" class="section level2">
-<h2><a href="06_correlation_regression.html">6. Correlation and Regression</a></h2>
-<p>Correlations and Regressions. More to come but code is done.</p>
-</div>
-<div id="t-tests" class="section level2">
-<h2><a href="07_ttests.html">7. T Tests</a></h2>
-<p>T tests….</p>
-</div>
-<div id="one-way-anova" class="section level2">
-<h2><a href="08_oneway_anova.html">8. One way ANOVA</a></h2>
-<p>One way anovas</p>
-</div>
-<div id="two-way-anova" class="section level2">
-<h2><a href="09_twoway_anovas.html">9. Two way ANOVA</a></h2>
-<p>One way anovas</p>
-</div>
 <div id="ancova" class="section level2">
-<h2><a href="10_ancova.html">10. ANCOVA</a></h2>
-<p>Ancova and the fun and joy of interactions</p>
+<h2>ANCOVA</h2>
+<p>Still working on this one and need a dataframe that is appropriate</p>
+<pre class="r"><code># One new package for summary stats
+#install.packages(&quot;broom&quot;)
+# install.packages(&quot;GGally&quot;)
+# install.packages(&quot;car&quot;)
+# install.packages(&quot;gvlma&quot;)
+
+
+# load the libraries each time you restart R
+library(tidyverse)
+library(lubridate)
+library(scales)
+library(skimr)
+library(janitor)
+library(patchwork)
+library(broom)
+library(car)
+
+
+# read in the file
+iris.df &lt;- read_csv(&quot;data/iris.csv&quot;) %&gt;%
+  clean_names() %&gt;%
+  remove_empty(c(&quot;rows&quot;, &quot;cols&quot;)) 
+
+glimpse(iris.df)</code></pre>
+<pre><code>## Observations: 150
+## Variables: 5
+## $ sepal_length &lt;dbl&gt; 5.1, NA, 4.7, 4.6, 5.0, 5.4, 4.6, 5.0, 4.4, 4.9, ...
+## $ sepal_width  &lt;dbl&gt; 3.5, 3.0, 3.2, 3.1, 3.6, 3.9, 3.4, 3.4, 2.9, 3.1,...
+## $ petal_length &lt;dbl&gt; 1.4, 1.4, 1.3, 1.5, 1.4, 1.7, 1.4, 1.5, 1.4, 1.5,...
+## $ petal_width  &lt;dbl&gt; 0.2, 0.2, 0.2, 0.2, 0.2, 0.4, 0.3, 0.2, 0.2, 0.1,...
+## $ species      &lt;chr&gt; &quot;setosa&quot;, &quot;setosa&quot;, &quot;setosa&quot;, &quot;setosa&quot;, &quot;setosa&quot;,...</code></pre>
 <!-- Global Site Tag (gtag.js) - Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=UA-88373117-4"></script>
 <script>
