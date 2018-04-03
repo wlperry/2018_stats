@@ -452,6 +452,10 @@ head(mc_smc_2015.df)</code></pre>
 ## # ... with 9 more variables: turbidity_ntu &lt;dbl&gt;, tp_ugl &lt;dbl&gt;,
 ## #   drp_ugl &lt;dbl&gt;, dry_wt_g &lt;dbl&gt;, dry_wt_g_l &lt;dbl&gt;, year &lt;dbl&gt;,
 ## #   month &lt;dbl&gt;, day &lt;int&gt;, julian_day &lt;dbl&gt;</code></pre>
+</div>
+<div id="pipes-and-ggplot-1" class="section level2">
+<h2>Pipes and GGPlot</h2>
+<p>So what we can also do is rather than making new dataframes all the time for graphs we can use the pipe command and lead the data into GGPlot</p>
 <pre class="r"><code>mc_smc.df %&gt;% filter(year==2015 &amp; site==&quot;mc&quot;) %&gt;%
   ggplot(aes(x=julian_day, y=dry_wt_g_l, color=site)) +
   geom_point() </code></pre>
@@ -501,6 +505,84 @@ head(mc_smc_2015.df)</code></pre>
 ## # ... with 87 more rows, and 9 more variables: turbidity_ntu &lt;dbl&gt;,
 ## #   tp_ugl &lt;dbl&gt;, drp_ugl &lt;dbl&gt;, dry_wt_g &lt;dbl&gt;, dry_wt_g_l &lt;dbl&gt;,
 ## #   year &lt;dbl&gt;, month &lt;dbl&gt;, day &lt;int&gt;, julian_day &lt;dbl&gt;</code></pre>
+</div>
+<div id="groups-and-summmarize-data" class="section level2">
+<h2>Groups and summmarize data</h2>
+<p>Now a really cool thing we can do is to group data and then look at summairies of the data or use it later down the road.</p>
+<p>So lets say we wanted to see the mean temperature by month in each stream</p>
+<pre class="r"><code>mc_smc.df %&gt;% group_by(site, year, month) %&gt;%
+  mutate(
+    mean_temp_c = mean(w_temp_c)
+  )</code></pre>
+<pre><code>## # A tibble: 102 x 16
+## # Groups:   site, year, month [48]
+##    datetime            site  w_temp_c volume_filtered_l  tare_g dry_105c_g
+##    &lt;dttm&gt;              &lt;chr&gt;    &lt;dbl&gt;             &lt;dbl&gt;   &lt;dbl&gt;      &lt;dbl&gt;
+##  1 2015-01-15 09:54:00 mc        0.               0.600  0.104      0.108 
+##  2 2015-01-29 09:10:00 mc       NA                0.650  0.107      0.110 
+##  3 2015-02-12 10:57:00 mc        0.               0.500  0.102      0.111 
+##  4 2015-02-26 12:12:00 mc       NA               NA     NA         NA     
+##  5 2015-03-12 11:15:00 mc        5.40             0.520  0.105      0.111 
+##  6 2015-03-26 11:15:00 mc        6.50             0.455  0.102      0.0988
+##  7 2015-04-09 10:00:00 mc       13.5              0.425  0.0959     0.111 
+##  8 2015-04-23 12:50:00 mc       13.4              0.510  0.103      0.108 
+##  9 2015-05-07 14:40:00 mc       20.3              0.550  0.104      0.114 
+## 10 2015-05-21 11:40:00 mc       12.4              0.500  0.102      0.118 
+## # ... with 92 more rows, and 10 more variables: turbidity_ntu &lt;dbl&gt;,
+## #   tp_ugl &lt;dbl&gt;, drp_ugl &lt;dbl&gt;, dry_wt_g &lt;dbl&gt;, dry_wt_g_l &lt;dbl&gt;,
+## #   year &lt;dbl&gt;, month &lt;dbl&gt;, day &lt;int&gt;, julian_day &lt;dbl&gt;,
+## #   mean_temp_c &lt;dbl&gt;</code></pre>
+<p>We can also use the summarize function but it leads to something differnt</p>
+<pre class="r"><code>mc_smc.df %&gt;% group_by(site, year, month) %&gt;%
+  summarize(
+    mean_temp_c = mean(w_temp_c),
+    mean_temp_c_2 = mean(w_temp_c, na.rm=TRUE)
+  )</code></pre>
+<pre><code>## # A tibble: 48 x 5
+## # Groups:   site, year [?]
+##    site   year month mean_temp_c mean_temp_c_2
+##    &lt;chr&gt; &lt;dbl&gt; &lt;dbl&gt;       &lt;dbl&gt;         &lt;dbl&gt;
+##  1 mc    2015.    1.       NA             0.  
+##  2 mc    2015.    2.       NA             0.  
+##  3 mc    2015.    3.        5.95          5.95
+##  4 mc    2015.    4.       13.4          13.4 
+##  5 mc    2015.    5.       16.4          16.4 
+##  6 mc    2015.    6.       18.6          18.6 
+##  7 mc    2015.    7.       NA            20.1 
+##  8 mc    2015.    8.       19.8          19.8 
+##  9 mc    2015.    9.       19.4          19.4 
+## 10 mc    2015.   10.       16.5          16.5 
+## # ... with 38 more rows</code></pre>
+<p>We can also use the summarize function but it leads to something differnt</p>
+<pre class="r"><code>mc_smc.df %&gt;% group_by(site, year, month) %&gt;%
+  summarize(
+    mean_temp_c = mean(w_temp_c),
+    mean_temp_c_2 = mean(w_temp_c, na.rm=TRUE)
+  )</code></pre>
+<pre><code>## # A tibble: 48 x 5
+## # Groups:   site, year [?]
+##    site   year month mean_temp_c mean_temp_c_2
+##    &lt;chr&gt; &lt;dbl&gt; &lt;dbl&gt;       &lt;dbl&gt;         &lt;dbl&gt;
+##  1 mc    2015.    1.       NA             0.  
+##  2 mc    2015.    2.       NA             0.  
+##  3 mc    2015.    3.        5.95          5.95
+##  4 mc    2015.    4.       13.4          13.4 
+##  5 mc    2015.    5.       16.4          16.4 
+##  6 mc    2015.    6.       18.6          18.6 
+##  7 mc    2015.    7.       NA            20.1 
+##  8 mc    2015.    8.       19.8          19.8 
+##  9 mc    2015.    9.       19.4          19.4 
+## 10 mc    2015.   10.       16.5          16.5 
+## # ... with 38 more rows</code></pre>
+<p>Finally we could also use this for plotting</p>
+<pre class="r"><code>mc_smc.df %&gt;% group_by(site, year, month) %&gt;%
+  summarize(
+    julian_day = first(julian_day),
+    mean_temp_c_2 = mean(w_temp_c, na.rm=TRUE)
+  ) %&gt;%
+  ggplot( aes(x=julian_day, y=mean_temp_c_2))+
+  geom_point()</code></pre>
+<p><img src="04_data_modification_files/figure-html/unnamed-chunk-19-1.png" width="672" /></p>
 </div>
 <div id="clean-data" class="section level2">
 <h2>Clean data</h2>

@@ -216,7 +216,8 @@ We can also use the summarize function but it leads to something differnt
 
 mc_smc.df %>% group_by(site, year, month) %>%
   summarize(
-    mean_temp_c = mean(w_temp_c)
+    mean_temp_c = mean(w_temp_c),
+    mean_temp_c_2 = mean(w_temp_c, na.rm=TRUE)
   )
 
 ```
@@ -226,12 +227,24 @@ We can also use the summarize function but it leads to something differnt
 
 mc_smc.df %>% group_by(site, year, month) %>%
   summarize(
-    mean_temp_c = mean(w_temp_c, na.rm=TRUE)
+    mean_temp_c = mean(w_temp_c),
+    mean_temp_c_2 = mean(w_temp_c, na.rm=TRUE)
   )
 
 ```
 
+Finally we could also use this for plotting
+```{r}
 
+mc_smc.df %>% group_by(site, year, month) %>%
+  summarize(
+    julian_day = first(julian_day),
+    mean_temp_c_2 = mean(w_temp_c, na.rm=TRUE)
+  ) %>%
+  ggplot( aes(x=julian_day, y=mean_temp_c_2))+
+  geom_point()
+
+```
 
 
 
