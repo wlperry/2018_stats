@@ -117,7 +117,7 @@ mc_smc.df %>%
 
 
 
-# Filtering data   
+## Filtering data   
 What if you wanted to work with only one species for each of the charactes. This will select only those individuals that are setosa. Note that in this you need *`= = `*. 
 ```{r}
 mc_smc_2015.df <- mc_smc.df %>% filter(year==2015)
