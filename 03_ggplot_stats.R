@@ -19,6 +19,9 @@ glimpse(iris.df)
 skim(iris.df)
 
 ## ------------------------------------------------------------------------
+skim_to_wide(iris.df)
+
+## ------------------------------------------------------------------------
 #Hitograms with GGPLOT
 ggplot(data=iris.df, aes(iris.df$Sepal.Length)) + 
   geom_histogram() +
