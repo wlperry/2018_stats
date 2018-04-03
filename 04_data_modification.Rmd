@@ -157,8 +157,8 @@ mc_2015.df <- mc_smc.df %>% filter(year==2015 & site=="mc")
 head(mc_smc_2015.df)
 ```
 
-
-
+## Pipes and GGPlot
+So what we can also do is rather than making new dataframes all the time for graphs we can use the pipe command and lead the data into GGPlot
 
 ```{r}
 mc_smc.df %>% filter(year==2015 & site=="mc") %>%
@@ -197,9 +197,39 @@ mc_smc.df %>% filter(is.na(dry_wt_g_l))
 mc_smc.df %>% filter(!is.na(dry_wt_g_l))
 ```
 
+##Groups and summmarize data    
+
+Now a really cool thing we can do is to group data and then look at summairies of the data or use it later down the road.
+
+So lets say we wanted to see the mean temperature by month in each stream
+```{r}
+mc_smc.df %>% group_by(site, year, month) %>%
+  mutate(
+    mean_temp_c = mean(w_temp_c)
+  )
+
+```
 
 
+We can also use the summarize function but it leads to something differnt
+```{r}
 
+mc_smc.df %>% group_by(site, year, month) %>%
+  summarize(
+    mean_temp_c = mean(w_temp_c)
+  )
+
+```
+
+We can also use the summarize function but it leads to something differnt
+```{r}
+
+mc_smc.df %>% group_by(site, year, month) %>%
+  summarize(
+    mean_temp_c = mean(w_temp_c, na.rm=TRUE)
+  )
+
+```
 
 
 
