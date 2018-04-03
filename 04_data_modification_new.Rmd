@@ -211,9 +211,9 @@ So lets finally use the *janitor* pacakge to clean up this data. This will make 
 Note that this will get rid of empty columns and rows if from an excel sheet and will clean up the variable names.   
 
 ```{r}
-# iris.df <- iris.df %>%
-#   clean_names() %>%
-#   remove_empty(c("rows", "cols")) 
+iris.df <- iris.df %>%
+  clean_names() %>%
+  remove_empty(c("rows", "cols")) 
 
 ```
 

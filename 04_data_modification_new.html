@@ -409,7 +409,7 @@ mc_smc.df &lt;- mc_smc.df %&gt;%
   ggplot(aes(x=julian_day, y=w_temp_c, color=site)) +
   geom_point() </code></pre>
 <pre><code>## Warning: Removed 12 rows containing missing values (geom_point).</code></pre>
-<p><img src="04_data_modification_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
+<p><img src="04_data_modification_new_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
 </div>
 <div id="filtering-data" class="section level1">
 <h1>Filtering data</h1>
@@ -456,7 +456,7 @@ head(mc_smc_2015.df)</code></pre>
   ggplot(aes(x=julian_day, y=dry_wt_g_l, color=site)) +
   geom_point() </code></pre>
 <pre><code>## Warning: Removed 1 rows containing missing values (geom_point).</code></pre>
-<p><img src="04_data_modification_files/figure-html/unnamed-chunk-11-1.png" width="672" /></p>
+<p><img src="04_data_modification_new_files/figure-html/unnamed-chunk-11-1.png" width="672" /></p>
 </div>
 <div id="selecting-variables" class="section level2">
 <h2>Selecting variables</h2>
@@ -507,9 +507,9 @@ head(mc_smc_2015.df)</code></pre>
 <p>So lets finally use the <em>janitor</em> pacakge to clean up this data. This will make working with data sets from other users a bit easier to work with quickly rather than reformatting all the values manually.<br />
 <br><br />
 Note that this will get rid of empty columns and rows if from an excel sheet and will clean up the variable names.</p>
-<pre class="r"><code># iris.df &lt;- iris.df %&gt;%
-#   clean_names() %&gt;%
-#   remove_empty(c(&quot;rows&quot;, &quot;cols&quot;)) </code></pre>
+<pre class="r"><code>iris.df &lt;- iris.df %&gt;%
+  clean_names() %&gt;%
+  remove_empty(c(&quot;rows&quot;, &quot;cols&quot;)) </code></pre>
 <!-- Global Site Tag (gtag.js) - Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=UA-88373117-4"></script>
 <script>
