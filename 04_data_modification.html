@@ -322,11 +322,15 @@ library(skimr)
 library(janitor)
 library(patchwork)
 library(readxl)
+library(kableExtra)
 
-# read in the file
+# read in the file:
 mc.df &lt;- read_excel(&quot;data/mc.xlsx&quot;)
+
+# Read in the second file:
 smc.df &lt;- read_excel(&quot;data/smc.xlsx&quot;)
 
+# look at the data
 glimpse(mc.df)</code></pre>
 <pre><code>## Observations: 51
 ## Variables: 9
@@ -342,36 +346,65 @@ glimpse(mc.df)</code></pre>
 </div>
 <div id="joining-dataframes-together" class="section level2">
 <h2>Joining dataframes together</h2>
-<p>So lets say we have these two dataframes and we want to work with them together - how do we do this. We can bind the two dataframes together as long as they have the same column names and same column numbers. This will append a dataframe to the other. Now when we do code we can work with it all at once.</p>
-<p>We can also separate them out later</p>
+<p>So lets say we have these two dataframes and we want to work with them together - how do we do this?</p>
+<div id="rbind-or-append" class="section level3">
+<h3>Rbind or append</h3>
+<p>We can bind the two dataframes together as long as they have the same column names and same column numbers. This will <em>append</em> a dataframe to the other. Now when we do code we can work with it all at once. We can also separate the data into smaller dataframes later.</p>
 <pre class="r"><code>mc_smc.df &lt;- rbind(mc.df, smc.df)
-head(mc_smc.df)</code></pre>
-<pre><code>## # A tibble: 6 x 9
-##   datetime site  w_temp_c volume_filtered… tare_g dry_105c_g turbidity_ntu
-##   &lt;chr&gt;    &lt;chr&gt;    &lt;dbl&gt;            &lt;dbl&gt;  &lt;dbl&gt;      &lt;dbl&gt;         &lt;dbl&gt;
-## 1 01/15/2… mc        0.              0.600  0.104     0.108           4.98
-## 2 01/29/2… mc       NA               0.650  0.107     0.110           4.11
-## 3 02/12/2… mc        0.              0.500  0.102     0.111          14.0 
-## 4 02/26/2… mc       NA              NA     NA        NA              NA   
-## 5 03/12/2… mc        5.40            0.520  0.105     0.111           7.94
-## 6 03/26/2… mc        6.50            0.455  0.102     0.0988          5.83
-## # ... with 2 more variables: tp_ugl &lt;dbl&gt;, drp_ugl &lt;dbl&gt;</code></pre>
+
+glimpse(mc_smc.df)</code></pre>
+<pre><code>## Observations: 102
+## Variables: 9
+## $ datetime          &lt;chr&gt; &quot;01/15/2015 09:54&quot;, &quot;01/29/2015 09:10&quot;, &quot;02/...
+## $ site              &lt;chr&gt; &quot;mc&quot;, &quot;mc&quot;, &quot;mc&quot;, &quot;mc&quot;, &quot;mc&quot;, &quot;mc&quot;, &quot;mc&quot;, &quot;m...
+## $ w_temp_c          &lt;dbl&gt; 0.00, NA, 0.00, NA, 5.40, 6.50, 13.50, 13.40...
+## $ volume_filtered_l &lt;dbl&gt; 0.600, 0.650, 0.500, NA, 0.520, 0.455, 0.425...
+## $ tare_g            &lt;dbl&gt; 0.1043, 0.1071, 0.1017, NA, 0.1054, 0.1016, ...
+## $ dry_105c_g        &lt;dbl&gt; 0.108100, 0.110200, 0.110900, NA, 0.111300, ...
+## $ turbidity_ntu     &lt;dbl&gt; 4.98, 4.11, 14.00, NA, 7.94, 5.83, 7.89, 5.2...
+## $ tp_ugl            &lt;dbl&gt; NA, 25.20, 65.70, NA, 97.60, 7.77, 29.90, 24...
+## $ drp_ugl           &lt;dbl&gt; 8.03, 13.00, 51.80, NA, 78.30, 6.53, 8.22, 1...</code></pre>
+</div>
 </div>
 <div id="the-pipe" class="section level2">
 <h2>The pipe</h2>
 <p>So lets start thinking about how to string a lot of commands together. Before this we have assigned items to a name or environmental varaible with <code>&lt;-</code> bu now what we want to do is sort of the opposite. We want to take an object or output of an object and pass it to the right to do new things with the output. We do this using the pipe command <code>%&gt;%</code>. This takes what is on the left and passes it to the right.</p>
 <p><br></p>
+<pre class="r"><code>mc_smc.df %&gt;% glimpse()</code></pre>
+<pre><code>## Observations: 102
+## Variables: 9
+## $ datetime          &lt;chr&gt; &quot;01/15/2015 09:54&quot;, &quot;01/29/2015 09:10&quot;, &quot;02/...
+## $ site              &lt;chr&gt; &quot;mc&quot;, &quot;mc&quot;, &quot;mc&quot;, &quot;mc&quot;, &quot;mc&quot;, &quot;mc&quot;, &quot;mc&quot;, &quot;m...
+## $ w_temp_c          &lt;dbl&gt; 0.00, NA, 0.00, NA, 5.40, 6.50, 13.50, 13.40...
+## $ volume_filtered_l &lt;dbl&gt; 0.600, 0.650, 0.500, NA, 0.520, 0.455, 0.425...
+## $ tare_g            &lt;dbl&gt; 0.1043, 0.1071, 0.1017, NA, 0.1054, 0.1016, ...
+## $ dry_105c_g        &lt;dbl&gt; 0.108100, 0.110200, 0.110900, NA, 0.111300, ...
+## $ turbidity_ntu     &lt;dbl&gt; 4.98, 4.11, 14.00, NA, 7.94, 5.83, 7.89, 5.2...
+## $ tp_ugl            &lt;dbl&gt; NA, 25.20, 65.70, NA, 97.60, 7.77, 29.90, 24...
+## $ drp_ugl           &lt;dbl&gt; 8.03, 13.00, 51.80, NA, 78.30, 6.53, 8.22, 1...</code></pre>
 </div>
 <div id="mutate" class="section level2">
 <h2>Mutate</h2>
 <p>So lets say in this dataframe we wanted to calculate the Dry Weight of a sample by subracting the Tare weight from Dry Weight</p>
-<pre class="r"><code>mc_smc.df &lt;- mc_smc.df %&gt;%
+<p><code>mc_smc.df &lt;- mc_smc.df %&gt;% mutate(variable = varaible - variable))</code></p>
+<pre class="r"><code># mc_smc.df &lt;- mc_smc.df %&gt;% mutate(variable = varaible - variable))
+
+mc_smc.df &lt;- mc_smc.df %&gt;%
   mutate(dry_wt_g = dry_105c_g - tare_g)</code></pre>
 <p>So here we made a new column and its all set. Lets say we wanted to calculate the Dry Wt per liter</p>
-<pre class="r"><code>mc_smc.df &lt;- mc_smc.df %&gt;%
+<pre class="r"><code># mc_smc.df &lt;- mc_smc.df %&gt;% mutate(variable = varaible / variable))
+
+mc_smc.df &lt;- mc_smc.df %&gt;%
   mutate(dry_wt_g_l = dry_wt_g/volume_filtered_l)</code></pre>
 <p>So that has done a transformation on two separate variables and would take a while to do one by one. We can also link the mutations together with commas and it will do the same thing above and overwrite the variables again</p>
-<pre class="r"><code>mc_smc.df &lt;- mc_smc.df %&gt;%
+<pre class="r"><code># mc_smc.df &lt;- mc_smc.df %&gt;% 
+#                   mutate(
+#                          variable = varaible - variable),
+#                           variable = varaible / variable)
+#                        )
+
+
+mc_smc.df &lt;- mc_smc.df %&gt;%
   mutate(
         dry_wt_g = dry_105c_g - tare_g,
         dry_wt_g_l = dry_wt_g/volume_filtered_l
@@ -380,12 +413,24 @@ head(mc_smc.df)</code></pre>
 <div id="date-times" class="section level2">
 <h2>Date Times</h2>
 <p>So if you look at the data you will see that datetieme is a character variable and not a date time. We can use the same method above to convert that.</p>
-<p>We will use the lubridate package to do this…</p>
+<p>We will use the lubridate package to do this…<br />
+y = year<br />
+m = month<br />
+d = day<br />
+h = hour<br />
+m = minute<br />
+s = second<br />
+<br> You put these in order that they appear in the excel cell and note that if you open a csv and save it again from excel it will convert it to Month - Day - Year Hour: Minute: Second so be aware if there is an error here.</p>
 <pre class="r"><code># you can make dates and time using lubridate
 # This would be the traditional way and maybe a bit slower.
 # mc.df$datetime &lt;- mdy_hm(mc.df$datetime)
 
-# There is a way we can change many varaibles at a time
+# df &lt;- df %&gt;% 
+#  mutate(
+#          variable = mdy_hm(varaible)
+#         )
+
+# There is a way we can change many variaibles at a time
 mc_smc.df &lt;- mc_smc.df %&gt;% 
   mutate(
           datetime = mdy_hm(datetime)
@@ -401,15 +446,6 @@ mc_smc.df &lt;- mc_smc.df %&gt;%
          day = day(datetime),
          julian_day = yday(datetime)
   )</code></pre>
-</div>
-<div id="pipes-and-ggplot" class="section level2">
-<h2>Pipes and ggplot</h2>
-<p>Lets try this with a plot. What happens here is it takes the dataframe and then passes it to the ggplot commands. So the dataframe is removed from the ggplot commands. I will show you why in a second that this is really cool.</p>
-<pre class="r"><code>mc_smc.df %&gt;% 
-  ggplot(aes(x=julian_day, y=w_temp_c, color=site)) +
-  geom_point() </code></pre>
-<pre><code>## Warning: Removed 12 rows containing missing values (geom_point).</code></pre>
-<p><img src="04_data_modification_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
 </div>
 <div id="filtering-data" class="section level2">
 <h2>Filtering data</h2>
@@ -433,11 +469,106 @@ head(mc_smc_2015.df)</code></pre>
 </div>
 <div id="boolean-search-terms-of-interest" class="section level2">
 <h2>Boolean search terms of interest</h2>
-<p># create a simple table # should be a dataframe to make it with kable | Search | code |<br />
-|—————————|————-| | greater than | <code>&gt;</code> | | greater than or equal to | <code>&gt;=</code> |<br />
-| less than | <code>&lt;</code> | | less than or equal to | <code>&lt;=</code> | | is NA | is.na | | is not NA | !is.na | | is not equal to | != | | is not x | !x | | x | y | x OR y |<br />
-| x &amp; y | x AND y |<br />
-<br></p>
+<pre class="r"><code>boolean.tbl &lt;- read_csv(&quot;figures/boolean.csv&quot;) 
+
+boolean.tbl %&gt;%
+  kable(&quot;html&quot;) %&gt;%
+  kable_styling(bootstrap_options = c(&quot;striped&quot;, &quot;hover&quot;, &quot;condensed&quot;))</code></pre>
+<table class="table table-striped table-hover table-condensed" style="margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+Search
+</th>
+<th style="text-align:left;">
+code
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+greater than
+</td>
+<td style="text-align:left;">
+&gt;
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+greater than or equal to
+</td>
+<td style="text-align:left;">
+&gt;=
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+less than
+</td>
+<td style="text-align:left;">
+&lt;
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+less than or equal to
+</td>
+<td style="text-align:left;">
+&lt;=
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+is NA
+</td>
+<td style="text-align:left;">
+is.na
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+is not NA
+</td>
+<td style="text-align:left;">
+!is.na
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+is not equal to
+</td>
+<td style="text-align:left;">
+!=
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+is not x
+</td>
+<td style="text-align:left;">
+!x
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+x | y
+</td>
+<td style="text-align:left;">
+x OR y
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+x &amp; y
+</td>
+<td style="text-align:left;">
+x AND y
+</td>
+</tr>
+</tbody>
+</table>
+<p><br></p>
 <pre class="r"><code>mc_2015.df &lt;- mc_smc.df %&gt;% filter(year==2015 &amp; site==&quot;mc&quot;) 
 
 head(mc_smc_2015.df)</code></pre>
@@ -454,14 +585,20 @@ head(mc_smc_2015.df)</code></pre>
 ## #   drp_ugl &lt;dbl&gt;, dry_wt_g &lt;dbl&gt;, dry_wt_g_l &lt;dbl&gt;, year &lt;dbl&gt;,
 ## #   month &lt;dbl&gt;, day &lt;int&gt;, julian_day &lt;dbl&gt;</code></pre>
 </div>
-<div id="pipes-and-ggplot-1" class="section level2">
+<div id="pipes-and-ggplot" class="section level2">
 <h2>Pipes and GGPlot</h2>
+<p>Lets try this with a plot. What happens here is it takes the dataframe and then passes it to the ggplot commands. So the dataframe is removed from the ggplot commands. I will show you why in a second that this is really cool.</p>
+<pre class="r"><code>mc_smc.df %&gt;% 
+  ggplot(aes(x=julian_day, y=w_temp_c, color=site)) +
+  geom_point() </code></pre>
+<pre><code>## Warning: Removed 12 rows containing missing values (geom_point).</code></pre>
+<p><img src="04_data_modification_files/figure-html/unnamed-chunk-11-1.png" width="672" /></p>
 <p>So what we can also do is rather than making new dataframes all the time for graphs we can use the pipe command and lead the data into GGPlot</p>
 <pre class="r"><code>mc_smc.df %&gt;% filter(year==2015 &amp; site==&quot;mc&quot;) %&gt;%
   ggplot(aes(x=julian_day, y=dry_wt_g_l, color=site)) +
   geom_point() </code></pre>
 <pre><code>## Warning: Removed 1 rows containing missing values (geom_point).</code></pre>
-<p><img src="04_data_modification_files/figure-html/unnamed-chunk-11-1.png" width="672" /></p>
+<p><img src="04_data_modification_files/figure-html/unnamed-chunk-12-1.png" width="672" /></p>
 </div>
 <div id="selecting-variables" class="section level2">
 <h2>Selecting variables</h2>
@@ -472,8 +609,8 @@ head(mc_smc_2015.df)</code></pre>
 <pre class="r"><code>mc_smc_drywt.df &lt;- mc_smc.df %&gt;% 
   select(datetime, julian_day, volume_filtered_l, starts_with(&quot;dry&quot;))</code></pre>
 </div>
-<div id="what-if-you-wanted-see-all-na-values" class="section level2">
-<h2>What if you wanted see all NA values</h2>
+<div id="what-if-you-wanted-see-all-na-values-in-a-particular-variable." class="section level2">
+<h2>What if you wanted see all NA values in a particular variable….</h2>
 <pre class="r"><code>mc_smc.df %&gt;% filter(is.na(dry_wt_g_l))</code></pre>
 <pre><code>## # A tibble: 5 x 15
 ##   datetime            site  w_temp_c volume_filtered_l tare_g dry_105c_g
@@ -487,7 +624,7 @@ head(mc_smc_2015.df)</code></pre>
 ## #   drp_ugl &lt;dbl&gt;, dry_wt_g &lt;dbl&gt;, dry_wt_g_l &lt;dbl&gt;, year &lt;dbl&gt;,
 ## #   month &lt;dbl&gt;, day &lt;int&gt;, julian_day &lt;dbl&gt;</code></pre>
 </div>
-<div id="what-if-you-wanted-see-all-na-values-1" class="section level2">
+<div id="what-if-you-wanted-see-all-na-values" class="section level2">
 <h2>What if you wanted see all NA values</h2>
 <pre class="r"><code>mc_smc.df %&gt;% filter(!is.na(dry_wt_g_l))</code></pre>
 <pre><code>## # A tibble: 97 x 15
@@ -533,28 +670,27 @@ head(mc_smc_2015.df)</code></pre>
 ## #   tp_ugl &lt;dbl&gt;, drp_ugl &lt;dbl&gt;, dry_wt_g &lt;dbl&gt;, dry_wt_g_l &lt;dbl&gt;,
 ## #   year &lt;dbl&gt;, month &lt;dbl&gt;, day &lt;int&gt;, julian_day &lt;dbl&gt;,
 ## #   mean_temp_c &lt;dbl&gt;</code></pre>
-<p>We can also use the summarize function but it leads to something differnt</p>
+<p>We can also use the summarize function but it leads to something different. What you get is the grouping variable and the varaibles you are summarizing. I have found a neat way to get others and that is using the <code>first(varaible)</code> summarize term to get the first value of a group.</p>
 <pre class="r"><code>mc_smc.df %&gt;% group_by(site, year, month) %&gt;%
   summarize(
-    mean_temp_c = mean(w_temp_c),
-    mean_temp_c_2 = mean(w_temp_c, na.rm=TRUE)
+    mean_temp_c = mean(w_temp_c)
   )</code></pre>
-<pre><code>## # A tibble: 48 x 5
+<pre><code>## # A tibble: 48 x 4
 ## # Groups:   site, year [?]
-##    site   year month mean_temp_c mean_temp_c_2
-##    &lt;chr&gt; &lt;dbl&gt; &lt;dbl&gt;       &lt;dbl&gt;         &lt;dbl&gt;
-##  1 mc    2015.    1.       NA             0.  
-##  2 mc    2015.    2.       NA             0.  
-##  3 mc    2015.    3.        5.95          5.95
-##  4 mc    2015.    4.       13.4          13.4 
-##  5 mc    2015.    5.       16.4          16.4 
-##  6 mc    2015.    6.       18.6          18.6 
-##  7 mc    2015.    7.       NA            20.1 
-##  8 mc    2015.    8.       19.8          19.8 
-##  9 mc    2015.    9.       19.4          19.4 
-## 10 mc    2015.   10.       16.5          16.5 
+##    site   year month mean_temp_c
+##    &lt;chr&gt; &lt;dbl&gt; &lt;dbl&gt;       &lt;dbl&gt;
+##  1 mc    2015.    1.       NA   
+##  2 mc    2015.    2.       NA   
+##  3 mc    2015.    3.        5.95
+##  4 mc    2015.    4.       13.4 
+##  5 mc    2015.    5.       16.4 
+##  6 mc    2015.    6.       18.6 
+##  7 mc    2015.    7.       NA   
+##  8 mc    2015.    8.       19.8 
+##  9 mc    2015.    9.       19.4 
+## 10 mc    2015.   10.       16.5 
 ## # ... with 38 more rows</code></pre>
-<p>We can also use the summarize function but it leads to something differnt</p>
+<p>You should get used to adding in the term <em><code>na.rm=TRUE</code></em> on all of your calculations. If you don’t you can see the results below.</p>
 <pre class="r"><code>mc_smc.df %&gt;% group_by(site, year, month) %&gt;%
   summarize(
     mean_temp_c = mean(w_temp_c),
@@ -583,16 +719,36 @@ head(mc_smc_2015.df)</code></pre>
   ) %&gt;%
   ggplot( aes(x=julian_day, y=mean_temp_c_2))+
   geom_point()</code></pre>
-<p><img src="04_data_modification_files/figure-html/unnamed-chunk-19-1.png" width="672" /></p>
+<p><img src="04_data_modification_files/figure-html/unnamed-chunk-20-1.png" width="672" /></p>
 </div>
 <div id="clean-data" class="section level2">
 <h2>Clean data</h2>
 <p>So lets finally use the <em>janitor</em> pacakge to clean up this data. This will make working with data sets from other users a bit easier to work with quickly rather than reformatting all the values manually.<br />
 <br><br />
 Note that this will get rid of empty columns and rows if from an excel sheet and will clean up the variable names.</p>
-<pre class="r"><code># iris.df &lt;- iris.df %&gt;%
-#   clean_names() %&gt;%
-#   remove_empty(c(&quot;rows&quot;, &quot;cols&quot;)) </code></pre>
+<pre class="r"><code>iris.df &lt;- read_csv(&quot;data/iris.csv&quot;) %&gt;%
+  clean_names() %&gt;%
+  remove_empty(c(&quot;rows&quot;, &quot;cols&quot;))</code></pre>
+<pre><code>## Parsed with column specification:
+## cols(
+##   Sepal.Length = col_double(),
+##   Sepal.Width = col_double(),
+##   Petal.Length = col_double(),
+##   Petal.Width = col_double(),
+##   Species = col_character()
+## )</code></pre>
+<pre class="r"><code>head(iris.df)</code></pre>
+<pre><code>## # A tibble: 6 x 5
+##   sepal_length sepal_width petal_length petal_width species
+##          &lt;dbl&gt;       &lt;dbl&gt;        &lt;dbl&gt;       &lt;dbl&gt; &lt;chr&gt;  
+## 1         5.10        3.50         1.40       0.200 setosa 
+## 2        NA           3.00         1.40       0.200 setosa 
+## 3         4.70        3.20         1.30       0.200 setosa 
+## 4         4.60        3.10         1.50       0.200 setosa 
+## 5         5.00        3.60         1.40       0.200 setosa 
+## 6         5.40        3.90         1.70       0.400 setosa</code></pre>
+<div id="note-above-what-you-get---you-get-all-of-the-special-characters-removed-capitilizations-are-now-lower-case-and-its-in-snake-case.-it-also-removes-any-empty-rows-and-columns-that-you-get-from-excel-often." class="section level3">
+<h3>Note above what you get - you get all of the special characters removed, capitilizations are now lower case and its in snake case. It also removes any empty rows and columns that you get from excel often.</h3>
 <!-- Global Site Tag (gtag.js) - Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=UA-88373117-4"></script>
 <script>
@@ -602,6 +758,7 @@ Note that this will get rid of empty columns and rows if from an excel sheet and
 
   gtag('config', 'UA-88373117-4');
 </script>
+</div>
 </div>
 
 

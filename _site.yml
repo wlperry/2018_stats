@@ -1,15 +1,18 @@
-name: "R Data and Stats"
-output_dir: "."
+name: R Data and Stats
+output_dir: '.'
 output:
   html_document:
     highlight: textmate
-    mathjax: null
+    mathjax: ~
+    lib_dir: site_libs
+    self_contained: no
 navbar:
-  title: "Bill Perry"
+  title: Bill Perry
   left:
-    - text: "Bill's Homepage"
-      href: https://wlperry.github.io/index.html
-    - text: "Stats and R Homepage"
-      href: https://wlperry.github.io/2018_stats/index.html      
-    - text: "About Bill"
-      href: about.html
+  - text: Bill's Homepage
+    href: https://wlperry.github.io/index.html
+  - text: Stats and R Homepage
+    href: https://wlperry.github.io/2018_stats/index.html
+  - text: About Bill
+    href: about.html
+

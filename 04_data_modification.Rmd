@@ -26,23 +26,29 @@ library(skimr)
 library(janitor)
 library(patchwork)
 library(readxl)
+library(kableExtra)
 
-# read in the file
+# read in the file:
 mc.df <- read_excel("data/mc.xlsx")
+
+# Read in the second file:
 smc.df <- read_excel("data/smc.xlsx")
 
+# look at the data
 glimpse(mc.df)
 ```
 
 
 ##Joining dataframes together
-So lets say we have these two dataframes and we want to work with them together - how do we do this.
-We can bind the two dataframes together as long as they have the same column names and same column numbers. This will append a dataframe to the other. Now when we do code we can work with it all at once.      
+So lets say we have these two dataframes and we want to work with them together - how do we do this?
 
-We can also separate them out later   
+###Rbind or append
+We can bind the two dataframes together as long as they have the same column names and same column numbers. This will *append* a dataframe to the other. Now when we do code we can work with it all at once. We can also separate the data into smaller dataframes later.      
+
 ```{r}
 mc_smc.df <- rbind(mc.df, smc.df)
-head(mc_smc.df)
+
+glimpse(mc_smc.df)
 ```
 
 
@@ -51,23 +57,43 @@ So lets start thinking about how to string a lot of commands together. Before th
 
 <br>    
 
+```{r}
+mc_smc.df %>% glimpse()
+```
+
 
 ##Mutate
-So lets say in this dataframe we wanted to calculate the Dry Weight of a sample by subracting the Tare weight from Dry Weight    
+So lets say in this dataframe we wanted to calculate the Dry Weight of a sample by subracting the Tare weight from Dry Weight     
+        
+```mc_smc.df <- mc_smc.df %>% mutate(variable = varaible - variable))```     
+     
 
 ```{r}
+# mc_smc.df <- mc_smc.df %>% mutate(variable = varaible - variable))
+
 mc_smc.df <- mc_smc.df %>%
   mutate(dry_wt_g = dry_105c_g - tare_g)
 ```
 
-So here we made a new column and its all set. Lets say we wanted to calculate the Dry Wt per liter
+So here we made a new column and its all set. Lets say we wanted to calculate the Dry Wt per liter   
 ```{r}
+
+# mc_smc.df <- mc_smc.df %>% mutate(variable = varaible / variable))
+
 mc_smc.df <- mc_smc.df %>%
   mutate(dry_wt_g_l = dry_wt_g/volume_filtered_l)
 ```
 
 So that has done a transformation on two separate variables and would take a while to do one by one. We can also link the mutations together with commas and it will do the same thing above and overwrite the variables again
 ```{r}
+
+# mc_smc.df <- mc_smc.df %>% 
+#                   mutate(
+#                          variable = varaible - variable),
+#                           variable = varaible / variable)
+#                        )
+
+
 mc_smc.df <- mc_smc.df %>%
   mutate(
         dry_wt_g = dry_105c_g - tare_g,
@@ -78,13 +104,27 @@ mc_smc.df <- mc_smc.df %>%
 ## Date Times
 So if you look at the data you will see that datetieme is a character variable and not a date time. We can use the same method above to convert that.    
 
-We will use the lubridate package to do this...
+We will use the lubridate package to do this...      
+y = year     
+m = month    
+d = day    
+h = hour     
+m = minute    
+s = second     
+<br>
+You put these in order that they appear in the excel cell and note that if you open a csv and save it again from excel it will convert it to Month - Day - Year Hour: Minute: Second so be aware if there is an error here.    
+
 ```{r}
 # you can make dates and time using lubridate
 # This would be the traditional way and maybe a bit slower.
 # mc.df$datetime <- mdy_hm(mc.df$datetime)
 
-# There is a way we can change many varaibles at a time
+# df <- df %>% 
+#  mutate(
+#          variable = mdy_hm(varaible)
+#         )
+
+# There is a way we can change many variaibles at a time
 mc_smc.df <- mc_smc.df %>% 
   mutate(
           datetime = mdy_hm(datetime)
@@ -105,17 +145,6 @@ mc_smc.df <- mc_smc.df %>%
 ```
 
 
-##Pipes and ggplot  
-Lets try this with a plot.  What happens here is it takes the dataframe and then passes it to the ggplot commands. So the dataframe is removed from the ggplot commands. I will show you why in a second that this is really cool.
-
-```{r}
-mc_smc.df %>% 
-  ggplot(aes(x=julian_day, y=w_temp_c, color=site)) +
-  geom_point() 
-```
-
-
-
 
 ## Filtering data   
 What if you wanted to work with only one species for each of the charactes. This will select only those individuals that are setosa. Note that in this you need *`= = `*. 
@@ -128,27 +157,15 @@ head(mc_smc_2015.df)
 <br>
 
 ##Boolean search terms of interest    
-```{r table2, echo=FALSE, message=FALSE, warnings=FALSE, results='asis'}
-tabl <- "  # create a simple table # should be a dataframe to make it with kable
-| Search                    | code        |  
-|---------------------------|-------------|
-| greater than              |   `>`       |
-| greater than or equal to  |   `>=`      |  
-| less than                 |   `<`       |
-| less than or equal to     |   `<=`      | 
-| is NA                     |   is.na     |
-| is not NA                 |   !is.na    |
-| is not equal to           |   !=        |
-| is not x                  |   !x        |
-| x | y                     |	x OR y      |  
-| x & y                     |	x AND y     |  
+```{r table2, message=FALSE, results='asis', warnings=FALSE}
+ 
+boolean.tbl <- read_csv("figures/boolean.csv") 
 
-
-
-
-"
-cat(tabl) # output the table in a format good for HTML/PDF/docx conversion
+boolean.tbl %>%
+  kable("html") %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed"))
 ```
+
 <br>
 
 ```{r}
@@ -158,6 +175,15 @@ head(mc_smc_2015.df)
 ```
 
 ## Pipes and GGPlot
+ 
+Lets try this with a plot.  What happens here is it takes the dataframe and then passes it to the ggplot commands. So the dataframe is removed from the ggplot commands. I will show you why in a second that this is really cool.
+
+```{r}
+mc_smc.df %>% 
+  ggplot(aes(x=julian_day, y=w_temp_c, color=site)) +
+  geom_point() 
+```
+
 So what we can also do is rather than making new dataframes all the time for graphs we can use the pipe command and lead the data into GGPlot
 
 ```{r}
@@ -187,7 +213,7 @@ mc_smc_drywt.df <- mc_smc.df %>%
 
 
 
-##What if you wanted see all NA values
+##What if you wanted see all NA values in a particular variable....
 ```{r}
 mc_smc.df %>% filter(is.na(dry_wt_g_l))
 ```
@@ -211,18 +237,17 @@ mc_smc.df %>% group_by(site, year, month) %>%
 ```
 
 
-We can also use the summarize function but it leads to something differnt
+We can also use the summarize function but it leads to something different. What you get is the grouping variable and the varaibles you are summarizing. I have found a neat way to get others and that is using the `first(varaible)` summarize term to get the first value of a group.   
 ```{r}
 
 mc_smc.df %>% group_by(site, year, month) %>%
   summarize(
-    mean_temp_c = mean(w_temp_c),
-    mean_temp_c_2 = mean(w_temp_c, na.rm=TRUE)
+    mean_temp_c = mean(w_temp_c)
   )
 
 ```
 
-We can also use the summarize function but it leads to something differnt
+You should get used to adding in the term *`na.rm=TRUE`* on all of your calculations. If you don't you can see the results below. 
 ```{r}
 
 mc_smc.df %>% group_by(site, year, month) %>%
@@ -254,12 +279,14 @@ So lets finally use the *janitor* pacakge to clean up this data. This will make 
 Note that this will get rid of empty columns and rows if from an excel sheet and will clean up the variable names.   
 
 ```{r}
-# iris.df <- iris.df %>%
-#   clean_names() %>%
-#   remove_empty(c("rows", "cols")) 
+iris.df <- read_csv("data/iris.csv") %>%
+  clean_names() %>%
+  remove_empty(c("rows", "cols"))
 
+head(iris.df)
 ```
 
+### Note above what you get - you get all of the special characters removed, capitilizations are now lower case and its in snake case. It also removes any empty rows and columns that you get from excel often.
 
 
    
