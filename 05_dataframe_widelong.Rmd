@@ -8,10 +8,13 @@ output:
     toc_float: true
 ---
 ## Dataframe wide to long and long to wide 
+I seem to always have to go back and read how to do this over and over so I am trying to get it down here so I can use this as a reference and others might find it helpful.
+
+Wide format is how you would usually enter data in excel with treatment down the left had side or some other category and variables for that treatment along the top row. This if a fine way to enter data but is not often that useful in R and you need to switch it to long format. I will post examples soon
 
 
 ##Load libraries
-We will read in the main files and load the libraries as we have worked with so far.   
+We will read in the main files and load the libraries as we have worked with so far.  I will do the iris.df first and then go to others that may be more complicated.
 
 ```{r, message=FALSE, warning=FALSE}
 # One new package for summary stats
@@ -25,7 +28,90 @@ library(skimr)
 library(janitor)
 library(patchwork)
 library(reshape2)
+library(kableExtra)
+```
 
+
+##Read in file     
+So a lot of us have to deal with grades but you will get the idea of how this works with a simple dataframe and then we can go on.
+
+```{r}
+# read in the file
+grades.df <- read_csv("data/grades.csv") %>%
+  clean_names() %>%
+  remove_empty(c("rows", "cols")) 
+
+glimpse(grades.df)
+```
+
+##Wide format file     
+
+This file is something that we might hae entered the grades in and it is something we are used to doing in excel. That is not bad but it limits what we can do fast with the file.         
+
+```{r kable1, message=FALSE, warning=FALSE, paged.print=FALSE}
+head(grades.df) %>% 
+  kable("html") %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed"))
+```
+
+
+### Graphing in wide format   
+So we want to make histograms of the grades and see what they are doing in each of the homeworks.  We would have to make a plot for each of them. Ugggh... This is doable though and fine.   
+```{r}
+grades.df %>% ggplot(aes(hw_1)) +
+  geom_histogram(binwidth = 5 ) + 
+  scale_x_continuous(breaks=seq(0,100,10)) +
+  labs(x="Points", y="Number of Students")
+```
+
+##Convert to *long* format     
+Note that it is a bit differnet now. you hae students going down the left, item which has each homework for each student and the grades on the right. Studnet 1 is listed 6 times for each of his 6 homeworks.  Why on earh would we do this!!!!!?????
+```{r}
+grades_long.df <- grades.df %>% 
+  gather(item, grade, -student_id) %>%
+  mutate(item = as.factor(item)) %>%
+  arrange(student_id, item)
+
+
+head(grades_long.df, n=10) %>% 
+  kable("html") %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed"))
+```
+
+
+## Why *long* format      
+Well the reason you need this format is for several types of analyses and it also makes graphing and workign with the data easier. Here is an example to show all the graphs for eah homework in a quick way...      
+<br>       
+Remember we can use filter and select to do things in ggplot with before the plot command too...
+
+
+```{r}
+grades_long.df %>% 
+  ggplot(aes(grade)) +
+  geom_histogram(binwidth = 5 ) + 
+  scale_x_continuous(breaks=seq(0,100,10)) +
+  labs(x="Points", y="Number of Students") +
+  facet_wrap("item",  scales = "free")
+```
+
+Lets say you only wanted to show homeworks 1 - 3 in the above plot. How could you do this easily
+
+```{r}
+grades_long.df %>% filter(item == "hw_1" |
+                            item == "hw_2" |
+                          item == "hw_3") %>%
+  ggplot(aes(grade)) +
+  geom_histogram(binwidth = 5 ) + 
+  scale_x_continuous(breaks=seq(0,100,10)) +
+  labs(x="Points", y="Number of Students") +
+  facet_wrap("item",  scales = "free")
+```
+
+
+CONTINUE WORK HERE IF TIME
+
+
+```{r}
 # read in the file
 iris.df <- read_csv("data/iris.csv") %>%
   clean_names() %>%
@@ -34,7 +120,63 @@ iris.df <- read_csv("data/iris.csv") %>%
 glimpse(iris.df)
 ```
 
-##Add a unique idenitifier
+
+
+
+```{r}
+# this will add an index to the dataframe so you know what individual is which
+iris.df <- iris.df %>% mutate(individual = row_number())
+
+```
+
+
+##Long to Wide format     
+There are times that you need to switch back
+```{r}
+iris_long.df <- iris.df %>% gather(trait, measure, -species, - individual)
+
+```
+
+
+Using tidyr
+```{r}
+iris_wide.dff <- iris_long.df %>% 
+  spread(trait, measure)
+```
+
+
+##Spread and Unite
+
+unite
+```{r}
+iris_unite.df <- iris.df %>% 
+  unite("ind_species", individual, species, sep="_")
+```
+
+separate
+```{r}
+iris_spread.df <- iris_unite.df %>% 
+  separate(ind_species, into=c("individual", "species"), sep="_")
+```
+
+
+
+   
+   
+   
+   
+   
+
+```{r}
+# read in the file
+iris.df <- read_csv("data/iris.csv") %>%
+  clean_names() %>%
+  remove_empty(c("rows", "cols")) 
+
+glimpse(iris.df)
+```
+
+##Add a unique identifier
 ```{r}
 # this will add an index to the dataframe so you know what individual is which
 iris.df <- iris.df %>% mutate(individual = row_number())
