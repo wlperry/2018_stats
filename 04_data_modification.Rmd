@@ -10,6 +10,12 @@ output:
 ## Data Modification and cleaning
 So the pattern of this set of code so far has been how to look at the data visually and how it looks and to see outliers.  The next goal is to be able to clean the data or remove, reoranize or reformat the data and add new transformed varaibles.     
 
+## Script
+Here is the script for this file in R without all this stuff
+[Dataframes 04 R Script](https://wlperry.github.io/04_data_modification.R)    
+
+##Data
+[Fake Grades](https://wlperry.github.io/data/grades.csv)    
 
 ##Load libraries
 We will read in the main files and load the libraries as we have worked with so far.   
