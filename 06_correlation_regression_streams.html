@@ -319,6 +319,7 @@ div.tocify {
 
 # load the libraries each time you restart R
 library(tidyverse)
+library(readxl)
 library(lubridate)
 library(scales)
 library(skimr)
@@ -332,18 +333,19 @@ library(car)
 library(gvlma)
 
 # read in the file
-iris.df &lt;- read_csv(&quot;data/iris.csv&quot;) %&gt;%
+streams.df &lt;- read_excel(&quot;data/stream_chemistry.xlsx&quot;) %&gt;%
   clean_names() %&gt;%
   remove_empty(c(&quot;rows&quot;, &quot;cols&quot;)) 
 
-glimpse(iris.df)</code></pre>
-<pre><code>## Observations: 150
-## Variables: 5
-## $ sepal_length &lt;dbl&gt; 5.1, NA, 4.7, 4.6, 5.0, 5.4, 4.6, 5.0, 4.4, 4.9, ...
-## $ sepal_width  &lt;dbl&gt; 3.5, 3.0, 3.2, 3.1, 3.6, 3.9, 3.4, 3.4, 2.9, 3.1,...
-## $ petal_length &lt;dbl&gt; 1.4, 1.4, 1.3, 1.5, 1.4, 1.7, 1.4, 1.5, 1.4, 1.5,...
-## $ petal_width  &lt;dbl&gt; 0.2, 0.2, 0.2, 0.2, 0.2, 0.4, 0.3, 0.2, 0.2, 0.1,...
-## $ species      &lt;chr&gt; &quot;setosa&quot;, &quot;setosa&quot;, &quot;setosa&quot;, &quot;setosa&quot;, &quot;setosa&quot;,...</code></pre>
+glimpse(streams.df)</code></pre>
+<pre><code>## Observations: 52
+## Variables: 6
+## $ sample_date &lt;dttm&gt; 2013-10-30, 2013-11-14, 2013-11-26, 2013-12-11, 2...
+## $ site        &lt;chr&gt; &quot;streams_123&quot;, &quot;streams_123&quot;, &quot;streams_123&quot;, &quot;stre...
+## $ drp         &lt;dbl&gt; 77.50, 65.30, 75.40, 71.10, 68.00, 65.30, 36.60, 3...
+## $ nh4         &lt;dbl&gt; 0.01, 0.02, 0.02, 0.01, 0.02, 0.09, 0.03, 0.02, 0....
+## $ no3         &lt;dbl&gt; 0.0, 0.0, 0.0, 0.0, 0.8, 6.6, 13.4, 18.9, 20.3, 19...
+## $ tp          &lt;dbl&gt; 79.3, 44.4, 34.0, 38.3, 51.0, 101.3, 61.1, 18.4, 1...</code></pre>
 </div>
 <div id="an-excellent-description-of-the-stats-for-aov-and-regression-is-here" class="section level2">
 <h2>An excellent description of the stats for AOV and regression is here:</h2>
@@ -357,42 +359,45 @@ glimpse(iris.df)</code></pre>
 <p>Lets try to do the summary stats on the data now and see how it differs</p>
 <pre class="r"><code># the data you want to look at
 
-skim(iris.df)</code></pre>
+skim(streams.df)</code></pre>
 <pre><code>## Skim summary statistics
-##  n obs: 150 
-##  n variables: 5 
+##  n obs: 52 
+##  n variables: 6 
 ## 
 ## Variable type: character 
-##  variable missing complete   n min max empty n_unique
-##   species       0      150 150   6  10     0        3
+##  variable missing complete  n min max empty n_unique
+##      site       0       52 52  11  11     0        1
 ## 
 ## Variable type: numeric 
-##      variable missing complete   n mean   sd  p0 p25  p50 p75 p100
-##  petal_length       0      150 150 3.76 1.77 1   1.6 4.35 5.1  6.9
-##   petal_width       0      150 150 1.2  0.76 0.1 0.3 1.3  1.8  2.5
-##  sepal_length       1      149 150 5.85 0.83 4.3 5.1 5.8  6.4  7.9
-##   sepal_width       0      150 150 3.06 0.44 2   2.8 3    3.3  4.4
+##  variable missing complete  n  mean     sd   p0   p25   p50   p75   p100
+##       drp       0       52 52 19.53 23.71  1.77  4.1   6.63 26.57  77.5 
+##       nh4       0       52 52  0.02  0.016 0     0.01  0.02  0.02   0.09
+##       no3       0       52 52  9.04  5.44  0     5.52  9.1  11.32  20.4 
+##        tp       0       52 52 32.02 23.39  1.7  15.83 22.45 44.4  101.3 
 ##      hist
-##  ▇▁▁▂▅▅▃▁
-##  ▇▁▁▅▃▃▂▂
-##  ▂▇▅▇▆▅▂▂
-##  ▁▂▅▇▃▂▁▁</code></pre>
+##  ▇▁▁▁▁▁▁▁
+##  ▇▇▁▁▁▁▁▁
+##  ▃▅▅▇▅▂▂▃
+##  ▂▇▂▂▁▁▁▁
+## 
+## Variable type: POSIXct 
+##     variable missing complete  n        min        max     median n_unique
+##  sample_date       0       52 52 2013-10-30 2016-01-21 2014-12-31       52</code></pre>
 </div>
-<div id="wide-to-long-format" class="section level2">
-<h2>Wide to long format</h2>
+<div id="long-to-wide-format" class="section level2">
+<h2>Long to Wide format</h2>
 <pre class="r"><code># this will add an index to the dataframe so you know what individual is which
-iris_long.df &lt;- iris.df %&gt;% 
-  mutate(individual = row_number()) %&gt;% 
-  gather(trait, measure, -species, - individual)</code></pre>
+streams_long.df &lt;- streams.df %&gt;% 
+  # mutate(sample = row_number()) %&gt;% 
+  gather(analyte, conc, -sample_date, -site )</code></pre>
 </div>
 <div id="outliers" class="section level2">
 <h2>Outliers</h2>
 <pre class="r"><code># Box Plots of data
-iris_long.df %&gt;% group_by(species, trait) %&gt;% 
-  ggplot( aes(x = species, y = measure, color = species, fill=species, alpha=0.3))+
-  geom_boxplot() </code></pre>
-<pre><code>## Warning: Removed 1 rows containing non-finite values (stat_boxplot).</code></pre>
-<p><img src="06_correlation_regression_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
+streams_long.df %&gt;% 
+  ggplot( aes(x = analyte, y = conc, color = analyte, fill=analyte))+
+  geom_boxplot(alpha=0.3) </code></pre>
+<p><img src="06_correlation_regression_streams_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
 </div>
 <div id="test-for-normality-of-data-and-using-the-broom-package" class="section level2">
 <h2>Test for normality of data and using the broom package</h2>
@@ -404,23 +409,15 @@ options(scipen = 999)
 
 # Test for normality of each group and store in shapirowilktests
 # This uses the broom package to get clean output of the test 
-iris_long.df %&gt;% group_by(species, trait) %&gt;% do(tidy(shapiro.test(.$measure)))</code></pre>
-<pre><code>## # A tibble: 12 x 5
-## # Groups:   species, trait [12]
-##    species    trait        statistic     p.value method                   
-##    &lt;chr&gt;      &lt;chr&gt;            &lt;dbl&gt;       &lt;dbl&gt; &lt;fct&gt;                    
-##  1 setosa     petal_length     0.955 0.0548      Shapiro-Wilk normality t…
-##  2 setosa     petal_width      0.800 0.000000866 Shapiro-Wilk normality t…
-##  3 setosa     sepal_length     0.977 0.456       Shapiro-Wilk normality t…
-##  4 setosa     sepal_width      0.972 0.272       Shapiro-Wilk normality t…
-##  5 versicolor petal_length     0.966 0.158       Shapiro-Wilk normality t…
-##  6 versicolor petal_width      0.948 0.0273      Shapiro-Wilk normality t…
-##  7 versicolor sepal_length     0.978 0.465       Shapiro-Wilk normality t…
-##  8 versicolor sepal_width      0.974 0.338       Shapiro-Wilk normality t…
-##  9 virginica  petal_length     0.962 0.110       Shapiro-Wilk normality t…
-## 10 virginica  petal_width      0.960 0.0870      Shapiro-Wilk normality t…
-## 11 virginica  sepal_length     0.971 0.258       Shapiro-Wilk normality t…
-## 12 virginica  sepal_width      0.967 0.181       Shapiro-Wilk normality t…</code></pre>
+streams_long.df %&gt;% group_by(analyte) %&gt;% do(tidy(shapiro.test(.$conc)))</code></pre>
+<pre><code>## # A tibble: 4 x 4
+## # Groups:   analyte [4]
+##   analyte statistic       p.value method                     
+##   &lt;chr&gt;       &lt;dbl&gt;         &lt;dbl&gt; &lt;fct&gt;                      
+## 1 drp         0.711 0.00000000834 Shapiro-Wilk normality test
+## 2 nh4         0.698 0.00000000478 Shapiro-Wilk normality test
+## 3 no3         0.960 0.0746        Shapiro-Wilk normality test
+## 4 tp          0.854 0.0000146     Shapiro-Wilk normality test</code></pre>
 <pre class="r"><code>#You can do this on all variables faster with if there was only one grouping
 # tapply(iris_long.df$measure, iris_long.df$species, shapiro.test)</code></pre>
 </div>
@@ -432,39 +429,9 @@ and<br />
 <a href="https://www.r-bloggers.com/plot-matrix-with-the-r-package-ggally/" class="uri">https://www.r-bloggers.com/plot-matrix-with-the-r-package-ggally/</a><br />
 and<br />
 <a href="http://ggobi.github.io/ggally/#canonical_correlation_analysis" class="uri">http://ggobi.github.io/ggally/#canonical_correlation_analysis</a></p>
-<pre class="r"><code>ggpairs(iris.df[,1:4])</code></pre>
-<pre><code>## Warning: Removed 1 rows containing non-finite values (stat_density).</code></pre>
-<pre><code>## Warning in (function (data, mapping, alignPercent = 0.6, method =
-## &quot;pearson&quot;, : Removing 1 row that contained a missing value</code></pre>
-<pre><code>## Warning in (function (data, mapping, alignPercent = 0.6, method =
-## &quot;pearson&quot;, : Removing 1 row that contained a missing value</code></pre>
-<pre><code>## Warning in (function (data, mapping, alignPercent = 0.6, method =
-## &quot;pearson&quot;, : Removing 1 row that contained a missing value</code></pre>
-<pre><code>## Warning: Removed 1 rows containing missing values (geom_point).
-
-## Warning: Removed 1 rows containing missing values (geom_point).
-
-## Warning: Removed 1 rows containing missing values (geom_point).</code></pre>
-<p><img src="06_correlation_regression_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
-<pre class="r"><code># if you only wanted to do this on a single species
-# Correlation graphs of one species
-setosa.df &lt;- iris.df %&gt;% #na.omit() %&gt;%
-  filter(species==&quot;setosa&quot;)   
-
-ggpairs(setosa.df[,1:4])</code></pre>
-<pre><code>## Warning: Removed 1 rows containing non-finite values (stat_density).</code></pre>
-<pre><code>## Warning in (function (data, mapping, alignPercent = 0.6, method =
-## &quot;pearson&quot;, : Removing 1 row that contained a missing value</code></pre>
-<pre><code>## Warning in (function (data, mapping, alignPercent = 0.6, method =
-## &quot;pearson&quot;, : Removing 1 row that contained a missing value</code></pre>
-<pre><code>## Warning in (function (data, mapping, alignPercent = 0.6, method =
-## &quot;pearson&quot;, : Removing 1 row that contained a missing value</code></pre>
-<pre><code>## Warning: Removed 1 rows containing missing values (geom_point).
-
-## Warning: Removed 1 rows containing missing values (geom_point).
-
-## Warning: Removed 1 rows containing missing values (geom_point).</code></pre>
-<p><img src="06_correlation_regression_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
+<pre class="r"><code>streams.df %&gt;% select(drp, tp, nh4, no3) %&gt;%
+  ggpairs()</code></pre>
+<p><img src="06_correlation_regression_streams_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
 </div>
 <div id="look-at-the-correlation-matrix" class="section level2">
 <h2>Look at the correlation matrix</h2>
@@ -472,15 +439,102 @@ ggpairs(setosa.df[,1:4])</code></pre>
 # the old way - the same really
 # cor(setosa.df[,1:4], method = &quot;pearson&quot;) # , method = c(&quot;pearson&quot;, &quot;kendall&quot;, &quot;spearman&quot;)
 # need to only have numeric varaibles
-iris.df %&gt;% select(-species) %&gt;% cor() </code></pre>
-<pre><code>##              sepal_length sepal_width petal_length petal_width
-## sepal_length            1          NA           NA          NA
-## sepal_width            NA   1.0000000   -0.4284401  -0.3661259
-## petal_length           NA  -0.4284401    1.0000000   0.9628654
-## petal_width            NA  -0.3661259    0.9628654   1.0000000</code></pre>
+streams.df %&gt;% select(-sample_date, -site) %&gt;% cor() </code></pre>
+<pre><code>##            drp        nh4         no3          tp
+## drp  1.0000000 0.30685828 -0.31325411  0.61471431
+## nh4  0.3068583 1.00000000  0.06834062  0.57126652
+## no3 -0.3132541 0.06834062  1.00000000 -0.01037433
+## tp   0.6147143 0.57126652 -0.01037433  1.00000000</code></pre>
 </div>
-<div id="linear-regression" class="section level2">
-<h2>Linear Regression</h2>
+<div id="correlation-test" class="section level1">
+<h1>Correlation test</h1>
+<pre class="r"><code>drp_tp.cor &lt;- cor.test(streams.df$drp, streams.df$tp)
+
+# can see by calling model
+drp_tp.cor</code></pre>
+<pre><code>## 
+##  Pearson&#39;s product-moment correlation
+## 
+## data:  streams.df$drp and streams.df$tp
+## t = 5.5109, df = 50, p-value = 0.000001247
+## alternative hypothesis: true correlation is not equal to 0
+## 95 percent confidence interval:
+##  0.4107135 0.7601030
+## sample estimates:
+##       cor 
+## 0.6147143</code></pre>
+<pre class="r"><code># other way
+cor.test(~ drp + tp, streams.df)</code></pre>
+<pre><code>## 
+##  Pearson&#39;s product-moment correlation
+## 
+## data:  drp and tp
+## t = 5.5109, df = 50, p-value = 0.000001247
+## alternative hypothesis: true correlation is not equal to 0
+## 95 percent confidence interval:
+##  0.4107135 0.7601030
+## sample estimates:
+##       cor 
+## 0.6147143</code></pre>
+<pre class="r"><code>str(drp_tp.cor)</code></pre>
+<pre><code>## List of 9
+##  $ statistic  : Named num 5.51
+##   ..- attr(*, &quot;names&quot;)= chr &quot;t&quot;
+##  $ parameter  : Named int 50
+##   ..- attr(*, &quot;names&quot;)= chr &quot;df&quot;
+##  $ p.value    : num 0.00000125
+##  $ estimate   : Named num 0.615
+##   ..- attr(*, &quot;names&quot;)= chr &quot;cor&quot;
+##  $ null.value : Named num 0
+##   ..- attr(*, &quot;names&quot;)= chr &quot;correlation&quot;
+##  $ alternative: chr &quot;two.sided&quot;
+##  $ method     : chr &quot;Pearson&#39;s product-moment correlation&quot;
+##  $ data.name  : chr &quot;streams.df$drp and streams.df$tp&quot;
+##  $ conf.int   : atomic [1:2] 0.411 0.76
+##   ..- attr(*, &quot;conf.level&quot;)= num 0.95
+##  - attr(*, &quot;class&quot;)= chr &quot;htest&quot;</code></pre>
+<pre class="r"><code># You can extract values from the cor.test() object like this:
+
+drp_tp.cor$estimate</code></pre>
+<pre><code>##       cor 
+## 0.6147143</code></pre>
+<pre class="r"><code>drp_tp.cor$p.value</code></pre>
+<pre><code>## [1] 0.000001246634</code></pre>
+<pre class="r"><code># This calculates the correlation coefficient and the degrees of freedom
+streams.df %&gt;% summarize(nuts_cor = cor.test(drp, tp)$estimate,
+                   nuts_df = cor.test(drp, tp)$parameter,
+                   nuts.pvalue = cor.test(drp, tp)$p.value)</code></pre>
+<pre><code>## # A tibble: 1 x 3
+##   nuts_cor nuts_df nuts.pvalue
+##      &lt;dbl&gt;   &lt;int&gt;       &lt;dbl&gt;
+## 1    0.615      50  0.00000125</code></pre>
+<pre class="r"><code>streams.df %&gt;%  do(tidy(cor.test(.$drp, .$tp))) # can be done with grouping variables as well</code></pre>
+<pre><code>##    estimate statistic        p.value parameter  conf.low conf.high
+## 1 0.6147143  5.510856 0.000001246634        50 0.4107135  0.760103
+##                                 method alternative
+## 1 Pearson&#39;s product-moment correlation   two.sided</code></pre>
+<div id="regressions" class="section level2">
+<h2>Regressions</h2>
+<div id="read-in-files" class="section level3">
+<h3>Read in files</h3>
+<pre class="r"><code>stds.df &lt;- read_excel(&quot;data/standards.xlsx&quot;)
+
+glimpse(stds.df)</code></pre>
+<pre><code>## Observations: 30
+## Variables: 5
+## $ replicate &lt;dbl&gt; 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2...
+## $ std       &lt;dbl&gt; 0.000, 0.000, 0.005, 0.005, 0.010, 0.010, 0.020, 0.0...
+## $ drp       &lt;dbl&gt; 0.000, 0.000, 0.002, 0.006, 0.004, 0.003, 0.006, 0.0...
+## $ tp        &lt;dbl&gt; -0.002, -0.002, -0.001, -0.001, 0.000, 0.000, 0.002,...
+## $ nh4       &lt;dbl&gt; 0.008, 0.008, NA, NA, 0.018, 0.018, 0.020, 0.020, 0....</code></pre>
+</div>
+<div id="stds-long" class="section level3">
+<h3>Stds long</h3>
+<pre class="r"><code>sts_long.df &lt;- stds.df %&gt;%
+  gather(analyte, abs, -replicate, - std)</code></pre>
+</div>
+<div id="linear-regression" class="section level3">
+<h3>Linear Regression</h3>
 <p>Linear regression models</p>
 <pre class="r"><code># Fit our regression model
 # regression formula and dataframte
@@ -509,8 +563,8 @@ summary(sepal.model) # show regression coefficients table</code></pre>
 ## Multiple R-squared:  0.5567, Adjusted R-squared:  0.5473 
 ## F-statistic: 59.03 on 1 and 47 DF,  p-value: 0.0000000007599</code></pre>
 </div>
-<div id="aov-table-of-regression" class="section level2">
-<h2>AOV table of regression</h2>
+<div id="aov-table-of-regression" class="section level3">
+<h3>AOV table of regression</h3>
 <pre class="r"><code>anova(sepal.model)</code></pre>
 <pre><code>## Analysis of Variance Table
 ## 
@@ -549,11 +603,12 @@ Anova(sepal.model, type=&quot;III&quot;)</code></pre>
 ## ---
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
 <pre class="r"><code># NOTE THERE IS NO DIFFERENCE</code></pre>
+</div>
 <div id="simple_regplot" class="section level3">
 <h3>Plot of the Regression</h3>
 <pre class="r"><code>plot(data=setosa.df, sepal_length ~ sepal_width, main=&quot;Regression Plot&quot;)
 abline(sepal.model, col=&quot;red&quot;)</code></pre>
-<p><img src="06_correlation_regression_files/figure-html/unnamed-chunk-13-1.png" width="672" /></p>
+<p><img src="06_correlation_regression_streams_files/figure-html/unnamed-chunk-20-1.png" width="672" /></p>
 </div>
 <div id="ggplot_regplot" class="section level3">
 <h3>Regression plot with GGPLOT which is a bit nicer in my opinion</h3>
@@ -562,7 +617,7 @@ abline(sepal.model, col=&quot;red&quot;)</code></pre>
   geom_point()</code></pre>
 <pre><code>## Warning: Removed 1 rows containing non-finite values (stat_smooth).</code></pre>
 <pre><code>## Warning: Removed 1 rows containing missing values (geom_point).</code></pre>
-<p><img src="06_correlation_regression_files/figure-html/unnamed-chunk-14-1.png" width="672" /></p>
+<p><img src="06_correlation_regression_streams_files/figure-html/unnamed-chunk-21-1.png" width="672" /></p>
 </div>
 <div id="we-can-use-this-to-get-more-information-about-the-model-fit" class="section level3">
 <h3>We can use this to get more information about the model fit</h3>
@@ -580,18 +635,18 @@ confint(sepal.model)</code></pre>
 2. errors are independent<br />
 3. relationships are linear<br />
 Investigate these assumptions visually by plotting your model:</p>
-</div>
-<div id="histogram-of-residuals" class="section level2">
-<h2>Histogram of residuals</h2>
+<div id="histogram-of-residuals" class="section level3">
+<h3>Histogram of residuals</h3>
 <pre class="r"><code># histogram of residuals
 hist(residuals(sepal.model))</code></pre>
-<p><img src="06_correlation_regression_files/figure-html/unnamed-chunk-16-1.png" width="672" /></p>
+<p><img src="06_correlation_regression_streams_files/figure-html/unnamed-chunk-23-1.png" width="672" /></p>
 </div>
-<div id="diagnostic-plots" class="section level2">
-<h2>Diagnostic Plots</h2>
+<div id="diagnostic-plots" class="section level3">
+<h3>Diagnostic Plots</h3>
 <pre class="r"><code>par(mar = c(4, 4, 2, 2), mfrow = c(1, 2)) 
 plot(sepal.model, which = c(1, 2)) # &quot;which&quot; argument optional</code></pre>
-<p><img src="06_correlation_regression_files/figure-html/unnamed-chunk-17-1.png" width="672" /></p>
+<p><img src="06_correlation_regression_streams_files/figure-html/unnamed-chunk-24-1.png" width="672" /></p>
+</div>
 <div id="nonconstant-error-variance-or-homoscedasticity" class="section level3">
 <h3>Non‐constant Error Variance or Homoscedasticity</h3>
 <pre class="r"><code># Evaluate homoscedasticity
@@ -612,9 +667,8 @@ shapiro.test(sepal.model$res)</code></pre>
 ## data:  sepal.model$res
 ## W = 0.98023, p-value = 0.5748</code></pre>
 </div>
-</div>
-<div id="save-residuals-for-further-analyses" class="section level2">
-<h2>Save residuals for further analyses</h2>
+<div id="save-residuals-for-further-analyses" class="section level3">
+<h3>Save residuals for further analyses</h3>
 <pre class="r"><code># # now to put the residuals next to the data and make sure that NAs are included
 # Not sure why it has an error but it works.
 setosa.df$residuals[!is.na(setosa.df$sepal_length)]&lt;-residuals(lm(data=setosa.df, sepal_length ~ sepal_width, na.action=na.omit))</code></pre>
@@ -630,8 +684,8 @@ setosa.df$residuals[!is.na(setosa.df$sepal_length)]&lt;-residuals(lm(data=setosa
 ## 5         5.00        3.60         1.40       0.200 setosa    -0.123 
 ## 6         5.40        3.90         1.70       0.400 setosa     0.0664</code></pre>
 </div>
-<div id="now-to-add-in-the-predicted-values" class="section level2">
-<h2>Now to add in the predicted values</h2>
+<div id="now-to-add-in-the-predicted-values" class="section level3">
+<h3>Now to add in the predicted values</h3>
 <p>you could also do this with a formula from the output of the model</p>
 <pre class="r"><code># this produces the fitted values for the model
 
@@ -651,8 +705,8 @@ fitted(sepal.model)</code></pre>
 ##       50 
 ## 4.912098</code></pre>
 </div>
-<div id="store-fitted-values-in-dataframe" class="section level2">
-<h2>Store fitted values in dataframe</h2>
+<div id="store-fitted-values-in-dataframe" class="section level3">
+<h3>Store fitted values in dataframe</h3>
 <pre class="r"><code># now to see a plot of fitted and observed-----
 setosa.df$fitted[!is.na(setosa.df$sepal_length)]&lt;-fitted(lm(data=setosa.df, sepal_length ~ sepal_width, na.action=na.omit))</code></pre>
 <pre><code>## Warning: Unknown or uninitialised column: &#39;fitted&#39;.</code></pre>
@@ -673,7 +727,8 @@ setosa.df$fitted[!is.na(setosa.df$sepal_length)]&lt;-fitted(lm(data=setosa.df, s
     geom_line(aes(x = sepal_width, y = fitted), color=&quot;red&quot;)</code></pre>
 <pre><code>## Warning: Removed 1 rows containing missing values (geom_point).</code></pre>
 <pre><code>## Warning: Removed 1 rows containing missing values (geom_point).</code></pre>
-<p><img src="06_correlation_regression_files/figure-html/unnamed-chunk-22-1.png" width="672" /></p>
+<p><img src="06_correlation_regression_streams_files/figure-html/unnamed-chunk-29-1.png" width="672" /></p>
+</div>
 </div>
 <div id="other-packages-that-do-similiar-things-maybe-better." class="section level2">
 <h2>Other packages that do similiar things maybe better.</h2>
@@ -743,13 +798,13 @@ there are a lot of good examples of comparing models and a lot more about regres
 <div id="different-code-for-a-qqplot-for-normality" class="section level3">
 <h3>Different code for a QQPlot for normality</h3>
 <pre class="r"><code>qqPlot(sepal.model, main=&quot;QQ Plot&quot;) #qq plot for studentized resid</code></pre>
-<p><img src="06_correlation_regression_files/figure-html/unnamed-chunk-25-1.png" width="672" /></p>
+<p><img src="06_correlation_regression_streams_files/figure-html/unnamed-chunk-32-1.png" width="672" /></p>
 <pre><code>## [1] 23 37</code></pre>
 </div>
 <div id="leverage-plots" class="section level3">
 <h3>leverage plots</h3>
 <pre class="r"><code>leveragePlots(sepal.model) # leverage plots</code></pre>
-<p><img src="06_correlation_regression_files/figure-html/unnamed-chunk-26-1.png" width="672" /></p>
+<p><img src="06_correlation_regression_streams_files/figure-html/unnamed-chunk-33-1.png" width="672" /></p>
 </div>
 <div id="assess-the-role-of-outliers" class="section level3">
 <h3>Assess the role of outliers</h3>
@@ -776,7 +831,7 @@ size is proportial to Cook&#39;s Distance&quot; )</code></pre>
 <pre><code>## Warning in title(...): &quot;id.method&quot; is not a graphical parameter</code></pre>
 <pre><code>## Warning in plot.xy(xy.coords(x, y), type = type, ...): &quot;id.method&quot; is not a
 ## graphical parameter</code></pre>
-<p><img src="06_correlation_regression_files/figure-html/unnamed-chunk-28-1.png" width="672" /></p>
+<p><img src="06_correlation_regression_streams_files/figure-html/unnamed-chunk-35-1.png" width="672" /></p>
 <pre><code>##       StudRes        Hat       CookD
 ## 15  1.7498494 0.06669843 0.104813642
 ## 16  0.0678211 0.15578847 0.000433591
@@ -788,14 +843,14 @@ size is proportial to Cook&#39;s Distance&quot; )</code></pre>
 <h3>Plot studentized residuals vs. fitted values</h3>
 <pre class="r"><code># plot studentized residuals vs. fitted values
 spreadLevelPlot(sepal.model)</code></pre>
-<p><img src="06_correlation_regression_files/figure-html/unnamed-chunk-29-1.png" width="672" /></p>
+<p><img src="06_correlation_regression_streams_files/figure-html/unnamed-chunk-36-1.png" width="672" /></p>
 <pre><code>## 
 ## Suggested power transformation:  5.093463</code></pre>
 <p>Non‐independence of Errors</p>
 <pre class="r"><code># Test for Autocorrelated Errors
 durbinWatsonTest(sepal.model)</code></pre>
 <pre><code>##  lag Autocorrelation D-W Statistic p-value
-##    1      -0.2762724      2.548843    0.06
+##    1      -0.2762724      2.548843   0.056
 ##  Alternative hypothesis: rho != 0</code></pre>
 </div>
 <div id="standardized-regression---converted-to-z-scores" class="section level3">
@@ -841,6 +896,7 @@ summary(sepal_z.model)</code></pre>
 
   gtag('config', 'UA-88373117-4');
 </script>
+</div>
 </div>
 </div>
 

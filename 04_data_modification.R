@@ -19,14 +19,27 @@ library(readxl)
 # read in the file:	
 mc.df <- read_excel("data/mc.xlsx")	
 	
+
 # Read in the second file:	
 
+# So type in smc.df <- and read_excel("") when you do this in inside of the "" hit tab
+# this will help you find the file and see the options
+
+smc.df <- read_excel("")
 
 
 	
-# look at the data using glimpse()
 
+
+smc.df <- read_excel("data/smc.xlsx")
+
+
+# look at the data using glimpse() - remember hit tab inside the ()
+glimpse()
 	
+
+glimpse(smc.df)
+
 
 
 #' ##Joining dataframes together	
@@ -40,7 +53,7 @@ mc.df <- read_excel("data/mc.xlsx")
 #' We can also separate the data into smaller dataframes later. 
 #' Use df <- rbind(df1, df2) then use glimpse() to look at it.
 
-
+mc_smc.df <- rbind(mc.df, smc.df)
 
 
 #' ##The pipe	
@@ -52,7 +65,7 @@ mc.df <- read_excel("data/mc.xlsx")
 #' things with the output. We do this using the pipe command ```%>%```. 
 #' This takes what is on the left and passes it to the right.    	
 
-
+mc_smc.df %>% glimpse()
 
 
 #' ##Mutate	
@@ -60,7 +73,8 @@ mc.df <- read_excel("data/mc.xlsx")
 #'         	
 #'  mc_smc.df <- mc_smc.df %>% mutate(variable = varaible - variable))      	
 
-
+mc_smc.df <- mc_smc.df %>%
+  mutate(dry_wt_g = dry_105c_g - tare_g)
 	
 
 
@@ -69,7 +83,8 @@ mc.df <- read_excel("data/mc.xlsx")
 	
 # mc_smc.df <- mc_smc.df %>% mutate(variable = varaible / variable))	
 	
-
+mc_smc.df <- mc_smc.df %>%
+  mutate(dry_wt_g_l = dry_wt_g/volume_filtered_l)
 
 
  	
@@ -81,7 +96,11 @@ mc.df <- read_excel("data/mc.xlsx")
 #                           variable = varaible / variable)	
 #                        )	
 
-
+mc_smc.df <- mc_smc.df %>%
+  mutate(
+    dry_wt_g = dry_105c_g - tare_g,
+    dry_wt_g_l = dry_wt_g/volume_filtered_l
+  )
 
 
 
@@ -115,6 +134,10 @@ mc.df <- read_excel("data/mc.xlsx")
 # There is a way we can change many variaibles at a time	
 
 
+mc_smc.df <- mc_smc.df %>% 
+  mutate(
+    datetime = mdy_hm(datetime)
+  )
 	
 #' ##Modifying dates	
 #' So we can now work with this datetime column really easily and pull 
@@ -153,9 +176,14 @@ head(mc_smc_2015.df)
 
 #'Use & to select two things
 #' 	 	
+
 mc_2015.df <- mc_smc.df %>% filter(year==2015 & site=="mc") 	
 	
 head(mc_smc_2015.df)	
+
+
+#OK Now if you wanted to select month 7 or month 8 how could you do this
+# Look at how booleans work and the terms....
 
 
 
@@ -172,7 +200,9 @@ head(mc_smc_2015.df)
 #' 
 #' try typing this one or you can un commnet the code and run it.
 
-	
+mc_smc.df %>% 
+  ggplot(aes(x=julian_day, y=w_temp_c, color=site)) +
+  geom_point() 
 
 	
 #' So what we can also do is rather than making new dataframes 
@@ -183,28 +213,37 @@ mc_smc.df %>% filter(year==2015 & site=="mc") %>%
   ggplot(aes(x=julian_day, y=dry_wt_g_l, color=site)) +	
   geom_point() 	
 
+##Selecting variables
+# What if you wanted to select only certain variables to work with?
+# Now lets use two ways to do the same thing.....   
 
- 	
+mc_smc_drywt.df <- mc_smc.df %>% 
+  select(datetime, julian_day, dry_wt_g_l)
+
+
+
+
 #' Lets assume you wanted to select all dry weight and volume filtered  you can use things like: 	
 #' ````starts_with(), ends_with(), contains(),  everything()```` in various combinations such as	
 #' 	
 mc_smc_drywt.df <- mc_smc.df %>% 	
   select(datetime, julian_day, volume_filtered_l, starts_with("dry"))	
-#' 	
-#' 	
-#' 	
+
+
+
+ 	
 #' 	
 #' ##What if you wanted see all NA values in a particular variable....	
 #' 	you use df %>% filter(is.na(variable))	
-#' 	
-#' 	
 
-#' 	
-#' 	
+mc_smc.df %>% filter(is.na(dry_wt_g_l))
+
+
+
 #' ##What if you wanted see all NA values	
 #' you use df %>% filter(!is.na(variable))		
 
-
+mc_smc.df %>% filter(!is.na(dry_wt_g_l))
 
 	
 #' ##Groups and summmarize data    	
@@ -226,7 +265,10 @@ mc_smc.df %>% group_by(site, year, month) %>%
 #   new variable = mean(variable)	
 #     )	
 	
-
+mc_smc.df %>% group_by(site, year, month) %>%
+  summarize(
+    mean_temp_c = mean(w_temp_c)
+  )
 
 
 #' You should get used to adding in the term *`na.rm=TRUE`* on all of your calculations. If you don't you can see the results below. 	
@@ -242,7 +284,7 @@ mc_smc.df %>% group_by(site, year, month) %>%
 
 	
 #' Finally we could also use this for plotting	
-#' 	
+
 	
 mc_smc.df %>% group_by(site, year, month) %>%	
   summarize(	

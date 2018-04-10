@@ -23,6 +23,7 @@ We will read in the main files and load the libraries as we have worked with so 
 
 # load the libraries each time you restart R
 library(tidyverse)
+library(readxl)
 library(lubridate)
 library(scales)
 library(skimr)
@@ -36,11 +37,11 @@ library(car)
 library(gvlma)
 
 # read in the file
-iris.df <- read_csv("data/iris.csv") %>%
+streams.df <- read_excel("data/stream_chemistry.xlsx") %>%
   clean_names() %>%
   remove_empty(c("rows", "cols")) 
 
-glimpse(iris.df)
+glimpse(streams.df)
 
 ```
 
@@ -53,17 +54,17 @@ Lets try to do the summary stats on the data now and see how it differs
 ```{r}
 # the data you want to look at
 
-skim(iris.df)
+skim(streams.df)
 
 ```
    
 
-## Wide to long format
+## Long to Wide format
 ```{r}
 # this will add an index to the dataframe so you know what individual is which
-iris_long.df <- iris.df %>% 
-  mutate(individual = row_number()) %>% 
-  gather(trait, measure, -species, - individual)
+streams_long.df <- streams.df %>% 
+  # mutate(sample = row_number()) %>% 
+  gather(analyte, conc, -sample_date, -site )
 
 ```
 
@@ -72,9 +73,9 @@ iris_long.df <- iris.df %>%
 
 ```{r}
 # Box Plots of data
-iris_long.df %>% group_by(species, trait) %>% 
-  ggplot( aes(x = species, y = measure, color = species, fill=species, alpha=0.3))+
-  geom_boxplot() 
+streams_long.df %>% 
+  ggplot( aes(x = analyte, y = conc, color = analyte, fill=analyte))+
+  geom_boxplot(alpha=0.3) 
 ```
 
 
@@ -89,7 +90,7 @@ options(scipen = 999)
 
 # Test for normality of each group and store in shapirowilktests
 # This uses the broom package to get clean output of the test 
-iris_long.df %>% group_by(species, trait) %>% do(tidy(shapiro.test(.$measure)))
+streams_long.df %>% group_by(analyte) %>% do(tidy(shapiro.test(.$conc)))
 
 #You can do this on all variables faster with if there was only one grouping
 # tapply(iris_long.df$measure, iris_long.df$species, shapiro.test)
@@ -106,23 +107,9 @@ https://www.r-bloggers.com/plot-matrix-with-the-r-package-ggally/
 and   
 http://ggobi.github.io/ggally/#canonical_correlation_analysis     
 ```{r message=TRUE, warning=TRUE}
-
-
-ggpairs(iris.df[,1:4])
-
-
+streams.df %>% select(drp, tp, nh4, no3) %>%
+  ggpairs()
 ```
-
-```{r}
-# if you only wanted to do this on a single species
-# Correlation graphs of one species
-setosa.df <- iris.df %>% #na.omit() %>%
-  filter(species=="setosa")   
-
-ggpairs(setosa.df[,1:4])
-
-```
-
 
 
 ##Look at the correlation matrix
@@ -131,11 +118,72 @@ ggpairs(setosa.df[,1:4])
 # the old way - the same really
 # cor(setosa.df[,1:4], method = "pearson") # , method = c("pearson", "kendall", "spearman")
 # need to only have numeric varaibles
-iris.df %>% select(-species) %>% cor() 
+streams.df %>% select(-sample_date, -site) %>% cor() 
 
 ```
 
-##Linear Regression  
+
+# Correlation test
+```{r}
+drp_tp.cor <- cor.test(streams.df$drp, streams.df$tp)
+
+# can see by calling model
+drp_tp.cor
+
+```
+
+```{r}
+# other way
+cor.test(~ drp + tp, streams.df)
+
+```
+
+
+```{r}
+str(drp_tp.cor)
+```
+
+
+```{r}
+# You can extract values from the cor.test() object like this:
+
+drp_tp.cor$estimate
+
+drp_tp.cor$p.value
+```
+
+```{r}
+# This calculates the correlation coefficient and the degrees of freedom
+streams.df %>% summarize(nuts_cor = cor.test(drp, tp)$estimate,
+                   nuts_df = cor.test(drp, tp)$parameter,
+                   nuts.pvalue = cor.test(drp, tp)$p.value)
+```
+
+```{r}
+streams.df %>%  do(tidy(cor.test(.$drp, .$tp))) # can be done with grouping variables as well
+```
+
+
+
+
+
+##Regressions
+
+###Read in files
+```{r}
+stds.df <- read_excel("data/standards.xlsx")
+
+glimpse(stds.df)
+```
+
+###Stds long
+```{r}
+sts_long.df <- stds.df %>%
+  gather(analyte, abs, -replicate, - std)
+```
+
+
+###Linear Regression  
 Linear regression models    
 ```{r}
 # Fit our regression model
@@ -148,7 +196,7 @@ summary(sepal.model) # show regression coefficients table
 
 ```
 
-##AOV table of regression
+###AOV table of regression
 ```{r}
 anova(sepal.model)
 
@@ -199,13 +247,13 @@ Ordinary least squares regression relies on several assumptions
 3. relationships are linear     
 Investigate these assumptions visually by plotting your model:  
 
-##Histogram of residuals
+###Histogram of residuals
 ```{r}
 # histogram of residuals
 hist(residuals(sepal.model))
 ```
 
-##Diagnostic Plots
+###Diagnostic Plots
 ```{r}
 par(mar = c(4, 4, 2, 2), mfrow = c(1, 2)) 
 plot(sepal.model, which = c(1, 2)) # "which" argument optional
@@ -227,7 +275,7 @@ shapiro.test(sepal.model$res)
 
 ```  
    
-## Save residuals for further analyses 
+### Save residuals for further analyses 
 ```{r}
 # # now to put the residuals next to the data and make sure that NAs are included
 # Not sure why it has an error but it works.
@@ -237,7 +285,7 @@ head(setosa.df)
 ```
   
 
-##Now to add in the predicted values    
+###Now to add in the predicted values    
 you could also do this with a formula from the output of the model  
 ```{r}
 # this produces the fitted values for the model
@@ -246,7 +294,7 @@ fitted(sepal.model)
 ```
 
 
-##Store fitted values in dataframe 
+###Store fitted values in dataframe 
 ```{r}
 # now to see a plot of fitted and observed-----
 setosa.df$fitted[!is.na(setosa.df$sepal_length)]<-fitted(lm(data=setosa.df, sepal_length ~ sepal_width, na.action=na.omit))
