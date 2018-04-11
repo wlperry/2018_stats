@@ -119,7 +119,7 @@ ggsave("figures/violin.plot.tiff",plot=violin.plot, width=6, height=6, dpi = 300
 ##Statistical plots     
 So now lets try to do a few plots that are useful for publication. the first will be a mean and standard error plot and we will try this with multiple data in wide format
 
-#Plotting multiple variables - wide format
+##Plotting multiple variables - wide format
 First lets just plot Species versus Sepal Length.
 ```{r}
 ggplot(iris.df, aes(x=Species)) +

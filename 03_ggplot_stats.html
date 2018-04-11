@@ -448,8 +448,8 @@ ggsave(&quot;figures/violin.plot.tiff&quot;,plot=violin.plot, width=6, height=6,
 <h2>Statistical plots</h2>
 <p>So now lets try to do a few plots that are useful for publication. the first will be a mean and standard error plot and we will try this with multiple data in wide format</p>
 </div>
-<div id="plotting-multiple-variables---wide-format" class="section level1">
-<h1>Plotting multiple variables - wide format</h1>
+<div id="plotting-multiple-variables---wide-format" class="section level2">
+<h2>Plotting multiple variables - wide format</h2>
 <p>First lets just plot Species versus Sepal Length.</p>
 <pre class="r"><code>ggplot(iris.df, aes(x=Species)) +
   geom_point(aes(y=Sepal.Length))</code></pre>
@@ -461,6 +461,7 @@ ggsave(&quot;figures/violin.plot.tiff&quot;,plot=violin.plot, width=6, height=6,
   geom_point(aes(y=Sepal.Width), color=&quot;red&quot;)</code></pre>
 <pre><code>## Warning: Removed 1 rows containing missing values (geom_point).</code></pre>
 <p><img src="03_ggplot_stats_files/figure-html/unnamed-chunk-12-1.png" width="672" /></p>
+</div>
 <div id="means" class="section level2">
 <h2>Means</h2>
 <p>Now what if you wanted only to show the means</p>
@@ -519,7 +520,6 @@ ggsave(&quot;figures/violin.plot.tiff&quot;,plot=violin.plot, width=6, height=6,
   ga('send', 'pageview');
 
 </script>
-</div>
 </div>
 </div>
 
