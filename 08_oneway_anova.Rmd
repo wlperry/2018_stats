@@ -1,12 +1,234 @@
 ---
-title: "Data Modification"
+title: "T Test and One Way ANOVA"
 author: "Bill Perry"
-date: "2018/03/14"
+date: "2018/04/30"
 output:
   html_document:
     toc: true
     toc_float: true
 ---
+##Load libraries
+We will read in the main files and load the libraries as we have worked with so far.   
+
+```{r, message=FALSE, warning=FALSE}
+# #Install Packages ----
+# install.packages("tidyverse")
+# install.packages("lubridate")
+# install.packages("scales")
+# install.packages("readxl")
+# install.packages("survminer")
+# install.packages("survival")
+# install.packages("patchwork")
+# install.packages("broom")
+# ANOVA specific
+# install.packages("car")
+# install.packages("emmeans")
+# install.packages("multcompView")
+
+
+#Load libraries ----
+library(tidyverse)
+library(lubridate)
+library(scales)
+library(readxl)
+library(skimr)
+library(broom)
+library(janitor)
+# library(zoo)
+library(patchwork)
+library(car)
+library(emmeans)
+library(multcompView)
+
+```
+
+
+## Read in the file
+```{r}
+# read in the file
+gene_exp.df <- read_excel("data/Example data.XLSX", sheet="Gene expression analysis") %>%
+  clean_names() %>%
+  remove_empty(c("rows", "cols")) 
+
+glimpse(gene_exp.df)
+```
+
+
+##Summary Statistics for the better look
+```{r}
+# the data you want to look at
+
+skim(gene_exp.df)
+
+```
+
+##Look at the data
+We could do this in the wide format but it is a lot easier in long format
+## Wide to long format
+```{r}
+# this will add an index to the dataframe so you know what individual is which
+gene_exp_long.df <- gene_exp.df %>%
+  gather(
+    treatment, # this will take all the row headings into a column
+    expression, # this will convert all the measures into a column called expression
+    -experiment, # the - sign tells tidyr not to move those columns
+    -individual
+  ) 
+
+glimpse(gene_exp_long.df)
+
+# we could spread it back out to what it was
+gene_exp_wide.df <- gene_exp_long.df %>%
+  spread(treatment, expression)
+
+
+```
+
+
+## Look at data
+```{r}
+glimpse(gene_exp_long.df)
+```
+
+##Convert to factors
+So to do this the experiment and individuals are numeric and need to be converted to categories or factors...
+
+## Wide data to factors
+
+```{r}
+# convert things to factors or do calculations
+gene_exp.df <- gene_exp.df %>%
+  mutate(
+    experiment = as.factor(experiment),
+    individual = as.factor(individual)
+  )
+
+# now look at it
+skim(gene_exp.df)
+
+```
+
+
+## Long data to factors
+
+```{r}
+#need to make treatment a factor
+gene_exp_long.df <- gene_exp_long.df %>%
+mutate(
+  experiment = as.factor(experiment),
+    individual = as.factor(individual),
+    treatment = as.factor(treatment)
+  )
+
+# now look at it
+skim(gene_exp_long.df)
+
+
+
+
+```
+
+
+
+##Now to graph the long format data
+```{r}
+# Note the new format allows us to make coding a lot faster
+gene_exp_long.df %>% 
+  group_by(treatment)  %>%
+  ggplot(aes(treatment, expression)) +
+  geom_boxplot()
+```
+
+
+
+
+
+
+
+
+## T-Tests are a great way to compare two means. But they can be a bit limited.
+
+There are several types of T tests and there are a few assumptions
+Normality
+Heterogeneity of Variances
+and a few others we will talk about....
+
+
+
+###Test for normality of each group
+To do this in wide format it is straight forward  
+Here these should be non-signficant so they are not deviating from a normal distribution.   
+
+```{r}
+# Test for normality of each group wide format
+shapiro.test(gene_exp.df$control)
+shapiro.test(gene_exp.df$treat1)
+shapiro.test(gene_exp.df$treat2)
+shapiro.test(gene_exp.df$treat3)
+
+
+```
+
+###Test for homogeneity of variances  
+Best to use the Levenes test compared to the Bartlet test  
+uses the car package   
+http://www.cookbook-r.com/Statistical_analysis/Homogeneity_of_variance/   
+```{r}
+#Test for homogeneity of variances
+
+leveneTest(expression ~ treatment, data=gene_exp_long.df)
+
+#Compared to the Bartlet test
+bartlett.test(expression ~ treatment, data=gene_exp_long.df)
+
+#With multiple independent variables, the interaction() function must be used to collapse the IV’s into a single variable with all combinations of the factors. If it is not used, then the will be the wrong degrees of freedom, and the p-value will be wrong.
+
+# bartlett.test(extra ~ interaction(group,some other independent factor), data=sleep.df)
+
+
+```
+
+ 
+  
+###Paired T-Tests wide format
+```{r}
+# Paired T-Test - Welch 2 sample -----
+t.test(gene_exp.df$control, gene_exp.df$treat1, paired=TRUE) # Note the 1 and 2 are in quotes so R knows its the column
+```
+
+
+###Paired T-Tests long format
+```{r}
+# Paired T-Test - Welch 2 sample -----
+# Welch t-test
+# t.test(variable ~ group, dataframe)
+
+# need to make a dataframe with only 2 groups
+cont_t1.df <- gene_exp_long.df %>%
+  filter(treatment == "control" | treatment == "treat1")
+
+
+t.test(expression ~ treatment, cont_t1.df, paired=TRUE) # Note the 1 and 2 are in quotes so R knows its the column
+```
+
+
+###Two Sample T-Test - in wide format
+By default, t.test does not assume equal variances
+```{r}
+# Welch t-test
+t.test(gene_exp.df$control, gene_exp.df$treat1, var.equal=FALSE)
+```
+
+
+###Two Sample T-Test - in long format
+By default, t.test does not assume equal variances
+```{r}
+# Welch t-test
+t.test(expression ~ treatment, cont_t1.df, var.equal=FALSE)
+```
+
+
+
 ## One way Anova
 
 ## Great Reading
@@ -15,298 +237,102 @@ https://www.zoology.ubc.ca/~schluter/R/fit-model/
 
 The key thing here is the use of the car package as it is essential for unbalanced designs and the use of Type III sum of squares otherwise Type I sum of squares are used which is rarely good. Weather to use Type II or III is a contentious issue and we will just go with Type III for all of our work
 
-##Load libraries
-We will read in the main files and load the libraries as we have worked with so far.   
 
-```{r, message=FALSE, warning=FALSE}
-# One new package for summary stats
-#install.packages("broom")
-# install.packages("GGally")
-# install.packages("car")
-# install.packages("gvlma")
-
-
-# load the libraries each time you restart R
-library(tidyverse)
-library(lubridate)
-library(scales)
-library(skimr)
-library(janitor)
-library(patchwork)
-# library(reshape2)
-library(broom)
-library(GGally)
-library(corrplot)
-library(car)
-
-
-# read in the file
-iris.df <- read_csv("data/iris.csv") %>%
-  clean_names() %>%
-  remove_empty(c("rows", "cols")) 
-
-glimpse(iris.df)
+## Bartlets test for homogeneity of varaince
+```{r}
+#Compared variances uisng  Bartlet test
+# significant means they differ in varainces but this is close
+bartlett.test(expression ~ treatment, data=gene_exp_long.df)
 ```
 
 
-###Summary Statistics for the better look
-###So this is a lot different than thinking about data from excel    
-Lets try to do the summary stats on the data now and see how it differs
-```{r}
-# the data you want to look at
-
-skim(iris.df)
-
-```
-   
-```{r}
-iris.df %>% group_by(species) %>% skim_to_wide()
-```
-
-## Wide to long format
-```{r}
-# this will add an index to the dataframe so you know what individual is which
-iris_long.df <- iris.df %>% 
-  mutate(individual = row_number()) %>% 
-  gather(trait, measure, -species, - individual)
-
-```
-
-
-## Outliers
-```{r}
-# Box Plots of data
-iris_long.df %>% group_by(species, trait) %>% 
-  ggplot( aes(x = trait, y = measure, color = species, fill=species))+
-  geom_boxplot(aes(alpha=0.3)) 
-```
-
-
-These look good for the most part with only one or two significant. Your choice to transform or not.       
-
-##Factors     
-Make sure the categorical variable is a factor    
-Rearrange the order of groups so that control group is first, followed by treatment groups.     
-you can do this by:
-```{r}
-# Make Factors from the different levels long way
-# iris_long.df$species <- as.factor(iris_long.df$species)  
-# iris_long.df$trait <- as.factor(iris_long.df$trait) 
-
-# Make Factors dplyr
-iris_long.df <- iris_long.df %>%
-  mutate(
-   sex = factor(species, 
-                  labels = c("setosa", "versicolor", "virginica")),
-    trait = factor(trait, 
-                  labels = c("sepal_length", "sepal_width", "petal_length", "petal_width"))
-  )
-
-
-
-```
-
-When doing this with Type 1 sum of squares putting the control first is critical
-`data$categories <- factor(data$categories, levels=c("c","a","b","d") `
-
-
-##Separate out the traits to new dataframes for analyses.  
-First lets subset the data into the respective traits to analyze one of them at a time  
-```{r}
-# # THIS IS THE BEST WAY TO SUBSET DATAFRAMES!!!! WOW!! ----
-# list2env(split(iris_long.df, iris_long.df$trait), envir = .GlobalEnv)
-# 
-# 
-# # # THIS IS HOW TO DO IT WITH TREATMENTS - MAKING SEPARATE DATAFRAMES
-# # t <- unique(iris_long.df$trait)
-# # for (i in trait){
-# #   x <- dplyr::filter(iris_long.df, trait == i)
-# #   t<-paste("trait","_",i, sep="")
-# #   assign(t,x)
-# #   }
-# # rm(x, t, i, trait)
-```
-
-
-
-## Test for normality of data and using the broom package     
-So I think this is premature but some people like to test the normality of the data but really you should be assessing the normality of the residuals. But here it goes...
+## ANOVA
+Now we can run an ANOVA as long as the categories we are testing are factors. When doing this we will test to see if any of the means are different but will not be able to tell what is different yet. Thatis the next step
 
 ```{r}
-# turn off scientific notaton
-options(scipen = 999)
-# to turn back on 
-#options(scipen = 0)
-
-# Test for normality of each group and store in shapirowilktests
-# This uses the broom package to get clean output of the test 
-iris_long.df %>% group_by(species, trait) %>% do(tidy(shapiro.test(.$measure)))
-
-#You can do this on all variables faster with if there was only one grouping
-# tapply(iris_long.df$measure, iris_long.df$species, shapiro.test)
-```  
-
-
-##Test for homogenetiy of variances       
-
-Best to use the Levenes test compared to the Bartlet test    
-uses the car package      
-
-http://www.cookbook-r.com/Statistical_analysis/Homogeneity_of_variance/   
-
-Note however that this is doing the homogeneity test on all traits and not each one which is what you really should do and is not often done. Need to check on this though.
-
-```{r}
-#Test for homogeneity of variances by groups
-leveneTest(sepal_length ~ species, data=iris.df)
-
-#Compared to the Bartlet test
-bartlett.test(sepal_length ~ species, data=iris.df)
-
-# Bartlett test with interaction
-# bartlett.test(measure ~ interaction(species,trait), data=iris.df)
-```
-
-
-
-###The ONE WAY ANOVA  
-The AOV Method is rather straight forward.  
-```{r}
+# ANOVA - ONE WAY
+# you can do an anova as an anova and not the linear model
 #Run the anova and store it in the model in Values
-sepal_lenght.model.lm = lm(sepal_length ~ species, data = iris.df)
+expression.model.aov = aov(expression ~ treatment, data=gene_exp_long.df)
 
 #Obtain the anova table
-summary(sepal_lenght.model.lm)
-```
-
-```{r}
-#Obtain the summary of the model
-#This is the AOV summary
-anova(sepal_lenght.model.lm)
-```
-
-##AOV
-The anova method is also rather straight forward they give essentialy the same information 
-
-```{r}
-#Run the anova and store it in the model in Values
-sepal.length.model.aov = aov(sepal_length ~ species, data = iris.df)
-
-#Obtain the anova table
-anova(sepal.length.model.aov)
-```
-
-##Save Anova Table to excel
-```{r}
-tidy_sepal_length <- tidy(sepal.length.model.aov)
-write_csv(tidy_sepal_length, "tidy_sepal_lenght_anova.csv")
-```
-
-
-####What is hard to understand here is how to interpret this table.   
-Crawley 2012 The R book does a good job at this and it has been paraphrased here.   
-The coefficients table has as many rows as there are parameters in the model.  
-The top row, labelled (Intercept), is the only mean value in the table: it is the mean for the factor level that comes first in the alphabet.  
-The other four rows are differences between means (each mean compared to the control mean in this example).   
-The second column contains the unreliability estimates. The first row contains the standard error of a mean (28.75). The other four rows contain the standard error of the difference between two means. The significance stars are highly misleading, suggesting wrongly that there are significant contrasts for this model. The problem arises because the default ‘Treatment contrasts’ in R are not orthogonal. The lower rows are being compared with the first row. Pages 428 Ccrawley   
-
-
-###Confidence intervals of treatment parameters   
-https://www.r-bloggers.com/one-way-analysis-of-variance-anova/
-The function confint returns confidence intervals on the treatment parameters which are by default 95% confidence intervals:    
-not sure why the test requires aov and wont work on lm   {#confidence}
-```{r}
-#Confidence intervals of the values
-confint(sepal.length.model.aov)
-```
-
-###We can look at effect sizes  
-not sure why the test requires aov and wont work on lm  {#effectsize} 
-```{r}
-#Effect sizes of the variables
-model.tables(sepal.length.model.aov,se=T)
+anova(expression.model.aov)
 
 ```
 
-###You can also look at the means of the values from the AOV.  
-not sure why the test requires aov and wont work on lm  
+## Save the model for use in word
 ```{r}
-#Means of the values from the AOV
-model.tables(sepal.length.model.aov, "means", se=T)
+
+# save model to a text file for excel or whatever
+tidy(expression.model.aov)
+
+#You can copy this out or save it as an object and then save it as a csv file
+# save the model
+# tidy_expression.model.aov <- tidy(expression.model.aov)
+# write_csv(expression.model.aov, "tidy_anova_expression.csv")
+
 ```
 
-###Now to plot model residuals versus fitted values to investigate the model assumptions.    
 
-###The base R approach {#plots}
+## Plot Residuals
+
 ```{r}
+# Plot residuals
 #Base R plots
-plot(fitted(sepal.length.model.aov), residuals(sepal.length.model.aov))
+plot(fitted(expression.model.aov), residuals(expression.model.aov))
 ```
 
-###Histogram of residuals
+
+## Histogram of residuals
 ```{r}
 #Histogram of residuals
-hist(residuals(sepal.length.model.aov), 
+hist(residuals(expression.model.aov), 
      col="darkgray")
 ```
 
-###Visual check for normality of residuals
+## Check for Normality
 ```{r}
 # check for normally distributed data
-qqnorm(sepal.length.model.aov$res)
+qqnorm(expression.model.aov$res)
 ```
 
-###Test for normality of residuals {#residnormality}
+## Statistical Test of Normality
 ```{r}
 #Test for normality of residuals
-shapiro.test(sepal.length.model.aov$res)
+shapiro.test(expression.model.aov$res)
+```
 
-```  
+## Post F tests of an ANOVA
 
-
-
-###Post hoc comparisons {#posthoc}
 ```{r}
-library(lsmeans)
+# Post F tests
 # Comparisons of species
-lsm = lsmeans(sepal.length.model.aov, 
-              "species",
+lsm = emmeans(expression.model.aov, 
+              "treatment",
               adjust="bonferroni")
+
 ### Means sharing a letter in .group are not significantly different
+#Note that this requires multcompView
 cld(lsm, 
     alpha=.05,
     Letters=letters)
 ```
 
-
-
-
-
-
-###Examine the distribution of the data for each group of Sepal.Length
 ```{r}
-
-#Examine the distribution of the data for each group of Sepal.Length
-iris_long.df %>% filter(trait=="sepal_length")  %>% ggplot(aes(x= species, y=measure))+ 
-  geom_boxplot() +
-  annotate("text", x="setosa", y=8, label= "A",fontface="bold", size=10 ) + 
-  annotate("text", x="versicolor", y=8, label= "B",fontface="bold", size=10 ) + 
-  annotate("text", x="virginica", y=8, label= "C", fontface="bold", size=10) +
-  labs(y="Sepal Length")
+# Now you have a statistical test of how the means compare
+gene_exp_long.df %>% 
+  group_by(treatment)  %>%
+  ggplot(aes(treatment, expression)) +
+  geom_boxplot()
 ```
 
-#Now to GEEK OUT!!! We can do this on all at the same time
-##HOLY MACKAREL THIS IS COOL!!! and it can save as a clean dataframe but does not save as models so it is not that helpful {#geek}
 ```{r}
-# WOW JUST WOW
-library(broom)
-iris_long.df  %>%
-  group_by(trait) %>%
-  do(model = aov(measure ~ species, data = .)) %>% 
-  glance(model) # or tidy(model) - this is to see the data in a clean way
-
+# what if you wanted a bar plot
+ggplot(gene_exp_long.df, aes(x= treatment))+
+  stat_summary(aes(y=expression), fun.y=mean, geom='bar', color="black", 
+               fill="blue") +
+  stat_summary(aes(y=expression), fun.data = mean_se, geom = "errorbar", color="black", width=0.2)
 ```
-
 
 
 
