@@ -94,6 +94,9 @@ img {
 .tabbed-pane {
   padding-top: 12px;
 }
+.html-widget {
+  margin-bottom: 20px;
+}
 button.code-folding-btn:focus {
   outline: none;
 }
@@ -349,12 +352,12 @@ head(mc_smc.df)</code></pre>
 <pre><code>## # A tibble: 6 x 9
 ##   datetime site  w_temp_c volume_filtered… tare_g dry_105c_g turbidity_ntu
 ##   &lt;chr&gt;    &lt;chr&gt;    &lt;dbl&gt;            &lt;dbl&gt;  &lt;dbl&gt;      &lt;dbl&gt;         &lt;dbl&gt;
-## 1 01/15/2… mc        0.              0.600  0.104     0.108           4.98
-## 2 01/29/2… mc       NA               0.650  0.107     0.110           4.11
-## 3 02/12/2… mc        0.              0.500  0.102     0.111          14.0 
-## 4 02/26/2… mc       NA              NA     NA        NA              NA   
-## 5 03/12/2… mc        5.40            0.520  0.105     0.111           7.94
-## 6 03/26/2… mc        6.50            0.455  0.102     0.0988          5.83
+## 1 01/15/2… mc         0              0.6    0.104     0.108           4.98
+## 2 01/29/2… mc        NA              0.65   0.107     0.110           4.11
+## 3 02/12/2… mc         0              0.5    0.102     0.111          14   
+## 4 02/26/2… mc        NA             NA     NA        NA              NA   
+## 5 03/12/2… mc         5.4            0.52   0.105     0.111           7.94
+## 6 03/26/2… mc         6.5            0.455  0.102     0.0988          5.83
 ## # ... with 2 more variables: tp_ugl &lt;dbl&gt;, drp_ugl &lt;dbl&gt;</code></pre>
 </div>
 <div id="the-pipe" class="section level2">
@@ -418,37 +421,33 @@ mc_smc.df &lt;- mc_smc.df %&gt;%
 
 head(mc_smc_2015.df)</code></pre>
 <pre><code>## # A tibble: 6 x 15
-##   datetime            site  w_temp_c volume_filtered_l tare_g dry_105c_g
-##   &lt;dttm&gt;              &lt;chr&gt;    &lt;dbl&gt;             &lt;dbl&gt;  &lt;dbl&gt;      &lt;dbl&gt;
-## 1 2015-01-15 09:54:00 mc        0.               0.600  0.104     0.108 
-## 2 2015-01-29 09:10:00 mc       NA                0.650  0.107     0.110 
-## 3 2015-02-12 10:57:00 mc        0.               0.500  0.102     0.111 
-## 4 2015-02-26 12:12:00 mc       NA               NA     NA        NA     
-## 5 2015-03-12 11:15:00 mc        5.40             0.520  0.105     0.111 
-## 6 2015-03-26 11:15:00 mc        6.50             0.455  0.102     0.0988
+##   datetime            site  w_temp_c volume_filtered… tare_g dry_105c_g
+##   &lt;dttm&gt;              &lt;chr&gt;    &lt;dbl&gt;            &lt;dbl&gt;  &lt;dbl&gt;      &lt;dbl&gt;
+## 1 2015-01-15 09:54:00 mc         0              0.6    0.104     0.108 
+## 2 2015-01-29 09:10:00 mc        NA              0.65   0.107     0.110 
+## 3 2015-02-12 10:57:00 mc         0              0.5    0.102     0.111 
+## 4 2015-02-26 12:12:00 mc        NA             NA     NA        NA     
+## 5 2015-03-12 11:15:00 mc         5.4            0.52   0.105     0.111 
+## 6 2015-03-26 11:15:00 mc         6.5            0.455  0.102     0.0988
 ## # ... with 9 more variables: turbidity_ntu &lt;dbl&gt;, tp_ugl &lt;dbl&gt;,
 ## #   drp_ugl &lt;dbl&gt;, dry_wt_g &lt;dbl&gt;, dry_wt_g_l &lt;dbl&gt;, year &lt;dbl&gt;,
 ## #   month &lt;dbl&gt;, day &lt;int&gt;, julian_day &lt;dbl&gt;</code></pre>
 <p><br></p>
 <div id="boolean-search-terms-of-interest" class="section level2">
 <h2>Boolean search terms of interest</h2>
-<p># create a simple table # should be a dataframe to make it with kable | Search | code |<br />
-|—————————|————-| | greater than | <code>&gt;</code> | | greater than or equal to | <code>&gt;=</code> |<br />
-| less than | <code>&lt;</code> | | less than or equal to | <code>&lt;=</code> | | is NA | is.na | | is not NA | !is.na | | is not equal to | != | | is not x | !x | | x | y | x OR y |<br />
-| x &amp; y | x AND y |<br />
-<br></p>
+<p><br></p>
 <pre class="r"><code>mc_2015.df &lt;- mc_smc.df %&gt;% filter(year==2015 &amp; site==&quot;mc&quot;) 
 
 head(mc_smc_2015.df)</code></pre>
 <pre><code>## # A tibble: 6 x 15
-##   datetime            site  w_temp_c volume_filtered_l tare_g dry_105c_g
-##   &lt;dttm&gt;              &lt;chr&gt;    &lt;dbl&gt;             &lt;dbl&gt;  &lt;dbl&gt;      &lt;dbl&gt;
-## 1 2015-01-15 09:54:00 mc        0.               0.600  0.104     0.108 
-## 2 2015-01-29 09:10:00 mc       NA                0.650  0.107     0.110 
-## 3 2015-02-12 10:57:00 mc        0.               0.500  0.102     0.111 
-## 4 2015-02-26 12:12:00 mc       NA               NA     NA        NA     
-## 5 2015-03-12 11:15:00 mc        5.40             0.520  0.105     0.111 
-## 6 2015-03-26 11:15:00 mc        6.50             0.455  0.102     0.0988
+##   datetime            site  w_temp_c volume_filtered… tare_g dry_105c_g
+##   &lt;dttm&gt;              &lt;chr&gt;    &lt;dbl&gt;            &lt;dbl&gt;  &lt;dbl&gt;      &lt;dbl&gt;
+## 1 2015-01-15 09:54:00 mc         0              0.6    0.104     0.108 
+## 2 2015-01-29 09:10:00 mc        NA              0.65   0.107     0.110 
+## 3 2015-02-12 10:57:00 mc         0              0.5    0.102     0.111 
+## 4 2015-02-26 12:12:00 mc        NA             NA     NA        NA     
+## 5 2015-03-12 11:15:00 mc         5.4            0.52   0.105     0.111 
+## 6 2015-03-26 11:15:00 mc         6.5            0.455  0.102     0.0988
 ## # ... with 9 more variables: turbidity_ntu &lt;dbl&gt;, tp_ugl &lt;dbl&gt;,
 ## #   drp_ugl &lt;dbl&gt;, dry_wt_g &lt;dbl&gt;, dry_wt_g_l &lt;dbl&gt;, year &lt;dbl&gt;,
 ## #   month &lt;dbl&gt;, day &lt;int&gt;, julian_day &lt;dbl&gt;</code></pre>
@@ -471,13 +470,13 @@ head(mc_smc_2015.df)</code></pre>
 <h2>What if you wanted see all NA values</h2>
 <pre class="r"><code>mc_smc.df %&gt;% filter(is.na(dry_wt_g_l))</code></pre>
 <pre><code>## # A tibble: 5 x 15
-##   datetime            site  w_temp_c volume_filtered_l tare_g dry_105c_g
-##   &lt;dttm&gt;              &lt;chr&gt;    &lt;dbl&gt;             &lt;dbl&gt;  &lt;dbl&gt;      &lt;dbl&gt;
-## 1 2015-02-26 12:12:00 mc       NA                   NA     NA         NA
-## 2 2016-02-11 10:00:00 mc       NA                   NA     NA         NA
-## 3 2016-12-22 10:00:00 mc       NA                   NA     NA         NA
-## 4 2016-07-14 08:00:00 smc      21.0                 NA     NA         NA
-## 5 2016-12-22 08:45:00 smc       3.72                NA     NA         NA
+##   datetime            site  w_temp_c volume_filtered… tare_g dry_105c_g
+##   &lt;dttm&gt;              &lt;chr&gt;    &lt;dbl&gt;            &lt;dbl&gt;  &lt;dbl&gt;      &lt;dbl&gt;
+## 1 2015-02-26 12:12:00 mc       NA                  NA     NA         NA
+## 2 2016-02-11 10:00:00 mc       NA                  NA     NA         NA
+## 3 2016-12-22 10:00:00 mc       NA                  NA     NA         NA
+## 4 2016-07-14 08:00:00 smc      21                  NA     NA         NA
+## 5 2016-12-22 08:45:00 smc       3.72               NA     NA         NA
 ## # ... with 9 more variables: turbidity_ntu &lt;dbl&gt;, tp_ugl &lt;dbl&gt;,
 ## #   drp_ugl &lt;dbl&gt;, dry_wt_g &lt;dbl&gt;, dry_wt_g_l &lt;dbl&gt;, year &lt;dbl&gt;,
 ## #   month &lt;dbl&gt;, day &lt;int&gt;, julian_day &lt;dbl&gt;</code></pre>
@@ -486,18 +485,18 @@ head(mc_smc_2015.df)</code></pre>
 <h2>What if you wanted see all NA values</h2>
 <pre class="r"><code>mc_smc.df %&gt;% filter(!is.na(dry_wt_g_l))</code></pre>
 <pre><code>## # A tibble: 97 x 15
-##    datetime            site  w_temp_c volume_filtered_l tare_g dry_105c_g
-##    &lt;dttm&gt;              &lt;chr&gt;    &lt;dbl&gt;             &lt;dbl&gt;  &lt;dbl&gt;      &lt;dbl&gt;
-##  1 2015-01-15 09:54:00 mc        0.               0.600 0.104      0.108 
-##  2 2015-01-29 09:10:00 mc       NA                0.650 0.107      0.110 
-##  3 2015-02-12 10:57:00 mc        0.               0.500 0.102      0.111 
-##  4 2015-03-12 11:15:00 mc        5.40             0.520 0.105      0.111 
-##  5 2015-03-26 11:15:00 mc        6.50             0.455 0.102      0.0988
-##  6 2015-04-09 10:00:00 mc       13.5              0.425 0.0959     0.111 
-##  7 2015-04-23 12:50:00 mc       13.4              0.510 0.103      0.108 
-##  8 2015-05-07 14:40:00 mc       20.3              0.550 0.104      0.114 
-##  9 2015-05-21 11:40:00 mc       12.4              0.500 0.102      0.118 
-## 10 2015-06-04 11:25:00 mc       16.8              0.520 0.105      0.120 
+##    datetime            site  w_temp_c volume_filtered… tare_g dry_105c_g
+##    &lt;dttm&gt;              &lt;chr&gt;    &lt;dbl&gt;            &lt;dbl&gt;  &lt;dbl&gt;      &lt;dbl&gt;
+##  1 2015-01-15 09:54:00 mc         0              0.6   0.104      0.108 
+##  2 2015-01-29 09:10:00 mc        NA              0.65  0.107      0.110 
+##  3 2015-02-12 10:57:00 mc         0              0.5   0.102      0.111 
+##  4 2015-03-12 11:15:00 mc         5.4            0.52  0.105      0.111 
+##  5 2015-03-26 11:15:00 mc         6.5            0.455 0.102      0.0988
+##  6 2015-04-09 10:00:00 mc        13.5            0.425 0.0959     0.111 
+##  7 2015-04-23 12:50:00 mc        13.4            0.51  0.103      0.108 
+##  8 2015-05-07 14:40:00 mc        20.3            0.55  0.104      0.114 
+##  9 2015-05-21 11:40:00 mc        12.4            0.5   0.102      0.118 
+## 10 2015-06-04 11:25:00 mc        16.8            0.52  0.105      0.120 
 ## # ... with 87 more rows, and 9 more variables: turbidity_ntu &lt;dbl&gt;,
 ## #   tp_ugl &lt;dbl&gt;, drp_ugl &lt;dbl&gt;, dry_wt_g &lt;dbl&gt;, dry_wt_g_l &lt;dbl&gt;,
 ## #   year &lt;dbl&gt;, month &lt;dbl&gt;, day &lt;int&gt;, julian_day &lt;dbl&gt;</code></pre>
@@ -507,7 +506,7 @@ head(mc_smc_2015.df)</code></pre>
 <p>So lets finally use the <em>janitor</em> pacakge to clean up this data. This will make working with data sets from other users a bit easier to work with quickly rather than reformatting all the values manually.<br />
 <br><br />
 Note that this will get rid of empty columns and rows if from an excel sheet and will clean up the variable names.</p>
-<pre class="r"><code>iris.df &lt;- iris.df %&gt;%
+<pre class="r"><code>iris.df &lt;- iris %&gt;%
   clean_names() %&gt;%
   remove_empty(c(&quot;rows&quot;, &quot;cols&quot;)) </code></pre>
 <!-- Global Site Tag (gtag.js) - Google Analytics -->

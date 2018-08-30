@@ -94,6 +94,9 @@ img {
 .tabbed-pane {
   padding-top: 12px;
 }
+.html-widget {
+  margin-bottom: 20px;
+}
 button.code-folding-btn:focus {
   outline: none;
 }
@@ -362,7 +365,7 @@ skim(gene_exp.df)</code></pre>
 ##  n obs: 9 
 ##  n variables: 6 
 ## 
-## Variable type: numeric 
+## ── Variable type:numeric ──────────────────────────────────
 ##    variable missing complete n  mean   sd    p0   p25   p50   p75  p100
 ##     control       0        9 9 12.37 0.24 12.02 12.16 12.46 12.53 12.66
 ##  experiment       0        9 9  2    0.87  1     1     2     3     3   
@@ -430,12 +433,12 @@ skim(gene_exp.df)</code></pre>
 ##  n obs: 9 
 ##  n variables: 6 
 ## 
-## Variable type: factor 
+## ── Variable type:factor ───────────────────────────────────
 ##    variable missing complete n n_unique              top_counts ordered
 ##  experiment       0        9 9        3 1: 3, 2: 3, 3: 3, NA: 0   FALSE
 ##  individual       0        9 9        9  1: 1, 2: 1, 3: 1, 4: 1   FALSE
 ## 
-## Variable type: numeric 
+## ── Variable type:numeric ──────────────────────────────────
 ##  variable missing complete n  mean   sd    p0   p25   p50   p75  p100
 ##   control       0        9 9 12.37 0.24 12.02 12.16 12.46 12.53 12.66
 ##    treat1       0        9 9 17.31 2.9  12.27 15.67 18.15 19.58 20.87
@@ -463,7 +466,7 @@ skim(gene_exp_long.df)</code></pre>
 ##  n obs: 36 
 ##  n variables: 4 
 ## 
-## Variable type: factor 
+## ── Variable type:factor ───────────────────────────────────
 ##    variable missing complete  n n_unique                     top_counts
 ##  experiment       0       36 36        3     1: 12, 2: 12, 3: 12, NA: 0
 ##  individual       0       36 36        9         1: 4, 2: 4, 3: 4, 4: 4
@@ -473,7 +476,7 @@ skim(gene_exp_long.df)</code></pre>
 ##    FALSE
 ##    FALSE
 ## 
-## Variable type: numeric 
+## ── Variable type:numeric ──────────────────────────────────
 ##    variable missing complete  n  mean sd    p0   p25   p50   p75  p100
 ##  expression       0       36 36 14.75  3 11.79 12.34 13.02 17.45 20.87
 ##      hist
@@ -541,7 +544,7 @@ bartlett.test(expression ~ treatment, data=gene_exp_long.df)</code></pre>
 ##  Bartlett test of homogeneity of variances
 ## 
 ## data:  expression by treatment
-## Bartlett&#39;s K-squared = 34.668, df = 3, p-value = 1.432e-07</code></pre>
+## Bartlett&#39;s K-squared = 34.668, df = 3, p-value = 0.0000001432</code></pre>
 <pre class="r"><code>#With multiple independent variables, the interaction() function must be used to collapse the IV’s into a single variable with all combinations of the factors. If it is not used, then the will be the wrong degrees of freedom, and the p-value will be wrong.
 
 # bartlett.test(extra ~ interaction(group,some other independent factor), data=sleep.df)</code></pre>
@@ -638,7 +641,7 @@ bartlett.test(expression ~ treatment, data=gene_exp_long.df)</code></pre>
 ##  Bartlett test of homogeneity of variances
 ## 
 ## data:  expression by treatment
-## Bartlett&#39;s K-squared = 34.668, df = 3, p-value = 1.432e-07</code></pre>
+## Bartlett&#39;s K-squared = 34.668, df = 3, p-value = 0.0000001432</code></pre>
 </div>
 <div id="anova" class="section level2">
 <h2>ANOVA</h2>
@@ -653,9 +656,9 @@ anova(expression.model.aov)</code></pre>
 <pre><code>## Analysis of Variance Table
 ## 
 ## Response: expression
-##           Df Sum Sq Mean Sq F value    Pr(&gt;F)    
-## treatment  3 199.26  66.421  18.334 4.189e-07 ***
-## Residuals 32 115.93   3.623                      
+##           Df Sum Sq Mean Sq F value       Pr(&gt;F)    
+## treatment  3 199.26  66.421  18.334 0.0000004189 ***
+## Residuals 32 115.93   3.623                         
 ## ---
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
 </div>
@@ -663,9 +666,11 @@ anova(expression.model.aov)</code></pre>
 <h2>Save the model for use in word</h2>
 <pre class="r"><code># save model to a text file for excel or whatever
 tidy(expression.model.aov)</code></pre>
-<pre><code>##        term df    sumsq    meansq statistic      p.value
-## 1 treatment  3 199.2629 66.420982  18.33381 4.189309e-07
-## 2 Residuals 32 115.9318  3.622868        NA           NA</code></pre>
+<pre><code>## # A tibble: 2 x 6
+##   term         df sumsq meansq statistic      p.value
+##   &lt;chr&gt;     &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;     &lt;dbl&gt;        &lt;dbl&gt;
+## 1 treatment     3  199.  66.4       18.3  0.000000419
+## 2 Residuals    32  116.   3.62      NA   NA</code></pre>
 <pre class="r"><code>#You can copy this out or save it as an object and then save it as a csv file
 # save the model
 # tidy_expression.model.aov &lt;- tidy(expression.model.aov)

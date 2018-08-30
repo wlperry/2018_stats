@@ -128,26 +128,26 @@ head(mc_smc_2015.df)
 <br>
 
 ##Boolean search terms of interest    
-```{r table2, echo=FALSE, message=FALSE, warnings=FALSE, results='asis'}
-tabl <- "  # create a simple table # should be a dataframe to make it with kable
-| Search                    | code        |  
-|---------------------------|-------------|
-| greater than              |   `>`       |
-| greater than or equal to  |   `>=`      |  
-| less than                 |   `<`       |
-| less than or equal to     |   `<=`      | 
-| is NA                     |   is.na     |
-| is not NA                 |   !is.na    |
-| is not equal to           |   !=        |
-| is not x                  |   !x        |
-| x | y                     |	x OR y      |  
-| x & y                     |	x AND y     |  
+```{r table2, eval=FALSE, message=FALSE, include=FALSE, results='asis', warnings=FALSE}
+# tabl <- "  # create a simple table # should be a dataframe to make it with kable
+# | Search                    | code        |  
+# |---------------------------|-------------|
+# | greater than              |   `>`       |
+# | greater than or equal to  |   `>=`      |  
+# | less than                 |   `<`       |
+# | less than or equal to     |   `<=`      | 
+# | is NA                     |   is.na     |
+# | is not NA                 |   !is.na    |
+# | is not equal to           |   !=        |
+# | is not x                  |   !x        |
+# | x | y                     |	x OR y      |  
+# | x & y                     |	x AND y     |  
 
 
 
 
-"
-cat(tabl) # output the table in a format good for HTML/PDF/docx conversion
+# "
+# cat(tabl) # output the table in a format good for HTML/PDF/docx conversion
 ```
 <br>
 
@@ -211,7 +211,7 @@ So lets finally use the *janitor* pacakge to clean up this data. This will make 
 Note that this will get rid of empty columns and rows if from an excel sheet and will clean up the variable names.   
 
 ```{r}
-iris.df <- iris.df %>%
+iris.df <- iris %>%
   clean_names() %>%
   remove_empty(c("rows", "cols")) 
 

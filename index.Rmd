@@ -17,6 +17,10 @@ I am going to try to develop an introductory class specifically for aquatic biol
 This is also a selfish way to organize my code and snippets in a central place that I can find them and make is available to others that are struggling with R and dataframes.     
 <br>
 
+Here are some dataframes     
+[beetle.csv](https://wlperry.github.io/2018_stats/data/beetle.csv)     
+[beetle.xlsx](https://wlperry.github.io/2018_stats/data/beetle.xlsx)      
+
 ##[1. Basics of projects and data](01_intro.html)     
 Before working on a project, I have found it is useful to ponder what the data will look like, what you want the final dataframe to look like and what you want to do with it. So, first we will go over basics of organization.  
      - folders and structure    

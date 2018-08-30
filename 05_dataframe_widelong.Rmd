@@ -49,9 +49,9 @@ glimpse(grades.df)
 This file is something that we might hae entered the grades in and it is something we are used to doing in excel. That is not bad but it limits what we can do fast with the file.         
 
 ```{r kable1, message=FALSE, warning=FALSE, paged.print=FALSE}
-head(grades.df) %>% 
-  kable("html") %>%
-  kable_styling(bootstrap_options = c("striped", "hover", "condensed"))
+# head(grades.df) %>% 
+#   kable("html") %>%
+#   kable_styling(bootstrap_options = c("striped", "hover", "condensed"))
 ```
 
 

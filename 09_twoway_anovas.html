@@ -94,6 +94,9 @@ img {
 .tabbed-pane {
   padding-top: 12px;
 }
+.html-widget {
+  margin-bottom: 20px;
+}
 button.code-folding-btn:focus {
   outline: none;
 }
@@ -516,7 +519,7 @@ or_ls.df %&gt;% group_by(sex, habitat) %&gt;% do(tidy(shapiro.test(.$cl)))</code
 <pre><code>## # A tibble: 4 x 5
 ## # Groups:   sex, habitat [4]
 ##   sex    habitat statistic p.value method                     
-##   &lt;fct&gt;  &lt;fct&gt;       &lt;dbl&gt;   &lt;dbl&gt; &lt;fct&gt;                      
+##   &lt;fct&gt;  &lt;fct&gt;       &lt;dbl&gt;   &lt;dbl&gt; &lt;chr&gt;                      
 ## 1 female lake        0.990   0.938 Shapiro-Wilk normality test
 ## 2 female stream      0.982   0.622 Shapiro-Wilk normality test
 ## 3 male   lake        0.975   0.370 Shapiro-Wilk normality test

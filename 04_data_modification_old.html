@@ -94,6 +94,9 @@ img {
 .tabbed-pane {
   padding-top: 12px;
 }
+.html-widget {
+  margin-bottom: 20px;
+}
 button.code-folding-btn:focus {
   outline: none;
 }
@@ -369,12 +372,7 @@ Note that this will get rid of empty columns and rows if from an excel sheet and
 <h1>Filtering data</h1>
 <p>What if you wanted to work with only one species for each of the charactes. This will select only those individuals that are setosa. Note that in this you need <em><code>= =</code></em>.</p>
 <pre class="r"><code>setosa.df &lt;- iris.df %&gt;% filter(species==&quot;setosa&quot;)</code></pre>
-<p><br> ##Boolean search terms of interest<br />
-# create a simple table # should be a dataframe to make it with kable | Search | code |<br />
-|—————————|————-| | greater than | <code>&gt;</code> | | greater than or equal to | <code>&gt;=</code> |<br />
-| less than | <code>&lt;</code> | | less than or equal to | <code>&lt;=</code> | | is NA | is.na | | is not NA | !is.na | | is not equal to | != | | is not x | !x | | x | y | x OR y |<br />
-| x &amp; y | x AND y |<br />
-<br></p>
+<p><br> ##Boolean search terms of interest</p>
 <pre class="r"><code>petal_width_lessthan.df &lt;- iris.df %&gt;% filter(sepal_width &lt; 3.5)</code></pre>
 <pre class="r"><code>petal_width_lessthanequal.df &lt;- iris.df %&gt;% filter(sepal_width &lt;= 3.5)</code></pre>
 <div id="what-if-you-wanted-to-combine-different-filters---you-can-use-or" class="section level2">
@@ -387,7 +385,7 @@ Note that this will get rid of empty columns and rows if from an excel sheet and
 <pre><code>## # A tibble: 1 x 5
 ##   sepal_length sepal_width petal_length petal_width species
 ##          &lt;dbl&gt;       &lt;dbl&gt;        &lt;dbl&gt;       &lt;dbl&gt; &lt;chr&gt;  
-## 1           NA          3.         1.40       0.200 setosa</code></pre>
+## 1           NA           3          1.4         0.2 setosa</code></pre>
 <!-- Global Site Tag (gtag.js) - Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=UA-88373117-4"></script>
 <script>

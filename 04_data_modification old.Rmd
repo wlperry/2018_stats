@@ -89,7 +89,7 @@ setosa.df <- iris.df %>% filter(species=="setosa")
 ```
 <br>
 ##Boolean search terms of interest    
-```{r table2, echo=FALSE, message=FALSE, warnings=FALSE, results='asis'}
+```{r table2, eval=FALSE, message=FALSE, include=FALSE, results='asis', warnings=FALSE}
 tabl <- "  # create a simple table # should be a dataframe to make it with kable
 | Search                    | code        |  
 |---------------------------|-------------|
@@ -108,8 +108,7 @@ tabl <- "  # create a simple table # should be a dataframe to make it with kable
 
 
 "
-cat(tabl) # output the table in a format good for HTML/PDF/docx conversion
-```
+# cat(tabl) # output the table in a format good for HTML/PDF/docx conversion
 <br>
 
 ```{r}

@@ -94,6 +94,9 @@ img {
 .tabbed-pane {
   padding-top: 12px;
 }
+.html-widget {
+  margin-bottom: 20px;
+}
 button.code-folding-btn:focus {
   outline: none;
 }
@@ -363,11 +366,11 @@ skim(iris.df)</code></pre>
 ##  n obs: 150 
 ##  n variables: 5 
 ## 
-## Variable type: character 
+## ── Variable type:character ────────────────────────────────
 ##  variable missing complete   n min max empty n_unique
 ##   species       0      150 150   6  10     0        3
 ## 
-## Variable type: numeric 
+## ── Variable type:numeric ──────────────────────────────────
 ##      variable missing complete   n mean   sd  p0 p25  p50 p75 p100
 ##  petal_length       0      150 150 3.76 1.77 1   1.6 4.35 5.1  6.9
 ##   petal_width       0      150 150 1.2  0.76 0.1 0.3 1.3  1.8  2.5
@@ -413,7 +416,7 @@ iris_long.df %&gt;% group_by(species, part) %&gt;% do(tidy(shapiro.test(.$measur
 <pre><code>## # A tibble: 12 x 5
 ## # Groups:   species, part [12]
 ##    species    part         statistic     p.value method                   
-##    &lt;chr&gt;      &lt;chr&gt;            &lt;dbl&gt;       &lt;dbl&gt; &lt;fct&gt;                    
+##    &lt;chr&gt;      &lt;chr&gt;            &lt;dbl&gt;       &lt;dbl&gt; &lt;chr&gt;                    
 ##  1 setosa     petal_length     0.955 0.0548      Shapiro-Wilk normality t…
 ##  2 setosa     petal_width      0.800 0.000000866 Shapiro-Wilk normality t…
 ##  3 setosa     sepal_length     0.978 0.460       Shapiro-Wilk normality t…
@@ -498,7 +501,7 @@ cor.test(~ petal_length + petal_width, iris.df)</code></pre>
 ##  $ alternative: chr &quot;two.sided&quot;
 ##  $ method     : chr &quot;Pearson&#39;s product-moment correlation&quot;
 ##  $ data.name  : chr &quot;iris.df$petal_length and iris.df$petal_width&quot;
-##  $ conf.int   : atomic [1:2] 0.949 0.973
+##  $ conf.int   : num [1:2] 0.949 0.973
 ##   ..- attr(*, &quot;conf.level&quot;)= num 0.95
 ##  - attr(*, &quot;class&quot;)= chr &quot;htest&quot;</code></pre>
 <pre class="r"><code># You can extract values from the cor.test() object like this:
@@ -517,14 +520,11 @@ iris.df %&gt;% summarize(petal_cor = cor.test(petal_length, petal_width)$estimat
 ##       &lt;dbl&gt;   &lt;int&gt;       &lt;dbl&gt;
 ## 1     0.963     148    4.68e-86</code></pre>
 <pre class="r"><code>iris.df %&gt;%  do(tidy(cor.test(.$petal_length, .$petal_width))) </code></pre>
-<pre><code>##    estimate statistic
-## 1 0.9628654  43.38724
-##                                                                                          p.value
-## 1 0.00000000000000000000000000000000000000000000000000000000000000000000000000000000000004675004
-##   parameter  conf.low conf.high                               method
-## 1       148 0.9490525 0.9729853 Pearson&#39;s product-moment correlation
-##   alternative
-## 1   two.sided</code></pre>
+<pre><code>## # A tibble: 1 x 8
+##   estimate statistic  p.value parameter conf.low conf.high method
+##      &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;     &lt;int&gt;    &lt;dbl&gt;     &lt;dbl&gt; &lt;chr&gt; 
+## 1    0.963      43.4 4.68e-86       148    0.949     0.973 Pears…
+## # ... with 1 more variable: alternative &lt;chr&gt;</code></pre>
 <pre class="r"><code># can be done with grouping variables as well</code></pre>
 <div id="regressions" class="section level2">
 <h2>Regressions</h2>
@@ -667,7 +667,7 @@ plot(drp.model, which = c(1, 2)) # &quot;which&quot; argument optional</code></p
 ncvTest(drp.model)</code></pre>
 <pre><code>## Non-constant Variance Score Test 
 ## Variance formula: ~ fitted.values 
-## Chisquare = 5.294216    Df = 1     p = 0.02139637</code></pre>
+## Chisquare = 5.294216, Df = 1, p = 0.021396</code></pre>
 </div>
 <div id="test-for-normality-of-residuals" class="section level3">
 <h3>Test for normality of residuals</h3>
@@ -691,14 +691,14 @@ stds.df$residuals[!is.na(stds.df$std)]&lt;-residuals(lm(data=stds.df, drp ~ std,
 ## length</code></pre>
 <pre class="r"><code>head(stds.df)</code></pre>
 <pre><code>## # A tibble: 6 x 6
-##   replicate     std     drp       tp      nh4 residuals
-##       &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt;
-## 1        1. 0.      0.      -0.00200  0.00800 -0.000814
-## 2        2. 0.      0.      -0.00200  0.00800 -0.000814
-## 3        1. 0.00500 0.00200 -0.00100 NA       -0.000316
-## 4        2. 0.00500 0.00600 -0.00100 NA        0.00368 
-## 5        1. 0.0100  0.00400  0.       0.0180   0.000182
-## 6        2. 0.0100  0.00300  0.       0.0180  -0.000818</code></pre>
+##   replicate   std   drp     tp    nh4 residuals
+##       &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;     &lt;dbl&gt;
+## 1         1 0     0     -0.002  0.008 -0.000814
+## 2         2 0     0     -0.002  0.008 -0.000814
+## 3         1 0.005 0.002 -0.001 NA     -0.000316
+## 4         2 0.005 0.006 -0.001 NA      0.00368 
+## 5         1 0.01  0.004  0      0.018  0.000182
+## 6         2 0.01  0.003  0      0.018 -0.000818</code></pre>
 </div>
 <div id="now-to-add-in-the-predicted-values" class="section level3">
 <h3>Now to add in the predicted values</h3>
@@ -727,14 +727,14 @@ stds.df$fitted[!is.na(stds.df$std)]&lt;-fitted(lm(data=stds.df, drp ~ std, na.ac
 ## length</code></pre>
 <pre class="r"><code>head(stds.df)</code></pre>
 <pre><code>## # A tibble: 6 x 7
-##   replicate     std     drp       tp      nh4 residuals   fitted
-##       &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;
-## 1        1. 0.      0.      -0.00200  0.00800 -0.000814 0.000814
-## 2        2. 0.      0.      -0.00200  0.00800 -0.000814 0.000814
-## 3        1. 0.00500 0.00200 -0.00100 NA       -0.000316 0.00232 
-## 4        2. 0.00500 0.00600 -0.00100 NA        0.00368  0.00232 
-## 5        1. 0.0100  0.00400  0.       0.0180   0.000182 0.00382 
-## 6        2. 0.0100  0.00300  0.       0.0180  -0.000818 0.00382</code></pre>
+##   replicate   std   drp     tp    nh4 residuals   fitted
+##       &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;
+## 1         1 0     0     -0.002  0.008 -0.000814 0.000814
+## 2         2 0     0     -0.002  0.008 -0.000814 0.000814
+## 3         1 0.005 0.002 -0.001 NA     -0.000316 0.00232 
+## 4         2 0.005 0.006 -0.001 NA      0.00368  0.00232 
+## 5         1 0.01  0.004  0      0.018  0.000182 0.00382 
+## 6         2 0.01  0.003  0      0.018 -0.000818 0.00382</code></pre>
 <pre class="r"><code>ggplot(stds.df)  +
     geom_point(aes(x = std, y = drp), color=&quot;blue&quot;)+
      geom_point(aes(x = std, y = fitted), color=&quot;red&quot;)+
@@ -859,7 +859,7 @@ spreadLevelPlot(drp.model)</code></pre>
 <pre class="r"><code># Test for Autocorrelated Errors
 durbinWatsonTest(drp.model)</code></pre>
 <pre><code>##  lag Autocorrelation D-W Statistic p-value
-##    1      0.02442015      1.572472   0.182
+##    1      0.02442015      1.572472   0.168
 ##  Alternative hypothesis: rho != 0</code></pre>
 </div>
 <div id="standardized-regression---converted-to-z-scores" class="section level3">
