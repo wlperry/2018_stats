@@ -100,6 +100,9 @@ img {
 button.code-folding-btn:focus {
   outline: none;
 }
+summary {
+  display: list-item;
+}
 </style>
 
 
@@ -114,7 +117,6 @@ body {
   padding-top: 56px;
   margin-top: -56px;
 }
-
 .section h2 {
   padding-top: 56px;
   margin-top: -56px;
@@ -134,6 +136,43 @@ body {
 .section h6 {
   padding-top: 56px;
   margin-top: -56px;
+}
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #ffffff;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
 }
 </style>
 
@@ -155,18 +194,77 @@ $(document).ready(function () {
 });
 </script>
 
-
 <div class="container-fluid main-container">
 
 <!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
 <script>
 $(document).ready(function () {
   window.buildTabsets("TOC");
 });
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
 </script>
 
 <!-- code folding -->
-
 
 
 
@@ -309,58 +407,24 @@ div.tocify {
 
 <div id="two-way-anovas" class="section level2">
 <h2>Two Way Anovas</h2>
-<div id="ok-so-this-is-a-completely-fake-dataset-that-i-will-update-soon-to-make-it-more-useful-to-illustrate-type-i-vs-type-iii-errors-but-for-now-we-will-go-with-it." class="section level3">
-<h3>Ok so this is a completely fake dataset that I will update soon to make it more useful to illustrate Type I vs Type III errors but for now we will go with it.</h3>
-</div>
-<div id="this-section-is-for-two-way-anovas" class="section level3">
-<h3>This section is for TWO WAY ANOVAs</h3>
-<div id="the-items-covered-in-this-page-are" class="section level4">
-<h4>The items covered in this page are</h4>
-<ol style="list-style-type: decimal">
-<li><a href="#load">Load libraries</a><br />
-</li>
-<li><a href="#make">Make separate Dataframes</a><br />
-</li>
-<li><a href="#bind">Make one dataframe and clean up</a><br />
-</li>
-<li><a href="#factors">Get ready for ANOVA</a><br />
-</li>
-<li><a href="#box">Boxplots</a><br />
-</li>
-<li><a href="#homogeneity">Test for homogeneity of variances</a><br />
-</li>
-<li><a href="#normality">Tests for normality</a><br />
-</li>
-<li><a href="#summary_stats">New summary statistics with RMISC</a><br />
-</li>
-<li><a href="#plots">Effect plots</a>
-<ol style="list-style-type: lower-roman">
-<li><a href="#main_effects">main effects</a><br />
-</li>
-<li><a href="#interact_plots">Interaction Plots</a><br />
-</li>
-</ol></li>
-<li><a href="#two_way_aov">Finally the two way ANOVA</a>
-<ol style="list-style-type: lower-roman">
-<li><a href="#summary">AOV summary</a></li>
-<li><a href="#type_I">Type I - WRONG if unblaanced</a></li>
-</ol></li>
-<li><a href="#assumptions">Assumptions of the model</a></li>
-<li><a href="#post_hoc">Post Hoc tests</a>
-<ol style="list-style-type: lower-roman">
-<li>Main effects only</li>
-<li><a href="#post_hoc_interact">Interaction effects</a></li>
-</ol></li>
-</ol>
-</div>
-<div id="an-absolutley-great-coverage-of-this-material-is-dolph-schluters-page-at" class="section level4">
-<h4>An absolutley great coverage of this material is Dolph Schluters page at:</h4>
-<p><a href="https://www.zoology.ubc.ca/~schluter/R/fit-model/" class="uri">https://www.zoology.ubc.ca/~schluter/R/fit-model/</a></p>
+<p>###Ok so this is a completely fake dataset that I will update soon to make it more useful to illustrate Type I vs Type III errors but for now we will go with it.</p>
+<p>###This section is for TWO WAY ANOVAs<br />
+#### The items covered in this page are<br />
+1. <a href="#load">Load libraries</a><br />
+2. <a href="#make">Make separate Dataframes</a><br />
+3. <a href="#bind">Make one dataframe and clean up</a><br />
+4. <a href="#factors">Get ready for ANOVA</a><br />
+5. <a href="#box">Boxplots</a><br />
+6. <a href="#homogeneity">Test for homogeneity of variances</a><br />
+7. <a href="#normality">Tests for normality</a><br />
+8. <a href="#summary_stats">New summary statistics with RMISC</a><br />
+9. <a href="#plots">Effect plots</a><br />
+i. <a href="#main_effects">main effects</a><br />
+ii. <a href="#interact_plots">Interaction Plots</a><br />
+10. <a href="#two_way_aov">Finally the two way ANOVA</a> i. <a href="#summary">AOV summary</a> ii. <a href="#type_I">Type I - WRONG if unblaanced</a> 11. <a href="#assumptions">Assumptions of the model</a> 12. <a href="#post_hoc">Post Hoc tests</a> i. Main effects only ii. <a href="#post_hoc_interact">Interaction effects</a></p>
+<p>####An absolutley great coverage of this material is Dolph Schluters page at: <a href="https://www.zoology.ubc.ca/~schluter/R/fit-model/" class="uri">https://www.zoology.ubc.ca/~schluter/R/fit-model/</a></p>
 <p>The key thing here is the use of the car package as it is essential for unbalanced designs and the use of Type III sum of squares otherwise Type I sum of squares are used which is rarely good. Weather to use Type II or III is a contentious issue and we will just go with Type III for all of our work</p>
-</div>
-</div>
-<div id="load" class="section level3">
-<h3>Load the libraries and data</h3>
+<p>###Load the libraries and data {#load}</p>
 <pre class="r"><code># Standard use packages
 library(tidyverse)
 library(ggplot2)
@@ -389,9 +453,7 @@ orfl=50
 orms=50
 # female OR in streams
 orfs=50</code></pre>
-</div>
-<div id="make" class="section level3">
-<h3>Now to make separate dataframes</h3>
+<p>###Now to make separate dataframes {#make}</p>
 <pre class="r"><code># DATASET 1 ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
 #make dataframe for lake male OR
 # create 50 random numbes between 34 and 55
@@ -432,9 +494,7 @@ sp &lt;- replicate(orfs, &quot;or&quot;)
 habitat &lt;- replicate(orfs, &quot;stream&quot;)
 sex &lt;- replicate(orfs, &quot;female&quot;)
 or_f_stream &lt;- cbind(habitat, sp, sex, cl)</code></pre>
-</div>
-<div id="bind" class="section level3">
-<h3>Now to bind the dataframes together and clean up the code a bit</h3>
+<p>###Now to bind the dataframes together and clean up the code a bit {#bind}</p>
 <pre class="r"><code># Bind the dataframes together ----
 #Rbind merges things top to bottom
 or_ls.df &lt;- as.data.frame(rbind(or_f_lake, or_m_lake, or_f_stream, or_m_stream))
@@ -464,27 +524,21 @@ head(or_ls.df)</code></pre>
 ## 4 or_female_lake    lake or female 37.04136 3.612035
 ## 5 or_female_lake    lake or female 39.00334 3.663647
 ## 6 or_female_lake    lake or female 41.07991 3.715519</code></pre>
-</div>
-<div id="factors" class="section level3">
-<h3>Now to look at the mechanics of a 2 WAY ANOVA - the set up</h3>
+<p>###Now to look at the mechanics of a 2 WAY ANOVA - the set up {#factors}</p>
 <pre class="r"><code>###NOW to two way anova ----
 # need to make the categroical variable into factors 
 or_ls.df$sex &lt;- as.factor(or_ls.df$sex)
 or_ls.df$sp &lt;- as.factor(or_ls.df$sp)
 or_ls.df$habitat &lt;- as.factor(or_ls.df$habitat)
 or_ls.df$sp_sex_habitat &lt;- as.factor(or_ls.df$sp_sex_habitat)</code></pre>
-</div>
-<div id="box" class="section level3">
-<h3>Boxplots</h3>
+<p>###Boxplots {#box}</p>
 <pre class="r"><code># Look at the data with box plots
 or_ls.df %&gt;%
   ggplot() +
   geom_boxplot(aes(x= sp_sex_habitat, y=cl)) +
   labs(y=&quot;Carapace length&quot;)</code></pre>
 <p><img src="09_twoway_anovas_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
-</div>
-<div id="homogeneity" class="section level3">
-<h3>Test for homogenetiy of variances</h3>
+<p>###Test for homogenetiy of variances {#homogeneity}</p>
 <pre class="r"><code># Best to use the Levenes test compared to the Bartlet test    
 # uses the car package   
 
@@ -504,9 +558,7 @@ bartlett.test(cl ~ sp_sex_habitat, data=or_ls.df)</code></pre>
 ## data:  cl by sp_sex_habitat
 ## Bartlett&#39;s K-squared = 5.3469, df = 3, p-value = 0.1481</code></pre>
 <p>THIS IS FOR 2 Way AOV With multiple independent variables, the interaction() function must be used to collapse the IV’s into a single variable with all combinations of the factors. If it is not used, then the will be the wrong degrees of freedom, and the p-value will be wrong.</p>
-</div>
-<div id="normality" class="section level3">
-<h3>Test for normality of data</h3>
+<p>###Test for normality of data {#normality}</p>
 <pre class="r"><code># SHAPIRO_WILK TEST FOR NORMALITY----
 # turn off scientific notaton
 options(scipen = 999)
@@ -526,7 +578,6 @@ or_ls.df %&gt;% group_by(sex, habitat) %&gt;% do(tidy(shapiro.test(.$cl)))</code
 ## 4 male   stream      0.985   0.757 Shapiro-Wilk normality test</code></pre>
 <pre class="r"><code># they are a bit off surprisingly but go with it anyway and test residuals
 # to see if the result is the same</code></pre>
-</div>
 <div id="summary_stats" class="section level3">
 <h3>Some basic Statistics in a new way</h3>
 <pre class="r"><code>#Summary Stats----
@@ -564,9 +615,7 @@ boxplot(cl ~ habitat:sex,
         xlab = &quot;Habitat&quot;,
         ylab = &quot;carapace length&quot;)</code></pre>
 <p><img src="09_twoway_anovas_files/figure-html/unnamed-chunk-11-1.png" width="672" /></p>
-</div>
-<div id="interact_plots" class="section level3">
-<h3>Interaction Plots</h3>
+<p>###Interaction Plots {#interact_plots}</p>
 <pre class="r"><code># Interaction Plots----
 # This will generate two plots to compare groups according to the 
 # and examine interactions
@@ -575,10 +624,8 @@ interaction.plot(or_ls.df$habitat, or_ls.df$sex, or_ls.df$cl)</code></pre>
 <p><img src="09_twoway_anovas_files/figure-html/unnamed-chunk-12-1.png" width="672" /></p>
 <pre class="r"><code>interaction.plot(or_ls.df$sex,  or_ls.df$habitat, or_ls.df$cl)</code></pre>
 <p><img src="09_twoway_anovas_files/figure-html/unnamed-chunk-13-1.png" width="672" /></p>
-</div>
-<div id="two-way-aov-model-" class="section level3">
-<h3>TWO WAY AOV MODEL—-</h3>
-<p>This is the two way ANOVA<br />
+<p>###TWO WAY AOV MODEL—-<br />
+This is the two way ANOVA<br />
 What you are looking for in here is the * after the value. if that is there then it is signficant. Below you would first look at the one where it is site:season - because if this is signifcant this is all you will analyze in the post anova or post F tests. If the interaction of site:season is not significant you would then look at the individual factors of season or site indiependently.</p>
 <p>The way to read the results below is that the interaction and sites are not significant but season is significant and since there are only two you really dont need to do the post F test as it will just say the same thing but it woudl be differnet if you and more than one season for instance.</p>
 </div>
@@ -607,9 +654,7 @@ Anova(model, type=&quot;III&quot;)       # Use type=&quot;III&quot; ALWAYS!!!!</
 ## Residuals      657 196                                    
 ## ---
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
-</div>
-<div id="summary" class="section level3">
-<h3>Now a summary of the model</h3>
+<p>###Now a summary of the model {#summary}</p>
 <pre class="r"><code># Are they the same? = Try running model with different data
 
 # this produces R-Squared and overall p-value and parameter estimates
@@ -692,18 +737,7 @@ summary(model)     # Produces r-square, overall p-value, parameter estimates</co
 <h1># condor.depaul.edu/sjost/it223/documents/resid-plots.gif.</h1>
 <pre class="r"><code>plot(model,1)</code></pre>
 <p><img src="09_twoway_anovas_files/figure-html/unnamed-chunk-20-1.png" width="672" /></p>
-</div>
-<div id="equality-of-variances-with-levenes" class="section level1">
-<h1>Equality of variances with Levenes</h1>
-</div>
-<div id="check-for-equality-of-variance-across-the-two-groups." class="section level1">
-<h1>Check for equality of variance across the two groups.</h1>
-</div>
-<div id="if-this-is-signficant-we-will-have-to-transform-the-data." class="section level1">
-<h1>If this is signficant we will have to transform the data.</h1>
-</div>
-<div id="the-levenes-test-uses-the-librarycar" class="section level1">
-<h1>The Levene’s test uses the library(car)</h1>
+<p>#Equality of variances with Levenes # Check for equality of variance across the two groups. # If this is signficant we will have to transform the data. # The Levene’s test uses the library(car)</p>
 <pre class="r"><code>leveneTest(or_ls.df$cl ~ or_ls.df$sex * or_ls.df$habitat)</code></pre>
 <pre><code>## Levene&#39;s Test for Homogeneity of Variance (center = median)
 ##        Df F value Pr(&gt;F)
@@ -727,8 +761,8 @@ summary(model)     # Produces r-square, overall p-value, parameter estimates</co
 #     Letters=letters)
 
 test(lsmseason)</code></pre>
-<pre><code>##  contrast      estimate        SE  df t.ratio p.value
-##  lake - stream 4.042528 0.2590174 196  15.607  &lt;.0001
+<pre><code>##  contrast      estimate    SE  df t.ratio p.value
+##  lake - stream     4.04 0.259 196 15.607  &lt;.0001 
 ## 
 ## Results are averaged over the levels of: sex</code></pre>
 <pre class="r"><code>lsmseason.sex = pairs(lsmeans(model,&quot;sex&quot;), adjust=&quot;bonferroni&quot;)</code></pre>
@@ -740,8 +774,8 @@ test(lsmseason)</code></pre>
 #     Letters=letters)
 
 test(lsmseason.sex)</code></pre>
-<pre><code>##  contrast      estimate        SE  df t.ratio p.value
-##  female - male  2.14865 0.2590174 196   8.295  &lt;.0001
+<pre><code>##  contrast      estimate    SE  df t.ratio p.value
+##  female - male     2.15 0.259 196 8.295   &lt;.0001 
 ## 
 ## Results are averaged over the levels of: habitat</code></pre>
 <div id="post_hoc_interact" class="section level3">
@@ -753,34 +787,20 @@ test(lsmseason.sex)</code></pre>
 </div>
 <div id="can-produce-comparisons-for-interaction-effects.-1" class="section level1">
 <h1>can produce comparisons for interaction effects.</h1>
-<pre class="r"><code>lsminteraction = lsmeans(model, 
+<pre class="r"><code>lsminteraction = emmeans(model, 
                          pairwise ~ habitat:sex,
                          adjust=&quot;bonferroni&quot;)
 
 lsminteraction$contrasts</code></pre>
-<pre><code>##  contrast                     estimate        SE  df t.ratio p.value
-##  lake,female - stream,female  3.099395 0.3663059 196   8.461  &lt;.0001
-##  lake,female - lake,male      1.205517 0.3663059 196   3.291  0.0071
-##  lake,female - stream,male    6.191179 0.3663059 196  16.902  &lt;.0001
-##  stream,female - lake,male   -1.893878 0.3663059 196  -5.170  &lt;.0001
-##  stream,female - stream,male  3.091784 0.3663059 196   8.440  &lt;.0001
-##  lake,male - stream,male      4.985662 0.3663059 196  13.611  &lt;.0001
+<pre><code>##  contrast                    estimate    SE  df t.ratio p.value
+##  lake,female - stream,female     3.10 0.366 196  8.461  &lt;.0001 
+##  lake,female - lake,male         1.21 0.366 196  3.291  0.0071 
+##  lake,female - stream,male       6.19 0.366 196 16.902  &lt;.0001 
+##  stream,female - lake,male      -1.89 0.366 196 -5.170  &lt;.0001 
+##  stream,female - stream,male     3.09 0.366 196  8.440  &lt;.0001 
+##  lake,male - stream,male         4.99 0.366 196 13.611  &lt;.0001 
 ## 
 ## P value adjustment: bonferroni method for 6 tests</code></pre>
-<pre class="r"><code>### Means sharing a letter in .group are not significantly different
-# when more than one categorical varaible
-cld(lsminteraction,
-    alpha=.05,
-    Letters=letters)</code></pre>
-<pre><code>##  habitat sex      lsmean        SE  df lower.CL upper.CL .group
-##  stream  male   32.89608 0.2590174 196 32.38526 33.40690  a    
-##  stream  female 35.98787 0.2590174 196 35.47705 36.49869   b   
-##  lake    male   37.88174 0.2590174 196 37.37093 38.39256    c  
-##  lake    female 39.08726 0.2590174 196 38.57644 39.59808     d 
-## 
-## Confidence level used: 0.95 
-## P value adjustment: tukey method for comparing a family of 4 estimates 
-## significance level used: alpha = 0.05</code></pre>
 <pre class="r"><code># test(lsmsite)</code></pre>
 <!-- Global Site Tag (gtag.js) - Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=UA-88373117-4"></script>

@@ -100,6 +100,9 @@ img {
 button.code-folding-btn:focus {
   outline: none;
 }
+summary {
+  display: list-item;
+}
 </style>
 
 
@@ -114,7 +117,6 @@ body {
   padding-top: 56px;
   margin-top: -56px;
 }
-
 .section h2 {
   padding-top: 56px;
   margin-top: -56px;
@@ -134,6 +136,43 @@ body {
 .section h6 {
   padding-top: 56px;
   margin-top: -56px;
+}
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #ffffff;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
 }
 </style>
 
@@ -155,18 +194,77 @@ $(document).ready(function () {
 });
 </script>
 
-
 <div class="container-fluid main-container">
 
 <!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
 <script>
 $(document).ready(function () {
   window.buildTabsets("TOC");
 });
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
 </script>
 
 <!-- code folding -->
-
 
 
 
@@ -307,9 +405,7 @@ div.tocify {
 </div>
 
 
-<div id="load-libraries" class="section level2">
-<h2>Load libraries</h2>
-<p>We will read in the main files and load the libraries as we have worked with so far.</p>
+<p>##Load libraries We will read in the main files and load the libraries as we have worked with so far.</p>
 <pre class="r"><code># #Install Packages ----
 # install.packages(&quot;tidyverse&quot;)
 # install.packages(&quot;lubridate&quot;)
@@ -338,7 +434,6 @@ library(patchwork)
 library(car)
 library(emmeans)
 library(multcompView)</code></pre>
-</div>
 <div id="read-in-the-file" class="section level2">
 <h2>Read in the file</h2>
 <pre class="r"><code># read in the file
@@ -351,13 +446,11 @@ glimpse(gene_exp.df)</code></pre>
 ## Variables: 6
 ## $ individual &lt;dbl&gt; 1, 2, 3, 4, 5, 6, 7, 8, 9
 ## $ experiment &lt;dbl&gt; 1, 1, 1, 2, 2, 2, 3, 3, 3
-## $ control    &lt;dbl&gt; 12.59708, 12.48503, 12.04311, 12.46447, 12.02386, 1...
-## $ treat1     &lt;dbl&gt; 20.87269, 19.57602, 15.66664, 15.70462, 20.20846, 1...
-## $ treat2     &lt;dbl&gt; 14.94204, 15.90944, 13.39281, 17.80308, 20.25343, 1...
-## $ treat3     &lt;dbl&gt; 11.90506, 12.42411, 12.34661, 11.93034, 11.78713, 1...</code></pre>
-</div>
-<div id="summary-statistics-for-the-better-look" class="section level2">
-<h2>Summary Statistics for the better look</h2>
+## $ control    &lt;dbl&gt; 12.59708, 12.48503, 12.04311, 12.46447, 12.02386, 12.…
+## $ treat1     &lt;dbl&gt; 20.87269, 19.57602, 15.66664, 15.70462, 20.20846, 18.…
+## $ treat2     &lt;dbl&gt; 14.94204, 15.90944, 13.39281, 17.80308, 20.25343, 19.…
+## $ treat3     &lt;dbl&gt; 11.90506, 12.42411, 12.34661, 11.93034, 11.78713, 12.…</code></pre>
+<p>##Summary Statistics for the better look</p>
 <pre class="r"><code># the data you want to look at
 
 skim(gene_exp.df)</code></pre>
@@ -365,7 +458,7 @@ skim(gene_exp.df)</code></pre>
 ##  n obs: 9 
 ##  n variables: 6 
 ## 
-## ── Variable type:numeric ──────────────────────────────────
+## ── Variable type:numeric ──────────────────────────────────────────
 ##    variable missing complete n  mean   sd    p0   p25   p50   p75  p100
 ##     control       0        9 9 12.37 0.24 12.02 12.16 12.46 12.53 12.66
 ##  experiment       0        9 9  2    0.87  1     1     2     3     3   
@@ -380,10 +473,7 @@ skim(gene_exp.df)</code></pre>
 ##  ▃▁▃▇▁▃▇▇
 ##  ▃▇▃▁▃▇▁▇
 ##  ▇▆▂▁▁▁▁▂</code></pre>
-</div>
-<div id="look-at-the-data" class="section level2">
-<h2>Look at the data</h2>
-<p>We could do this in the wide format but it is a lot easier in long format ## Wide to long format</p>
+<p>##Look at the data We could do this in the wide format but it is a lot easier in long format ## Wide to long format</p>
 <pre class="r"><code># this will add an index to the dataframe so you know what individual is which
 gene_exp_long.df &lt;- gene_exp.df %&gt;%
   gather(
@@ -396,10 +486,10 @@ gene_exp_long.df &lt;- gene_exp.df %&gt;%
 glimpse(gene_exp_long.df)</code></pre>
 <pre><code>## Observations: 36
 ## Variables: 4
-## $ individual &lt;dbl&gt; 1, 2, 3, 4, 5, 6, 7, 8, 9, 1, 2, 3, 4, 5, 6, 7, 8, ...
-## $ experiment &lt;dbl&gt; 1, 1, 1, 2, 2, 2, 3, 3, 3, 1, 1, 1, 2, 2, 2, 3, 3, ...
-## $ treatment  &lt;chr&gt; &quot;control&quot;, &quot;control&quot;, &quot;control&quot;, &quot;control&quot;, &quot;contro...
-## $ expression &lt;dbl&gt; 12.59708, 12.48503, 12.04311, 12.46447, 12.02386, 1...</code></pre>
+## $ individual &lt;dbl&gt; 1, 2, 3, 4, 5, 6, 7, 8, 9, 1, 2, 3, 4, 5, 6, 7, 8, 9,…
+## $ experiment &lt;dbl&gt; 1, 1, 1, 2, 2, 2, 3, 3, 3, 1, 1, 1, 2, 2, 2, 3, 3, 3,…
+## $ treatment  &lt;chr&gt; &quot;control&quot;, &quot;control&quot;, &quot;control&quot;, &quot;control&quot;, &quot;control&quot;…
+## $ expression &lt;dbl&gt; 12.59708, 12.48503, 12.04311, 12.46447, 12.02386, 12.…</code></pre>
 <pre class="r"><code># we could spread it back out to what it was
 gene_exp_wide.df &lt;- gene_exp_long.df %&gt;%
   spread(treatment, expression)</code></pre>
@@ -409,14 +499,11 @@ gene_exp_wide.df &lt;- gene_exp_long.df %&gt;%
 <pre class="r"><code>glimpse(gene_exp_long.df)</code></pre>
 <pre><code>## Observations: 36
 ## Variables: 4
-## $ individual &lt;dbl&gt; 1, 2, 3, 4, 5, 6, 7, 8, 9, 1, 2, 3, 4, 5, 6, 7, 8, ...
-## $ experiment &lt;dbl&gt; 1, 1, 1, 2, 2, 2, 3, 3, 3, 1, 1, 1, 2, 2, 2, 3, 3, ...
-## $ treatment  &lt;chr&gt; &quot;control&quot;, &quot;control&quot;, &quot;control&quot;, &quot;control&quot;, &quot;contro...
-## $ expression &lt;dbl&gt; 12.59708, 12.48503, 12.04311, 12.46447, 12.02386, 1...</code></pre>
-</div>
-<div id="convert-to-factors" class="section level2">
-<h2>Convert to factors</h2>
-<p>So to do this the experiment and individuals are numeric and need to be converted to categories or factors…</p>
+## $ individual &lt;dbl&gt; 1, 2, 3, 4, 5, 6, 7, 8, 9, 1, 2, 3, 4, 5, 6, 7, 8, 9,…
+## $ experiment &lt;dbl&gt; 1, 1, 1, 2, 2, 2, 3, 3, 3, 1, 1, 1, 2, 2, 2, 3, 3, 3,…
+## $ treatment  &lt;chr&gt; &quot;control&quot;, &quot;control&quot;, &quot;control&quot;, &quot;control&quot;, &quot;control&quot;…
+## $ expression &lt;dbl&gt; 12.59708, 12.48503, 12.04311, 12.46447, 12.02386, 12.…</code></pre>
+<p>##Convert to factors So to do this the experiment and individuals are numeric and need to be converted to categories or factors…</p>
 </div>
 <div id="wide-data-to-factors" class="section level2">
 <h2>Wide data to factors</h2>
@@ -433,12 +520,12 @@ skim(gene_exp.df)</code></pre>
 ##  n obs: 9 
 ##  n variables: 6 
 ## 
-## ── Variable type:factor ───────────────────────────────────
+## ── Variable type:factor ───────────────────────────────────────────
 ##    variable missing complete n n_unique              top_counts ordered
 ##  experiment       0        9 9        3 1: 3, 2: 3, 3: 3, NA: 0   FALSE
 ##  individual       0        9 9        9  1: 1, 2: 1, 3: 1, 4: 1   FALSE
 ## 
-## ── Variable type:numeric ──────────────────────────────────
+## ── Variable type:numeric ──────────────────────────────────────────
 ##  variable missing complete n  mean   sd    p0   p25   p50   p75  p100
 ##   control       0        9 9 12.37 0.24 12.02 12.16 12.46 12.53 12.66
 ##    treat1       0        9 9 17.31 2.9  12.27 15.67 18.15 19.58 20.87
@@ -466,7 +553,7 @@ skim(gene_exp_long.df)</code></pre>
 ##  n obs: 36 
 ##  n variables: 4 
 ## 
-## ── Variable type:factor ───────────────────────────────────
+## ── Variable type:factor ───────────────────────────────────────────
 ##    variable missing complete  n n_unique                     top_counts
 ##  experiment       0       36 36        3     1: 12, 2: 12, 3: 12, NA: 0
 ##  individual       0       36 36        9         1: 4, 2: 4, 3: 4, 4: 4
@@ -476,14 +563,12 @@ skim(gene_exp_long.df)</code></pre>
 ##    FALSE
 ##    FALSE
 ## 
-## ── Variable type:numeric ──────────────────────────────────
+## ── Variable type:numeric ──────────────────────────────────────────
 ##    variable missing complete  n  mean sd    p0   p25   p50   p75  p100
 ##  expression       0       36 36 14.75  3 11.79 12.34 13.02 17.45 20.87
 ##      hist
 ##  ▇▁▂▁▁▁▁▁</code></pre>
-</div>
-<div id="now-to-graph-the-long-format-data" class="section level2">
-<h2>Now to graph the long format data</h2>
+<p>##Now to graph the long format data</p>
 <pre class="r"><code># Note the new format allows us to make coding a lot faster
 gene_exp_long.df %&gt;% 
   group_by(treatment)  %&gt;%
@@ -494,9 +579,7 @@ gene_exp_long.df %&gt;%
 <div id="t-tests-are-a-great-way-to-compare-two-means.-but-they-can-be-a-bit-limited." class="section level2">
 <h2>T-Tests are a great way to compare two means. But they can be a bit limited.</h2>
 <p>There are several types of T tests and there are a few assumptions Normality Heterogeneity of Variances and a few others we will talk about….</p>
-<div id="test-for-normality-of-each-group" class="section level3">
-<h3>Test for normality of each group</h3>
-<p>To do this in wide format it is straight forward<br />
+<p>###Test for normality of each group To do this in wide format it is straight forward<br />
 Here these should be non-signficant so they are not deviating from a normal distribution.</p>
 <pre class="r"><code># Test for normality of each group wide format
 shapiro.test(gene_exp.df$control)</code></pre>
@@ -523,10 +606,8 @@ shapiro.test(gene_exp.df$control)</code></pre>
 ## 
 ## data:  gene_exp.df$treat3
 ## W = 0.68571, p-value = 0.0009661</code></pre>
-</div>
-<div id="test-for-homogeneity-of-variances" class="section level3">
-<h3>Test for homogeneity of variances</h3>
-<p>Best to use the Levenes test compared to the Bartlet test<br />
+<p>###Test for homogeneity of variances<br />
+Best to use the Levenes test compared to the Bartlet test<br />
 uses the car package<br />
 <a href="http://www.cookbook-r.com/Statistical_analysis/Homogeneity_of_variance/" class="uri">http://www.cookbook-r.com/Statistical_analysis/Homogeneity_of_variance/</a></p>
 <pre class="r"><code>#Test for homogeneity of variances
@@ -548,9 +629,7 @@ bartlett.test(expression ~ treatment, data=gene_exp_long.df)</code></pre>
 <pre class="r"><code>#With multiple independent variables, the interaction() function must be used to collapse the IV’s into a single variable with all combinations of the factors. If it is not used, then the will be the wrong degrees of freedom, and the p-value will be wrong.
 
 # bartlett.test(extra ~ interaction(group,some other independent factor), data=sleep.df)</code></pre>
-</div>
-<div id="paired-t-tests-wide-format" class="section level3">
-<h3>Paired T-Tests wide format</h3>
+<p>###Paired T-Tests wide format</p>
 <pre class="r"><code># Paired T-Test - Welch 2 sample -----
 t.test(gene_exp.df$control, gene_exp.df$treat1, paired=TRUE) # Note the 1 and 2 are in quotes so R knows its the column</code></pre>
 <pre><code>## 
@@ -564,9 +643,7 @@ t.test(gene_exp.df$control, gene_exp.df$treat1, paired=TRUE) # Note the 1 and 2 
 ## sample estimates:
 ## mean of the differences 
 ##               -4.939062</code></pre>
-</div>
-<div id="paired-t-tests-long-format" class="section level3">
-<h3>Paired T-Tests long format</h3>
+<p>###Paired T-Tests long format</p>
 <pre class="r"><code># Paired T-Test - Welch 2 sample -----
 # Welch t-test
 # t.test(variable ~ group, dataframe)
@@ -588,10 +665,7 @@ t.test(expression ~ treatment, cont_t1.df, paired=TRUE) # Note the 1 and 2 are i
 ## sample estimates:
 ## mean of the differences 
 ##               -4.939062</code></pre>
-</div>
-<div id="two-sample-t-test---in-wide-format" class="section level3">
-<h3>Two Sample T-Test - in wide format</h3>
-<p>By default, t.test does not assume equal variances</p>
+<p>###Two Sample T-Test - in wide format By default, t.test does not assume equal variances</p>
 <pre class="r"><code># Welch t-test
 t.test(gene_exp.df$control, gene_exp.df$treat1, var.equal=FALSE)</code></pre>
 <pre><code>## 
@@ -605,10 +679,7 @@ t.test(gene_exp.df$control, gene_exp.df$treat1, var.equal=FALSE)</code></pre>
 ## sample estimates:
 ## mean of x mean of y 
 ##  12.37063  17.30969</code></pre>
-</div>
-<div id="two-sample-t-test---in-long-format" class="section level3">
-<h3>Two Sample T-Test - in long format</h3>
-<p>By default, t.test does not assume equal variances</p>
+<p>###Two Sample T-Test - in long format By default, t.test does not assume equal variances</p>
 <pre class="r"><code># Welch t-test
 t.test(expression ~ treatment, cont_t1.df, var.equal=FALSE)</code></pre>
 <pre><code>## 
@@ -622,7 +693,6 @@ t.test(expression ~ treatment, cont_t1.df, var.equal=FALSE)</code></pre>
 ## sample estimates:
 ## mean in group control  mean in group treat1 
 ##              12.37063              17.30969</code></pre>
-</div>
 </div>
 <div id="one-way-anova" class="section level2">
 <h2>One way Anova</h2>
@@ -719,11 +789,11 @@ lsm = emmeans(expression.model.aov,
 cld(lsm, 
     alpha=.05,
     Letters=letters)</code></pre>
-<pre><code>##  treatment   emmean        SE df lower.CL upper.CL .group
-##  control   12.37063 0.6344611 32 11.07827 13.66298  a    
-##  treat3    12.43765 0.6344611 32 11.14530 13.73001  a    
-##  treat2    16.89009 0.6344611 32 15.59773 18.18244   b   
-##  treat1    17.30969 0.6344611 32 16.01733 18.60204   b   
+<pre><code>##  treatment emmean    SE df lower.CL upper.CL .group
+##  control     12.4 0.634 32     11.1     13.7  a    
+##  treat3      12.4 0.634 32     11.1     13.7  a    
+##  treat2      16.9 0.634 32     15.6     18.2   b   
+##  treat1      17.3 0.634 32     16.0     18.6   b   
 ## 
 ## Confidence level used: 0.95 
 ## P value adjustment: tukey method for comparing a family of 4 estimates 

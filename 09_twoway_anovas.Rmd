@@ -373,16 +373,14 @@ test(lsmseason.sex)
 # One advantage of the using the  package for post-hoc tests is that it  
 # can produce comparisons for interaction effects.
 ```{r}
-lsminteraction = lsmeans(model, 
+lsminteraction = emmeans(model, 
                          pairwise ~ habitat:sex,
                          adjust="bonferroni")
 
 lsminteraction$contrasts
-### Means sharing a letter in .group are not significantly different
-# when more than one categorical varaible
-cld(lsminteraction,
-    alpha=.05,
-    Letters=letters)
+
+
+
 # test(lsmsite)
 ```
 

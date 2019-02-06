@@ -100,6 +100,9 @@ img {
 button.code-folding-btn:focus {
   outline: none;
 }
+summary {
+  display: list-item;
+}
 </style>
 
 
@@ -114,7 +117,6 @@ body {
   padding-top: 56px;
   margin-top: -56px;
 }
-
 .section h2 {
   padding-top: 56px;
   margin-top: -56px;
@@ -134,6 +136,43 @@ body {
 .section h6 {
   padding-top: 56px;
   margin-top: -56px;
+}
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #ffffff;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
 }
 </style>
 
@@ -155,18 +194,77 @@ $(document).ready(function () {
 });
 </script>
 
-
 <div class="container-fluid main-container">
 
 <!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
 <script>
 $(document).ready(function () {
   window.buildTabsets("TOC");
 });
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
 </script>
 
 <!-- code folding -->
-
 
 
 
@@ -314,14 +412,8 @@ div.tocify {
 <div id="script" class="section level2">
 <h2>Script</h2>
 <p>Here is the script for this file in R without all this stuff <a href="https://wlperry.github.io/04_data_modification.R">Dataframes 04 R Script</a></p>
-</div>
-<div id="data" class="section level2">
-<h2>Data</h2>
-<p><a href="https://wlperry.github.io/data/grades.csv">Fake Grades</a></p>
-</div>
-<div id="load-libraries" class="section level2">
-<h2>Load libraries</h2>
-<p>We will read in the main files and load the libraries as we have worked with so far.</p>
+<p>##Data <a href="https://wlperry.github.io/data/grades.csv">Fake Grades</a></p>
+<p>##Load libraries We will read in the main files and load the libraries as we have worked with so far.</p>
 <pre class="r"><code># One new package for summary stats
 #install.packages(&quot;psych&quot;)
 
@@ -345,58 +437,46 @@ smc.df &lt;- read_excel(&quot;data/smc.xlsx&quot;)
 glimpse(mc.df)</code></pre>
 <pre><code>## Observations: 51
 ## Variables: 9
-## $ datetime          &lt;chr&gt; &quot;01/15/2015 09:54&quot;, &quot;01/29/2015 09:10&quot;, &quot;02/...
-## $ site              &lt;chr&gt; &quot;mc&quot;, &quot;mc&quot;, &quot;mc&quot;, &quot;mc&quot;, &quot;mc&quot;, &quot;mc&quot;, &quot;mc&quot;, &quot;m...
-## $ w_temp_c          &lt;dbl&gt; 0.00, NA, 0.00, NA, 5.40, 6.50, 13.50, 13.40...
-## $ volume_filtered_l &lt;dbl&gt; 0.600, 0.650, 0.500, NA, 0.520, 0.455, 0.425...
-## $ tare_g            &lt;dbl&gt; 0.1043, 0.1071, 0.1017, NA, 0.1054, 0.1016, ...
-## $ dry_105c_g        &lt;dbl&gt; 0.108100, 0.110200, 0.110900, NA, 0.111300, ...
-## $ turbidity_ntu     &lt;dbl&gt; 4.98, 4.11, 14.00, NA, 7.94, 5.83, 7.89, 5.2...
-## $ tp_ugl            &lt;dbl&gt; NA, 25.20, 65.70, NA, 97.60, 7.77, 29.90, 24...
-## $ drp_ugl           &lt;dbl&gt; 8.03, 13.00, 51.80, NA, 78.30, 6.53, 8.22, 1...</code></pre>
-</div>
-<div id="joining-dataframes-together" class="section level2">
-<h2>Joining dataframes together</h2>
-<p>So lets say we have these two dataframes and we want to work with them together - how do we do this?</p>
-<div id="rbind-or-append" class="section level3">
-<h3>Rbind or append</h3>
-<p>We can bind the two dataframes together as long as they have the same column names and same column numbers. This will <em>append</em> a dataframe to the other. Now when we do code we can work with it all at once. We can also separate the data into smaller dataframes later.</p>
+## $ datetime          &lt;chr&gt; &quot;01/15/2015 09:54&quot;, &quot;01/29/2015 09:10&quot;, &quot;02/12…
+## $ site              &lt;chr&gt; &quot;mc&quot;, &quot;mc&quot;, &quot;mc&quot;, &quot;mc&quot;, &quot;mc&quot;, &quot;mc&quot;, &quot;mc&quot;, &quot;mc&quot;…
+## $ w_temp_c          &lt;dbl&gt; 0.00, NA, 0.00, NA, 5.40, 6.50, 13.50, 13.40, …
+## $ volume_filtered_l &lt;dbl&gt; 0.600, 0.650, 0.500, NA, 0.520, 0.455, 0.425, …
+## $ tare_g            &lt;dbl&gt; 0.1043, 0.1071, 0.1017, NA, 0.1054, 0.1016, 0.…
+## $ dry_105c_g        &lt;dbl&gt; 0.108100, 0.110200, 0.110900, NA, 0.111300, 0.…
+## $ turbidity_ntu     &lt;dbl&gt; 4.98, 4.11, 14.00, NA, 7.94, 5.83, 7.89, 5.22,…
+## $ tp_ugl            &lt;dbl&gt; NA, 25.20, 65.70, NA, 97.60, 7.77, 29.90, 24.1…
+## $ drp_ugl           &lt;dbl&gt; 8.03, 13.00, 51.80, NA, 78.30, 6.53, 8.22, 12.…</code></pre>
+<p>##Joining dataframes together So lets say we have these two dataframes and we want to work with them together - how do we do this?</p>
+<p>###Rbind or append We can bind the two dataframes together as long as they have the same column names and same column numbers. This will <em>append</em> a dataframe to the other. Now when we do code we can work with it all at once. We can also separate the data into smaller dataframes later.</p>
 <pre class="r"><code>mc_smc.df &lt;- rbind(mc.df, smc.df)
 
 glimpse(mc_smc.df)</code></pre>
 <pre><code>## Observations: 102
 ## Variables: 9
-## $ datetime          &lt;chr&gt; &quot;01/15/2015 09:54&quot;, &quot;01/29/2015 09:10&quot;, &quot;02/...
-## $ site              &lt;chr&gt; &quot;mc&quot;, &quot;mc&quot;, &quot;mc&quot;, &quot;mc&quot;, &quot;mc&quot;, &quot;mc&quot;, &quot;mc&quot;, &quot;m...
-## $ w_temp_c          &lt;dbl&gt; 0.00, NA, 0.00, NA, 5.40, 6.50, 13.50, 13.40...
-## $ volume_filtered_l &lt;dbl&gt; 0.600, 0.650, 0.500, NA, 0.520, 0.455, 0.425...
-## $ tare_g            &lt;dbl&gt; 0.1043, 0.1071, 0.1017, NA, 0.1054, 0.1016, ...
-## $ dry_105c_g        &lt;dbl&gt; 0.108100, 0.110200, 0.110900, NA, 0.111300, ...
-## $ turbidity_ntu     &lt;dbl&gt; 4.98, 4.11, 14.00, NA, 7.94, 5.83, 7.89, 5.2...
-## $ tp_ugl            &lt;dbl&gt; NA, 25.20, 65.70, NA, 97.60, 7.77, 29.90, 24...
-## $ drp_ugl           &lt;dbl&gt; 8.03, 13.00, 51.80, NA, 78.30, 6.53, 8.22, 1...</code></pre>
-</div>
-</div>
-<div id="the-pipe" class="section level2">
-<h2>The pipe</h2>
-<p>So lets start thinking about how to string a lot of commands together. Before this we have assigned items to a name or environmental varaible with <code>&lt;-</code> bu now what we want to do is sort of the opposite. We want to take an object or output of an object and pass it to the right to do new things with the output. We do this using the pipe command <code>%&gt;%</code>. This takes what is on the left and passes it to the right.</p>
+## $ datetime          &lt;chr&gt; &quot;01/15/2015 09:54&quot;, &quot;01/29/2015 09:10&quot;, &quot;02/12…
+## $ site              &lt;chr&gt; &quot;mc&quot;, &quot;mc&quot;, &quot;mc&quot;, &quot;mc&quot;, &quot;mc&quot;, &quot;mc&quot;, &quot;mc&quot;, &quot;mc&quot;…
+## $ w_temp_c          &lt;dbl&gt; 0.00, NA, 0.00, NA, 5.40, 6.50, 13.50, 13.40, …
+## $ volume_filtered_l &lt;dbl&gt; 0.600, 0.650, 0.500, NA, 0.520, 0.455, 0.425, …
+## $ tare_g            &lt;dbl&gt; 0.1043, 0.1071, 0.1017, NA, 0.1054, 0.1016, 0.…
+## $ dry_105c_g        &lt;dbl&gt; 0.108100, 0.110200, 0.110900, NA, 0.111300, 0.…
+## $ turbidity_ntu     &lt;dbl&gt; 4.98, 4.11, 14.00, NA, 7.94, 5.83, 7.89, 5.22,…
+## $ tp_ugl            &lt;dbl&gt; NA, 25.20, 65.70, NA, 97.60, 7.77, 29.90, 24.1…
+## $ drp_ugl           &lt;dbl&gt; 8.03, 13.00, 51.80, NA, 78.30, 6.53, 8.22, 12.…</code></pre>
+<p>##The pipe So lets start thinking about how to string a lot of commands together. Before this we have assigned items to a name or environmental varaible with <code>&lt;-</code> bu now what we want to do is sort of the opposite. We want to take an object or output of an object and pass it to the right to do new things with the output. We do this using the pipe command <code>%&gt;%</code>. This takes what is on the left and passes it to the right.</p>
 <p><br></p>
 <pre class="r"><code>mc_smc.df %&gt;% glimpse()</code></pre>
 <pre><code>## Observations: 102
 ## Variables: 9
-## $ datetime          &lt;chr&gt; &quot;01/15/2015 09:54&quot;, &quot;01/29/2015 09:10&quot;, &quot;02/...
-## $ site              &lt;chr&gt; &quot;mc&quot;, &quot;mc&quot;, &quot;mc&quot;, &quot;mc&quot;, &quot;mc&quot;, &quot;mc&quot;, &quot;mc&quot;, &quot;m...
-## $ w_temp_c          &lt;dbl&gt; 0.00, NA, 0.00, NA, 5.40, 6.50, 13.50, 13.40...
-## $ volume_filtered_l &lt;dbl&gt; 0.600, 0.650, 0.500, NA, 0.520, 0.455, 0.425...
-## $ tare_g            &lt;dbl&gt; 0.1043, 0.1071, 0.1017, NA, 0.1054, 0.1016, ...
-## $ dry_105c_g        &lt;dbl&gt; 0.108100, 0.110200, 0.110900, NA, 0.111300, ...
-## $ turbidity_ntu     &lt;dbl&gt; 4.98, 4.11, 14.00, NA, 7.94, 5.83, 7.89, 5.2...
-## $ tp_ugl            &lt;dbl&gt; NA, 25.20, 65.70, NA, 97.60, 7.77, 29.90, 24...
-## $ drp_ugl           &lt;dbl&gt; 8.03, 13.00, 51.80, NA, 78.30, 6.53, 8.22, 1...</code></pre>
-</div>
-<div id="mutate" class="section level2">
-<h2>Mutate</h2>
-<p>So lets say in this dataframe we wanted to calculate the Dry Weight of a sample by subracting the Tare weight from Dry Weight</p>
+## $ datetime          &lt;chr&gt; &quot;01/15/2015 09:54&quot;, &quot;01/29/2015 09:10&quot;, &quot;02/12…
+## $ site              &lt;chr&gt; &quot;mc&quot;, &quot;mc&quot;, &quot;mc&quot;, &quot;mc&quot;, &quot;mc&quot;, &quot;mc&quot;, &quot;mc&quot;, &quot;mc&quot;…
+## $ w_temp_c          &lt;dbl&gt; 0.00, NA, 0.00, NA, 5.40, 6.50, 13.50, 13.40, …
+## $ volume_filtered_l &lt;dbl&gt; 0.600, 0.650, 0.500, NA, 0.520, 0.455, 0.425, …
+## $ tare_g            &lt;dbl&gt; 0.1043, 0.1071, 0.1017, NA, 0.1054, 0.1016, 0.…
+## $ dry_105c_g        &lt;dbl&gt; 0.108100, 0.110200, 0.110900, NA, 0.111300, 0.…
+## $ turbidity_ntu     &lt;dbl&gt; 4.98, 4.11, 14.00, NA, 7.94, 5.83, 7.89, 5.22,…
+## $ tp_ugl            &lt;dbl&gt; NA, 25.20, 65.70, NA, 97.60, 7.77, 29.90, 24.1…
+## $ drp_ugl           &lt;dbl&gt; 8.03, 13.00, 51.80, NA, 78.30, 6.53, 8.22, 12.…</code></pre>
+<p>##Mutate So lets say in this dataframe we wanted to calculate the Dry Weight of a sample by subracting the Tare weight from Dry Weight</p>
 <p><code>mc_smc.df &lt;- mc_smc.df %&gt;% mutate(variable = varaible - variable))</code></p>
 <pre class="r"><code># mc_smc.df &lt;- mc_smc.df %&gt;% mutate(variable = varaible - variable))
 
@@ -446,10 +526,7 @@ mc_smc.df &lt;- mc_smc.df %&gt;%
   mutate(
           datetime = mdy_hm(datetime)
   )</code></pre>
-</div>
-<div id="modifying-dates" class="section level2">
-<h2>Modifying dates</h2>
-<p>So we can now work with this datetime column really easily and pull out parts of it to work with further</p>
+<p>##Modifying dates So we can now work with this datetime column really easily and pull out parts of it to work with further</p>
 <pre class="r"><code>mc_smc.df &lt;- mc_smc.df %&gt;% 
   mutate(
          year = year(datetime),
@@ -473,13 +550,11 @@ head(mc_smc_2015.df)</code></pre>
 ## 4 2015-02-26 12:12:00 mc        NA             NA     NA        NA     
 ## 5 2015-03-12 11:15:00 mc         5.4            0.52   0.105     0.111 
 ## 6 2015-03-26 11:15:00 mc         6.5            0.455  0.102     0.0988
-## # ... with 9 more variables: turbidity_ntu &lt;dbl&gt;, tp_ugl &lt;dbl&gt;,
+## # … with 9 more variables: turbidity_ntu &lt;dbl&gt;, tp_ugl &lt;dbl&gt;,
 ## #   drp_ugl &lt;dbl&gt;, dry_wt_g &lt;dbl&gt;, dry_wt_g_l &lt;dbl&gt;, year &lt;dbl&gt;,
 ## #   month &lt;dbl&gt;, day &lt;int&gt;, julian_day &lt;dbl&gt;</code></pre>
 <p><br></p>
-</div>
-<div id="boolean-search-terms-of-interest" class="section level2">
-<h2>Boolean search terms of interest</h2>
+<p>##Boolean search terms of interest</p>
 <pre class="r"><code>boolean.tbl &lt;- read_csv(&quot;figures/boolean.csv&quot;) 
 
 # boolean.tbl %&gt;%
@@ -498,7 +573,7 @@ head(mc_smc_2015.df)</code></pre>
 ## 4 2015-02-26 12:12:00 mc        NA             NA     NA        NA     
 ## 5 2015-03-12 11:15:00 mc         5.4            0.52   0.105     0.111 
 ## 6 2015-03-26 11:15:00 mc         6.5            0.455  0.102     0.0988
-## # ... with 9 more variables: turbidity_ntu &lt;dbl&gt;, tp_ugl &lt;dbl&gt;,
+## # … with 9 more variables: turbidity_ntu &lt;dbl&gt;, tp_ugl &lt;dbl&gt;,
 ## #   drp_ugl &lt;dbl&gt;, dry_wt_g &lt;dbl&gt;, dry_wt_g_l &lt;dbl&gt;, year &lt;dbl&gt;,
 ## #   month &lt;dbl&gt;, day &lt;int&gt;, julian_day &lt;dbl&gt;</code></pre>
 </div>
@@ -516,18 +591,13 @@ head(mc_smc_2015.df)</code></pre>
   geom_point() </code></pre>
 <pre><code>## Warning: Removed 1 rows containing missing values (geom_point).</code></pre>
 <p><img src="04_data_modification_files/figure-html/unnamed-chunk-12-1.png" width="672" /></p>
-</div>
-<div id="selecting-variables" class="section level2">
-<h2>Selecting variables</h2>
-<p>What if you wanted to select only certain variables to work with? Now lets use two ways to do the same thing…..</p>
+<p>##Selecting variables What if you wanted to select only certain variables to work with? Now lets use two ways to do the same thing…..</p>
 <pre class="r"><code>mc_smc_drywt.df &lt;- mc_smc.df %&gt;% 
   select(datetime, julian_day, dry_wt_g_l)</code></pre>
 <p>Lets assume you wanted to select all dry weight and volume filtered you can use things like: <code>starts_with(), ends_with(), contains(),  everything()</code> in various combinations such as</p>
 <pre class="r"><code>mc_smc_drywt.df &lt;- mc_smc.df %&gt;% 
   select(datetime, julian_day, volume_filtered_l, starts_with(&quot;dry&quot;))</code></pre>
-</div>
-<div id="what-if-you-wanted-see-all-na-values-in-a-particular-variable." class="section level2">
-<h2>What if you wanted see all NA values in a particular variable….</h2>
+<p>##What if you wanted see all NA values in a particular variable….</p>
 <pre class="r"><code>mc_smc.df %&gt;% filter(is.na(dry_wt_g_l))</code></pre>
 <pre><code>## # A tibble: 5 x 15
 ##   datetime            site  w_temp_c volume_filtered… tare_g dry_105c_g
@@ -537,12 +607,10 @@ head(mc_smc_2015.df)</code></pre>
 ## 3 2016-12-22 10:00:00 mc       NA                  NA     NA         NA
 ## 4 2016-07-14 08:00:00 smc      21                  NA     NA         NA
 ## 5 2016-12-22 08:45:00 smc       3.72               NA     NA         NA
-## # ... with 9 more variables: turbidity_ntu &lt;dbl&gt;, tp_ugl &lt;dbl&gt;,
+## # … with 9 more variables: turbidity_ntu &lt;dbl&gt;, tp_ugl &lt;dbl&gt;,
 ## #   drp_ugl &lt;dbl&gt;, dry_wt_g &lt;dbl&gt;, dry_wt_g_l &lt;dbl&gt;, year &lt;dbl&gt;,
 ## #   month &lt;dbl&gt;, day &lt;int&gt;, julian_day &lt;dbl&gt;</code></pre>
-</div>
-<div id="what-if-you-wanted-see-all-na-values" class="section level2">
-<h2>What if you wanted see all NA values</h2>
+<p>##What if you wanted see all NA values</p>
 <pre class="r"><code>mc_smc.df %&gt;% filter(!is.na(dry_wt_g_l))</code></pre>
 <pre><code>## # A tibble: 97 x 15
 ##    datetime            site  w_temp_c volume_filtered… tare_g dry_105c_g
@@ -557,12 +625,10 @@ head(mc_smc_2015.df)</code></pre>
 ##  8 2015-05-07 14:40:00 mc        20.3            0.55  0.104      0.114 
 ##  9 2015-05-21 11:40:00 mc        12.4            0.5   0.102      0.118 
 ## 10 2015-06-04 11:25:00 mc        16.8            0.52  0.105      0.120 
-## # ... with 87 more rows, and 9 more variables: turbidity_ntu &lt;dbl&gt;,
+## # … with 87 more rows, and 9 more variables: turbidity_ntu &lt;dbl&gt;,
 ## #   tp_ugl &lt;dbl&gt;, drp_ugl &lt;dbl&gt;, dry_wt_g &lt;dbl&gt;, dry_wt_g_l &lt;dbl&gt;,
 ## #   year &lt;dbl&gt;, month &lt;dbl&gt;, day &lt;int&gt;, julian_day &lt;dbl&gt;</code></pre>
-</div>
-<div id="groups-and-summmarize-data" class="section level2">
-<h2>Groups and summmarize data</h2>
+<p>##Groups and summmarize data</p>
 <p>Now a really cool thing we can do is to group data and then look at summairies of the data or use it later down the road.</p>
 <p>So lets say we wanted to see the mean temperature by month in each stream</p>
 <pre class="r"><code>mc_smc.df %&gt;% group_by(site, year, month) %&gt;%
@@ -583,7 +649,7 @@ head(mc_smc_2015.df)</code></pre>
 ##  8 2015-04-23 12:50:00 mc        13.4            0.51   0.103      0.108 
 ##  9 2015-05-07 14:40:00 mc        20.3            0.55   0.104      0.114 
 ## 10 2015-05-21 11:40:00 mc        12.4            0.5    0.102      0.118 
-## # ... with 92 more rows, and 10 more variables: turbidity_ntu &lt;dbl&gt;,
+## # … with 92 more rows, and 10 more variables: turbidity_ntu &lt;dbl&gt;,
 ## #   tp_ugl &lt;dbl&gt;, drp_ugl &lt;dbl&gt;, dry_wt_g &lt;dbl&gt;, dry_wt_g_l &lt;dbl&gt;,
 ## #   year &lt;dbl&gt;, month &lt;dbl&gt;, day &lt;int&gt;, julian_day &lt;dbl&gt;,
 ## #   mean_temp_c &lt;dbl&gt;</code></pre>
@@ -606,7 +672,7 @@ head(mc_smc_2015.df)</code></pre>
 ##  8 mc     2015     8       19.8 
 ##  9 mc     2015     9       19.4 
 ## 10 mc     2015    10       16.5 
-## # ... with 38 more rows</code></pre>
+## # … with 38 more rows</code></pre>
 <p>You should get used to adding in the term <em><code>na.rm=TRUE</code></em> on all of your calculations. If you don’t you can see the results below.</p>
 <pre class="r"><code>mc_smc.df %&gt;% group_by(site, year, month) %&gt;%
   summarize(
@@ -627,7 +693,7 @@ head(mc_smc_2015.df)</code></pre>
 ##  8 mc     2015     8       19.8          19.8 
 ##  9 mc     2015     9       19.4          19.4 
 ## 10 mc     2015    10       16.5          16.5 
-## # ... with 38 more rows</code></pre>
+## # … with 38 more rows</code></pre>
 <p>Finally we could also use this for plotting</p>
 <pre class="r"><code>mc_smc.df %&gt;% group_by(site, year, month) %&gt;%
   summarize(
@@ -637,10 +703,8 @@ head(mc_smc_2015.df)</code></pre>
   ggplot( aes(x=julian_day, y=mean_temp_c_2))+
   geom_point()</code></pre>
 <p><img src="04_data_modification_files/figure-html/unnamed-chunk-20-1.png" width="672" /></p>
-</div>
-<div id="clean-data" class="section level2">
-<h2>Clean data</h2>
-<p>So lets finally use the <em>janitor</em> pacakge to clean up this data. This will make working with data sets from other users a bit easier to work with quickly rather than reformatting all the values manually.<br />
+<p>##Clean data<br />
+So lets finally use the <em>janitor</em> pacakge to clean up this data. This will make working with data sets from other users a bit easier to work with quickly rather than reformatting all the values manually.<br />
 <br><br />
 Note that this will get rid of empty columns and rows if from an excel sheet and will clean up the variable names.</p>
 <pre class="r"><code>iris.df &lt;- read_csv(&quot;data/iris.csv&quot;) %&gt;%

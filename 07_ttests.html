@@ -100,6 +100,9 @@ img {
 button.code-folding-btn:focus {
   outline: none;
 }
+summary {
+  display: list-item;
+}
 </style>
 
 
@@ -114,7 +117,6 @@ body {
   padding-top: 56px;
   margin-top: -56px;
 }
-
 .section h2 {
   padding-top: 56px;
   margin-top: -56px;
@@ -134,6 +136,43 @@ body {
 .section h6 {
   padding-top: 56px;
   margin-top: -56px;
+}
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #ffffff;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
 }
 </style>
 
@@ -155,18 +194,77 @@ $(document).ready(function () {
 });
 </script>
 
-
 <div class="container-fluid main-container">
 
 <!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
 <script>
 $(document).ready(function () {
   window.buildTabsets("TOC");
 });
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
 </script>
 
 <!-- code folding -->
-
 
 
 
@@ -309,10 +407,7 @@ div.tocify {
 
 <div id="t-tests" class="section level2">
 <h2>T Tests</h2>
-</div>
-<div id="load-libraries" class="section level2">
-<h2>Load libraries</h2>
-<p>We will read in the main files and load the libraries as we have worked with so far.</p>
+<p>##Load libraries We will read in the main files and load the libraries as we have worked with so far.</p>
 <pre class="r"><code># One new package for summary stats
 #install.packages(&quot;broom&quot;)
 # install.packages(&quot;GGally&quot;)
@@ -342,17 +437,13 @@ iris.df &lt;- read_csv(&quot;data/iris.csv&quot;) %&gt;%
 glimpse(iris.df)</code></pre>
 <pre><code>## Observations: 150
 ## Variables: 5
-## $ sepal_length &lt;dbl&gt; 5.1, NA, 4.7, 4.6, 5.0, 5.4, 4.6, 5.0, 4.4, 4.9, ...
-## $ sepal_width  &lt;dbl&gt; 3.5, 3.0, 3.2, 3.1, 3.6, 3.9, 3.4, 3.4, 2.9, 3.1,...
-## $ petal_length &lt;dbl&gt; 1.4, 1.4, 1.3, 1.5, 1.4, 1.7, 1.4, 1.5, 1.4, 1.5,...
-## $ petal_width  &lt;dbl&gt; 0.2, 0.2, 0.2, 0.2, 0.2, 0.4, 0.3, 0.2, 0.2, 0.1,...
-## $ species      &lt;chr&gt; &quot;setosa&quot;, &quot;setosa&quot;, &quot;setosa&quot;, &quot;setosa&quot;, &quot;setosa&quot;,...</code></pre>
-<div id="summary-statistics-for-the-better-look" class="section level3">
-<h3>Summary Statistics for the better look</h3>
-</div>
-<div id="so-this-is-a-lot-different-than-thinking-about-data-from-excel" class="section level3">
-<h3>So this is a lot different than thinking about data from excel</h3>
-<p>Lets try to do the summary stats on the data now and see how it differs</p>
+## $ sepal_length &lt;dbl&gt; 5.1, NA, 4.7, 4.6, 5.0, 5.4, 4.6, 5.0, 4.4, 4.9, 5.…
+## $ sepal_width  &lt;dbl&gt; 3.5, 3.0, 3.2, 3.1, 3.6, 3.9, 3.4, 3.4, 2.9, 3.1, 3…
+## $ petal_length &lt;dbl&gt; 1.4, 1.4, 1.3, 1.5, 1.4, 1.7, 1.4, 1.5, 1.4, 1.5, 1…
+## $ petal_width  &lt;dbl&gt; 0.2, 0.2, 0.2, 0.2, 0.2, 0.4, 0.3, 0.2, 0.2, 0.1, 0…
+## $ species      &lt;chr&gt; &quot;setosa&quot;, &quot;setosa&quot;, &quot;setosa&quot;, &quot;setosa&quot;, &quot;setosa&quot;, &quot;…</code></pre>
+<p>###Summary Statistics for the better look ###So this is a lot different than thinking about data from excel<br />
+Lets try to do the summary stats on the data now and see how it differs</p>
 <pre class="r"><code># the data you want to look at
 
 skim(iris.df)</code></pre>
@@ -360,11 +451,11 @@ skim(iris.df)</code></pre>
 ##  n obs: 150 
 ##  n variables: 5 
 ## 
-## ── Variable type:character ────────────────────────────────
+## ── Variable type:character ────────────────────────────────────────
 ##  variable missing complete   n min max empty n_unique
 ##   species       0      150 150   6  10     0        3
 ## 
-## ── Variable type:numeric ──────────────────────────────────
+## ── Variable type:numeric ──────────────────────────────────────────
 ##      variable missing complete   n mean   sd  p0 p25  p50 p75 p100
 ##  petal_length       0      150 150 3.76 1.77 1   1.6 4.35 5.1  6.9
 ##   petal_width       0      150 150 1.2  0.76 0.1 0.3 1.3  1.8  2.5
@@ -391,8 +482,7 @@ skim(iris.df)</code></pre>
 ## 10 nume… virgin… petal_w… 0       50       50    2.03  0.27  1.4   &quot;1.8…
 ## 11 nume… virgin… sepal_l… 0       50       50    6.59  0.64  4.9   6.23 
 ## 12 nume… virgin… sepal_w… 0       50       50    2.97  0.32  2.2   &quot;2.8…
-## # ... with 4 more variables: p50 &lt;chr&gt;, p75 &lt;chr&gt;, p100 &lt;chr&gt;, hist &lt;chr&gt;</code></pre>
-</div>
+## # … with 4 more variables: p50 &lt;chr&gt;, p75 &lt;chr&gt;, p100 &lt;chr&gt;, hist &lt;chr&gt;</code></pre>
 </div>
 <div id="wide-to-long-format" class="section level2">
 <h2>Wide to long format</h2>
@@ -410,10 +500,8 @@ iris_long.df %&gt;% group_by(species, trait) %&gt;%
 <pre><code>## Warning: Removed 1 rows containing non-finite values (stat_boxplot).</code></pre>
 <p><img src="07_ttests_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
 <p>These look good for the most part with only one or two significant. Your choice to transform or not.</p>
-</div>
-<div id="factors" class="section level2">
-<h2>Factors</h2>
-<p>Make sure the categorical variable is a factor<br />
+<p>##Factors<br />
+Make sure the categorical variable is a factor<br />
 Rearrange the order of groups so that control group is first, followed by treatment groups.<br />
 you can do this by:</p>
 <pre class="r"><code># Make Factors from the different levels long way
@@ -442,25 +530,23 @@ options(scipen = 999)
 iris_long.df %&gt;% group_by(species, trait) %&gt;% do(tidy(shapiro.test(.$measure)))</code></pre>
 <pre><code>## # A tibble: 12 x 5
 ## # Groups:   species, trait [12]
-##    species    trait        statistic     p.value method                   
-##    &lt;chr&gt;      &lt;fct&gt;            &lt;dbl&gt;       &lt;dbl&gt; &lt;chr&gt;                    
-##  1 setosa     sepal_length     0.955 0.0548      Shapiro-Wilk normality t…
-##  2 setosa     sepal_width      0.800 0.000000866 Shapiro-Wilk normality t…
-##  3 setosa     petal_length     0.977 0.456       Shapiro-Wilk normality t…
-##  4 setosa     petal_width      0.972 0.272       Shapiro-Wilk normality t…
-##  5 versicolor sepal_length     0.966 0.158       Shapiro-Wilk normality t…
-##  6 versicolor sepal_width      0.948 0.0273      Shapiro-Wilk normality t…
-##  7 versicolor petal_length     0.978 0.465       Shapiro-Wilk normality t…
-##  8 versicolor petal_width      0.974 0.338       Shapiro-Wilk normality t…
-##  9 virginica  sepal_length     0.962 0.110       Shapiro-Wilk normality t…
-## 10 virginica  sepal_width      0.960 0.0870      Shapiro-Wilk normality t…
-## 11 virginica  petal_length     0.971 0.258       Shapiro-Wilk normality t…
-## 12 virginica  petal_width      0.967 0.181       Shapiro-Wilk normality t…</code></pre>
+##    species    trait        statistic     p.value method                    
+##    &lt;chr&gt;      &lt;fct&gt;            &lt;dbl&gt;       &lt;dbl&gt; &lt;chr&gt;                     
+##  1 setosa     sepal_length     0.955 0.0548      Shapiro-Wilk normality te…
+##  2 setosa     sepal_width      0.800 0.000000866 Shapiro-Wilk normality te…
+##  3 setosa     petal_length     0.977 0.456       Shapiro-Wilk normality te…
+##  4 setosa     petal_width      0.972 0.272       Shapiro-Wilk normality te…
+##  5 versicolor sepal_length     0.966 0.158       Shapiro-Wilk normality te…
+##  6 versicolor sepal_width      0.948 0.0273      Shapiro-Wilk normality te…
+##  7 versicolor petal_length     0.978 0.465       Shapiro-Wilk normality te…
+##  8 versicolor petal_width      0.974 0.338       Shapiro-Wilk normality te…
+##  9 virginica  sepal_length     0.962 0.110       Shapiro-Wilk normality te…
+## 10 virginica  sepal_width      0.960 0.0870      Shapiro-Wilk normality te…
+## 11 virginica  petal_length     0.971 0.258       Shapiro-Wilk normality te…
+## 12 virginica  petal_width      0.967 0.181       Shapiro-Wilk normality te…</code></pre>
 <pre class="r"><code>#You can do this on all variables faster with if there was only one grouping
 # tapply(iris_long.df$measure, iris_long.df$species, shapiro.test)</code></pre>
-</div>
-<div id="test-for-homogenetiy-of-variances" class="section level2">
-<h2>Test for homogenetiy of variances</h2>
+<p>##Test for homogenetiy of variances</p>
 <p>Best to use the Levenes test compared to the Bartlet test<br />
 uses the car package</p>
 <p><a href="http://www.cookbook-r.com/Statistical_analysis/Homogeneity_of_variance/" class="uri">http://www.cookbook-r.com/Statistical_analysis/Homogeneity_of_variance/</a></p>

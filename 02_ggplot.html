@@ -100,6 +100,9 @@ img {
 button.code-folding-btn:focus {
   outline: none;
 }
+summary {
+  display: list-item;
+}
 </style>
 
 
@@ -114,7 +117,6 @@ body {
   padding-top: 56px;
   margin-top: -56px;
 }
-
 .section h2 {
   padding-top: 56px;
   margin-top: -56px;
@@ -134,6 +136,43 @@ body {
 .section h6 {
   padding-top: 56px;
   margin-top: -56px;
+}
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #ffffff;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
 }
 </style>
 
@@ -155,18 +194,77 @@ $(document).ready(function () {
 });
 </script>
 
-
 <div class="container-fluid main-container">
 
 <!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
 <script>
 $(document).ready(function () {
   window.buildTabsets("TOC");
 });
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
 </script>
 
 <!-- code folding -->
-
 
 
 
@@ -307,9 +405,8 @@ div.tocify {
 </div>
 
 
-<div id="create-directories" class="section level2">
-<h2>Create Directories</h2>
-<p>So lets create a project with all of the subdirectories on your computer. Create a folder somewhere - I usually have the following format:</p>
+<p>##Create Directories<br />
+So lets create a project with all of the subdirectories on your computer. Create a folder somewhere - I usually have the following format:</p>
 <ol style="list-style-type: decimal">
 <li><p>r_projects</p>
 <ul>
@@ -329,9 +426,7 @@ div.tocify {
 </ul></li>
 </ul></li>
 </ol>
-</div>
-<div id="create-project" class="section level2">
-<h2>Create Project</h2>
+<p>##Create Project</p>
 <p>Now click - <code>File - New Project</code> and create a project called 2018_stats in your R Projects Folder. This is what you will open to start working on the project and then you can work with scripts in there.</p>
 <p>Try doing this based on what we did last week.<br />
 Remember to creat the sub directories manually in the <em><code>files pane</code></em></p>
@@ -342,7 +437,6 @@ documents<br />
 figures<br />
 final_data</p>
 </blockquote>
-</div>
 <div id="download-data" class="section level2">
 <h2>Download Data</h2>
 <p>I have placed example data files below. You can also access the iris dataframe from within R using the code <code>iris.df &lt;- iris</code> in your R script. You should download these files and put them in the data directory of your project.</p>
@@ -378,18 +472,16 @@ iris.df &lt;- read_csv(&quot;data/iris.csv&quot;)
 
 iris_excel.df &lt;- read_excel(&quot;data/iris_excel.xlsx&quot;, sheet=&quot;iris_excel&quot;) 
 # if there is only one sheet - no worries</code></pre>
-</div>
-<div id="view-data" class="section level2">
-<h2>View Data</h2>
-<p>Look at the data with glimpse</p>
+<p>##View Data<br />
+Look at the data with glimpse</p>
 <pre class="r"><code>glimpse(iris.df)</code></pre>
 <pre><code>## Observations: 150
 ## Variables: 5
-## $ Sepal.Length &lt;dbl&gt; 5.1, NA, 4.7, 4.6, 5.0, 5.4, 4.6, 5.0, 4.4, 4.9, ...
-## $ Sepal.Width  &lt;dbl&gt; 3.5, 3.0, 3.2, 3.1, 3.6, 3.9, 3.4, 3.4, 2.9, 3.1,...
-## $ Petal.Length &lt;dbl&gt; 1.4, 1.4, 1.3, 1.5, 1.4, 1.7, 1.4, 1.5, 1.4, 1.5,...
-## $ Petal.Width  &lt;dbl&gt; 0.2, 0.2, 0.2, 0.2, 0.2, 0.4, 0.3, 0.2, 0.2, 0.1,...
-## $ Species      &lt;chr&gt; &quot;setosa&quot;, &quot;setosa&quot;, &quot;setosa&quot;, &quot;setosa&quot;, &quot;setosa&quot;,...</code></pre>
+## $ Sepal.Length &lt;dbl&gt; 5.1, NA, 4.7, 4.6, 5.0, 5.4, 4.6, 5.0, 4.4, 4.9, 5.…
+## $ Sepal.Width  &lt;dbl&gt; 3.5, 3.0, 3.2, 3.1, 3.6, 3.9, 3.4, 3.4, 2.9, 3.1, 3…
+## $ Petal.Length &lt;dbl&gt; 1.4, 1.4, 1.3, 1.5, 1.4, 1.7, 1.4, 1.5, 1.4, 1.5, 1…
+## $ Petal.Width  &lt;dbl&gt; 0.2, 0.2, 0.2, 0.2, 0.2, 0.4, 0.3, 0.2, 0.2, 0.1, 0…
+## $ Species      &lt;chr&gt; &quot;setosa&quot;, &quot;setosa&quot;, &quot;setosa&quot;, &quot;setosa&quot;, &quot;setosa&quot;, &quot;…</code></pre>
 <p>Look at the top or bottle of the data</p>
 <pre class="r"><code>head(iris.df)</code></pre>
 <pre><code>## # A tibble: 6 x 5
@@ -402,10 +494,8 @@ iris_excel.df &lt;- read_excel(&quot;data/iris_excel.xlsx&quot;, sheet=&quot;iri
 ## 5          5           3.6          1.4         0.2 setosa 
 ## 6          5.4         3.9          1.7         0.4 setosa</code></pre>
 <pre class="r"><code># tail(iris.df)</code></pre>
-</div>
-<div id="plot-data" class="section level2">
-<h2>Plot data</h2>
-<p>So below I have added in data=, y= and x= but they are not really necessary</p>
+<p>##Plot data<br />
+So below I have added in data=, y= and x= but they are not really necessary</p>
 <pre class="r"><code>ggplot(data=iris.df, aes(x=Petal.Length, y=Petal.Width)) +  
   geom_point()  </code></pre>
 <p><img src="02_ggplot_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
@@ -418,10 +508,8 @@ ggplot(data=iris.df) +
 <pre class="r"><code>ggplot(data=iris.df) +  
   geom_point(aes(x=Petal.Length, y=Petal.Width))    </code></pre>
 <p><img src="02_ggplot_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
-</div>
-<div id="colors-of-points" class="section level2">
-<h2>Colors of points</h2>
-<p>Note in the above graph all of the points are black although we know there are three species. We can do two things with this. We can add a color to the graph</p>
+<p>##Colors of points<br />
+Note in the above graph all of the points are black although we know there are three species. We can do two things with this. We can add a color to the graph</p>
 <pre class="r"><code>ggplot(data=iris.df, aes(x=Petal.Length, y=Petal.Width)) +  
   geom_point(color=&quot;blue&quot;)  </code></pre>
 <p><img src="02_ggplot_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
@@ -429,9 +517,7 @@ ggplot(data=iris.df) +
 <pre class="r"><code>ggplot(data=iris.df, aes(x=Petal.Length, y=Petal.Width, color=Species)) +   
   geom_point()  </code></pre>
 <p><img src="02_ggplot_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
-</div>
-<div id="size-of-points" class="section level2">
-<h2>Size of points</h2>
+<p>##Size of points</p>
 <p>We could also just make the point sizes all just larger by entering the size parameter outside of the aesthetics parentheses.</p>
 <pre class="r"><code>ggplot(data=iris.df, aes(x=Petal.Length, y=Petal.Width, color=Species)) +   
   geom_point(size=3)    </code></pre>
@@ -440,10 +526,8 @@ ggplot(data=iris.df) +
 <pre class="r"><code>ggplot(data=iris.df, aes(x=Petal.Length, y=Petal.Width, color=Species)) +   
   geom_point(size=4)    </code></pre>
 <p><img src="02_ggplot_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
-</div>
-<div id="shapes-of-points" class="section level2">
-<h2>Shapes of Points</h2>
-<p>We could also map the type of point shape to the species</p>
+<p>##Shapes of Points<br />
+We could also map the type of point shape to the species</p>
 <pre class="r"><code>ggplot(data=iris.df, aes(x=Petal.Length, y=Petal.Width, shape=Species)) +
   geom_point(size=4)</code></pre>
 <p><img src="02_ggplot_files/figure-html/unnamed-chunk-11-1.png" width="672" /></p>
@@ -480,10 +564,8 @@ ggplot(data=iris.df) +
 <p><img src="02_ggplot_files/figure-html/unnamed-chunk-15-1.png" width="672" /></p>
 <pre class="r"><code>  # we will get into themes but this will center the title
   # theme(plot.title = element_text(hjust = 0.5))</code></pre>
-</div>
-<div id="time-series-plots" class="section level2">
-<h2>Time series plots</h2>
-<p>Now its time to work with data like we usually use in data on buoys and sensors - time series plots. These can be a bit trickier but tidyverse and the scales package come into their own now. ###Read in the data</p>
+<p>##Time series plots<br />
+Now its time to work with data like we usually use in data on buoys and sensors - time series plots. These can be a bit trickier but tidyverse and the scales package come into their own now. ###Read in the data</p>
 <pre class="r"><code>streams.df &lt;- read_csv(&quot;data/streams_q_gage_no3.csv&quot;, guess_max = 10000)</code></pre>
 <pre><code>## Parsed with column specification:
 ## cols(
@@ -501,22 +583,18 @@ ggplot(data=iris.df) +
 glimpse(streams.df)</code></pre>
 <pre><code>## Observations: 57,492
 ## Variables: 7
-## $ agency        &lt;chr&gt; &quot;USGS&quot;, &quot;USGS&quot;, &quot;USGS&quot;, &quot;USGS&quot;, &quot;USGS&quot;, &quot;USGS&quot;, ...
-## $ site_no       &lt;chr&gt; &quot;05554300&quot;, &quot;05554300&quot;, &quot;05554300&quot;, &quot;05554300&quot;, ...
-## $ site          &lt;chr&gt; &quot;indian_cr&quot;, &quot;indian_cr&quot;, &quot;indian_cr&quot;, &quot;indian_c...
-## $ datetime      &lt;dttm&gt; 2017-02-23 17:00:00, 2017-02-23 17:15:00, 2017-...
-## $ discharge_cfs &lt;dbl&gt; 34.6, 35.3, 35.3, 34.6, 35.3, 35.3, 35.3, 34.6, ...
-## $ gage_ht_ft    &lt;dbl&gt; 8.66, 8.67, 8.67, 8.66, 8.67, 8.67, 8.67, 8.66, ...
-## $ no3_mgl       &lt;dbl&gt; 7.94, 7.94, 7.93, 7.94, 7.93, 7.93, 7.93, 7.93, ...</code></pre>
-</div>
-<div id="basic-time-series-plot" class="section level2">
-<h2>Basic time series plot</h2>
+## $ agency        &lt;chr&gt; &quot;USGS&quot;, &quot;USGS&quot;, &quot;USGS&quot;, &quot;USGS&quot;, &quot;USGS&quot;, &quot;USGS&quot;, &quot;U…
+## $ site_no       &lt;chr&gt; &quot;05554300&quot;, &quot;05554300&quot;, &quot;05554300&quot;, &quot;05554300&quot;, &quot;0…
+## $ site          &lt;chr&gt; &quot;indian_cr&quot;, &quot;indian_cr&quot;, &quot;indian_cr&quot;, &quot;indian_cr&quot;…
+## $ datetime      &lt;dttm&gt; 2017-02-23 17:00:00, 2017-02-23 17:15:00, 2017-02…
+## $ discharge_cfs &lt;dbl&gt; 34.6, 35.3, 35.3, 34.6, 35.3, 35.3, 35.3, 34.6, 35…
+## $ gage_ht_ft    &lt;dbl&gt; 8.66, 8.67, 8.67, 8.66, 8.67, 8.67, 8.67, 8.66, 8.…
+## $ no3_mgl       &lt;dbl&gt; 7.94, 7.94, 7.93, 7.94, 7.93, 7.93, 7.93, 7.93, 7.…</code></pre>
+<p>##Basic time series plot</p>
 <pre class="r"><code>ggplot(streams.df, aes(datetime, no3_mgl, color=site)) +
   geom_point()</code></pre>
 <p><img src="02_ggplot_files/figure-html/unnamed-chunk-17-1.png" width="672" /></p>
-</div>
-<div id="scales---time-series" class="section level2">
-<h2>Scales - time series</h2>
+<p>##Scales - time series</p>
 <pre class="r"><code>ggplot(streams.df, aes(datetime, no3_mgl, color=site)) +
   geom_point() +
   scale_y_continuous()+ #expand=c(0,0), breaks=c(0,30,60)
@@ -525,9 +603,7 @@ glimpse(streams.df)</code></pre>
                   labels=date_format(&quot;%Y-%b-%d&quot;), expand=c(0,0))</code></pre>
 <pre><code>## Warning: Removed 23 rows containing missing values (geom_point).</code></pre>
 <p><img src="02_ggplot_files/figure-html/unnamed-chunk-18-1.png" width="672" /></p>
-</div>
-<div id="themes" class="section level2">
-<h2>Themes</h2>
+<p>##Themes</p>
 <pre class="r"><code>ggplot(streams.df, aes(datetime, no3_mgl, color=site)) +
   geom_point() +
   scale_y_continuous()+ #expand=c(0,0), breaks=c(0,30,60)
@@ -537,9 +613,7 @@ glimpse(streams.df)</code></pre>
   theme_bw()</code></pre>
 <pre><code>## Warning: Removed 23 rows containing missing values (geom_point).</code></pre>
 <p><img src="02_ggplot_files/figure-html/before%20last-1.png" width="672" /></p>
-</div>
-<div id="theme---adjust-text" class="section level2">
-<h2>Theme - adjust text</h2>
+<p>##Theme - adjust text</p>
 <pre class="r"><code>ggplot(streams.df, aes(datetime, no3_mgl, color=site)) +
   geom_point() +
   scale_y_continuous()+ #expand=c(0,0), breaks=c(0,30,60)
@@ -554,10 +628,7 @@ glimpse(streams.df)</code></pre>
        axis.text.y = element_text(size=10, face=&quot;bold&quot;))</code></pre>
 <pre><code>## Warning: Removed 23 rows containing missing values (geom_point).</code></pre>
 <p><img src="02_ggplot_files/figure-html/last%20code-1.png" width="672" /></p>
-</div>
-<div id="final-time-series-plot" class="section level2">
-<h2>Final time series plot</h2>
-<p>So lets make all the changes to the graph that we might want to do</p>
+<p>##Final time series plot So lets make all the changes to the graph that we might want to do</p>
 <pre class="r"><code>ggplot(streams.df, aes(datetime, no3_mgl, color=site)) +
   geom_point() +
   scale_y_continuous()+ #expand=c(0,0), breaks=c(0,30,60)

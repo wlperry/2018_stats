@@ -100,6 +100,9 @@ img {
 button.code-folding-btn:focus {
   outline: none;
 }
+summary {
+  display: list-item;
+}
 </style>
 
 
@@ -114,7 +117,6 @@ body {
   padding-top: 56px;
   margin-top: -56px;
 }
-
 .section h2 {
   padding-top: 56px;
   margin-top: -56px;
@@ -134,6 +136,43 @@ body {
 .section h6 {
   padding-top: 56px;
   margin-top: -56px;
+}
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #ffffff;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
 }
 </style>
 
@@ -155,18 +194,77 @@ $(document).ready(function () {
 });
 </script>
 
-
 <div class="container-fluid main-container">
 
 <!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
 <script>
 $(document).ready(function () {
   window.buildTabsets("TOC");
 });
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
 </script>
 
 <!-- code folding -->
-
 
 
 
@@ -308,8 +406,7 @@ div.tocify {
 
 
 <p>Designing a project from the ground up.</p>
-<div id="steps-to-consider" class="section level2">
-<h2>Steps to consider</h2>
+<p>##Steps to consider</p>
 <p>So the first thing to think about in my opinion is the workflow or dataflow:</p>
 <ol style="list-style-type: decimal">
 <li>What is the source and format of your data?
@@ -362,12 +459,8 @@ div.tocify {
 </ul></li>
 </ul></li>
 </ol>
-</div>
-<div id="data-source-format" class="section level2">
-<h2>Data Source Format</h2>
-<div id="controlled-vocabulary-and-units" class="section level3">
-<h3>Controlled vocabulary and units</h3>
-<p><br> Thinking about your data source first is important. Using a controlled vocabulary to reference the variables is critical and will save huge amounts of time when modifying the code later on. I find it helpful to have a meta data document with the vocabulary and the units for each term so that future users can figure out what your code means.<br />
+<p>##Data Source Format ###Controlled vocabulary and units<br />
+<br> Thinking about your data source first is important. Using a controlled vocabulary to reference the variables is critical and will save huge amounts of time when modifying the code later on. I find it helpful to have a meta data document with the vocabulary and the units for each term so that future users can figure out what your code means.<br />
 <br> ###Variable names<br />
 As part of controlled voabulary, the way you type the variable names is also important and also important to be consistent</p>
 <ol style="list-style-type: decimal">
@@ -385,14 +478,9 @@ As part of controlled voabulary, the way you type the variable names is also imp
 <p>the key is that you should have no spaces or special characters. If you do have spaces you use the back tick <strong>`</strong>on either side of the variable to call it.<br />
 <br> Special characters are often coded differently in mac and pc computers and will cause more headaches than you have after St. Patricks Day.</p>
 <p><br></p>
-</div>
-<div id="transformations" class="section level3">
-<h3>Transformations</h3>
+<p>###Transformations</p>
 <p>Keeping a list of transformations can be helpful in coding and if it is in the meta data file, you can copy the transformations out of the document and if there are mistakes people can track it down fast.</p>
-</div>
-<div id="data-structure-and-format" class="section level3">
-<h3>Data structure and format</h3>
-<p>R uses a column format and all the data in a column has to be of the same type. You can, however, refernece data by row and column as in excel.<br />
+<p>###Data structure and format R uses a column format and all the data in a column has to be of the same type. You can, however, refernece data by row and column as in excel.<br />
 <br> The most common data formats you will run into are:</p>
 <ul>
 <li>Numeric - can be double or integer but that is not as important<br />
@@ -414,9 +502,7 @@ As part of controlled voabulary, the way you type the variable names is also imp
 </ul></li>
 </ul>
 <p><strong>Note that if you mix formats within a column some of the variables will be converted to NA if say you have a column that is a character column which has mixed numbers and text and is then converted to numeric</strong></p>
-</div>
-<div id="wide-format-original-data" class="section level3">
-<h3>Wide format original data</h3>
+<p>###Wide format original data</p>
 <p>Typically when we enter data it is in <strong>wide format</strong> where an identifier is down the first column and the various variables are in separate columns. This is what is often easiest to enter into excel or wherever it is entered originally.</p>
 <p>This format is often more difficult to work with in R and GGPlot so it is converted to <strong>long format</strong> where there is a column of identifiers, a column of variable names, and a column of values. The switch between these formats is often rather easy so it does not matter what format it is in.<br />
 <br><br />
@@ -448,40 +534,24 @@ This would condense this format to fewer columns:</p>
 </li>
 <li>value (the values of each of the resprective traits)</li>
 </ul>
-</div>
-<div id="output" class="section level3">
-<h3>Output</h3>
-<p>I find it useful to maintain a read only file of the original data and never write to this file other than the original QA/QC flagging of the data if even then. I usually read from this file and save it to the finalized data folder where the data has been cleaned formatted and basic calculations done on it.</p>
-</div>
-</div>
-<div id="data-flow" class="section level2">
-<h2>Data Flow</h2>
-<p>It is often very helpful prior to doing any code work to think about what the final output will look like and what the original data looks like and the steps between these two points.</p>
-</div>
-<div id="directory-structure" class="section level2">
-<h2>Directory structure</h2>
+<p>###Output<br />
+I find it useful to maintain a read only file of the original data and never write to this file other than the original QA/QC flagging of the data if even then. I usually read from this file and save it to the finalized data folder where the data has been cleaned formatted and basic calculations done on it.</p>
+<p>##Data Flow<br />
+It is often very helpful prior to doing any code work to think about what the final output will look like and what the original data looks like and the steps between these two points.</p>
+<p>##Directory structure</p>
 <p>Having a consistent directory structure where code, data, and text is stored makes it easy to look at different directories and find what you are looking for. That is why I use the following structure. Choose what works for you and stick with it… please</p>
 <blockquote>
 <ul>
-<li>r_projects
-<ul>
-<li>scripts<br />
-</li>
-<li>documents<br />
-</li>
-<li>data<br />
-</li>
-<li>figures or output<br />
-</li>
-<li>final_data</li>
-</ul></li>
+<li>r_projects<br />
+- scripts<br />
+- documents<br />
+- data<br />
+- figures or output<br />
+- final_data</li>
 </ul>
 </blockquote>
 <p>Using projects in R is super useful and you don’t have to worry about setting directories between a mac and windows machine and all the paths are relative in there when you reference data or output directories and is the same on windows and mac.</p>
-</div>
-<div id="file-names" class="section level2">
-<h2>File names</h2>
-<p>From the site <a href="https://andrewbtran.github.io/NICAR/2018/workflow/docs/01-workflow_intro.html?utm_content=buffer858fd&amp;utm_medium=social&amp;utm_source=twitter.com&amp;utm_campaign=buffer">File organization and best practices</a> and <a href="https://kkulma.github.io/2018-03-18-Prime-Hints-for-Running-a-data-project-in-R/">Prime Hints</a> naming files has many good practices. Of these the main theme is:</p>
+<p>##File names From the site <a href="https://andrewbtran.github.io/NICAR/2018/workflow/docs/01-workflow_intro.html?utm_content=buffer858fd&amp;utm_medium=social&amp;utm_source=twitter.com&amp;utm_campaign=buffer">File organization and best practices</a> and <a href="https://kkulma.github.io/2018-03-18-Prime-Hints-for-Running-a-data-project-in-R/">Prime Hints</a> naming files has many good practices. Of these the main theme is:</p>
 <ol style="list-style-type: decimal">
 <li>Use a consistent naming theme</li>
 </ol>
@@ -510,37 +580,21 @@ This would condense this format to fewer columns:</p>
 <ol style="list-style-type: lower-alpha">
 <li>final thesis proposal.docx - I deal with many students and this is not helpful</li>
 </ol>
-</div>
-<div id="annotations-and-metadata-files" class="section level2">
-<h2>Annotations and metadata files</h2>
+<p>##Annotations and metadata files</p>
 <p><strong>For the love of all that is good</strong> - be sure to annotate you code using the <code>#</code> and whatever text helps describe the process you are doing - it will make the code easier to read and evaluate later when you are trying to figure out something really fast. You can also use it to search for code snippets as you are going along.</p>
 <p>Metadata files that document what you are doing and why and what the various conversions and statistical transformations are can be of great use later on as well. It is often challenging to figure out what the units are in for various variables or what they actually mean.</p>
-</div>
-<div id="rstudio-specifics" class="section level2">
-<h2>RStudio Specifics</h2>
-<div id="outline-your-code-to-navigate" class="section level3">
-<h3>Outline your code to navigate</h3>
-<p>You can write a comment <code>#</code> and then follow it with <code>text</code> and then 4 dashes <code>----</code> or <code>####</code> and it will create a note in the outline view</p>
-</div>
-<div id="comment-your-code" class="section level3">
-<h3>Comment your code</h3>
-<p>You should use comments <code>#</code> with text behind it to annotate the purpose of what your are doing and what is happening in the code chunk below.</p>
-</div>
-</div>
-<div id="installing-r" class="section level2">
-<h2>Installing R</h2>
-<p>So lets start installing R and R studio<br />
+<p>##RStudio Specifics<br />
+###Outline your code to navigate<br />
+You can write a comment <code>#</code> and then follow it with <code>text</code> and then 4 dashes <code>----</code> or <code>####</code> and it will create a note in the outline view</p>
+<p>###Comment your code<br />
+You should use comments <code>#</code> with text behind it to annotate the purpose of what your are doing and what is happening in the code chunk below.</p>
+<p>##Installing R So lets start installing R and R studio<br />
 R is its own program and can be retrieved from <a href="https://cran.r-project.org/">R Cran</a><br />
 <br><br />
 R Studio is a program that makes the interface and usability of R easier in my opinion and can be retrieved here <a href="https://www.rstudio.com/products/rstudio/download/">R Studio</a></p>
 <p><br> When you get these installed we can load up R studio and look at the interface.</p>
-<div id="r-interface" class="section level3">
-<h3>R interface</h3>
-<p>Start R studio and you should see: <img src="images/setup_1.png" alt="r interface" /></p>
-</div>
-<div id="project-setup" class="section level3">
-<h3>Project Setup</h3>
-<p>Now to set up a new project - this is if the directory does not exist Click: 1. File 2. New Project <img src="images/setup_2.png" alt="Project set up" /></p>
+<p>###R interface Start R studio and you should see: <img src="images/setup_1.png" alt="r interface" /></p>
+<p>###Project Setup Now to set up a new project - this is if the directory does not exist Click: 1. File 2. New Project <img src="images/setup_2.png" alt="Project set up" /></p>
 <p>You can select <code>New Directory</code> or you can select existing directory - lets say you choose new directory <img src="images/setup_3.png" alt="File New Project New Directory" /></p>
 <p>For now you are doing a <code>New Project</code>. We will talk about Github at a later date</p>
 <div class="figure">
@@ -549,10 +603,8 @@ R Studio is a program that makes the interface and usability of R easier in my o
 </div>
 <p>Interface changes only slightly - look in the upper right<br />
 <img src="images/setup_5.png" alt="What has changed" /></p>
-</div>
-<div id="scripts" class="section level3">
-<h3>Scripts</h3>
-<p>Now we can create a new script</p>
+<p>###Scripts<br />
+Now we can create a new script</p>
 <ol style="list-style-type: decimal">
 <li>File</li>
 <li>New file</li>
@@ -563,10 +615,7 @@ R Studio is a program that makes the interface and usability of R easier in my o
 <p class="caption">New Script</p>
 </div>
 <p>Now the interface looks like <img src="images/setup_7.png" alt="Scriptst" /></p>
-</div>
-<div id="install-libraries" class="section level3">
-<h3>Install Libraries</h3>
-<p>The key to R in my opinion is to install libraries. We will practice with one and your homework is to install the others.</p>
+<p>###Install Libraries The key to R in my opinion is to install libraries. We will practice with one and your homework is to install the others.</p>
 <p>You will type:<br />
 <code>#install libraires ----</code><br />
 <code>install.packages(&quot;tidyverse&quot;)</code></p>
@@ -600,8 +649,6 @@ R Studio is a program that makes the interface and usability of R easier in my o
 
   gtag('config', 'UA-88373117-4');
 </script>
-</div>
-</div>
 
 
 
