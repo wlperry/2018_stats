@@ -1,8 +1,14 @@
 ---
 title: "Libraries"
 author: "Bill Perry"
-date: "6/10/2019"
-output: html_document
+date: "2019/06/10"
+output:
+  # css: stats.css
+  html_document:
+   toc: TRUE
+   toc_float: TRUE
+   number_sections:  FALSE
+   
 ---
 
 ### Libraries - I am working on this and will show how to install and load libraries

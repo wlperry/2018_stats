@@ -10,7 +10,7 @@ output:
    number_sections:  FALSE
    
 ---
-##Create Directories     
+## Create Directories     
 So lets create a project with all of the subdirectories on your computer. Create a folder somewhere - I usually have the following format:      
 
 1. r_projects        
