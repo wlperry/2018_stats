@@ -1,0 +1,12 @@
+---
+title: "Example dataframes"
+author: "Bill Perry"
+date: "6/10/2019"
+output: html_document
+---
+
+## These are a collection of datasets that we will use:     
+I am in the process of putting them in Github CSV files to download in R directly
+
+[beetle.csv](https://wlperry.github.io/2018_stats/data/beetle.csv)     
+[beetle.xlsx](https://wlperry.github.io/2018_stats/data/beetle.xlsx)      

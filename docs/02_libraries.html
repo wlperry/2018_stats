@@ -12,7 +12,7 @@
 <meta name="author" content="Bill Perry" />
 
 
-<title>R Graphs, Data and Stats</title>
+<title>Libraries</title>
 
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -20,9 +20,6 @@
 <script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
-<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
-<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
-<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
 <link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
 <script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
@@ -264,90 +261,6 @@ $(document).ready(function () {
 
 
 
-<script>
-$(document).ready(function ()  {
-
-    // move toc-ignore selectors from section div to header
-    $('div.section.toc-ignore')
-        .removeClass('toc-ignore')
-        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
-
-    // establish options
-    var options = {
-      selectors: "h1,h2,h3",
-      theme: "bootstrap3",
-      context: '.toc-content',
-      hashGenerator: function (text) {
-        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
-      },
-      ignoreSelector: ".toc-ignore",
-      scrollTo: 0
-    };
-    options.showAndHide = true;
-    options.smoothScroll = true;
-
-    // tocify
-    var toc = $("#TOC").tocify(options).data("toc-tocify");
-});
-</script>
-
-<style type="text/css">
-
-#TOC {
-  margin: 25px 0px 20px 0px;
-}
-@media (max-width: 768px) {
-#TOC {
-  position: relative;
-  width: 100%;
-}
-}
-
-
-.toc-content {
-  padding-left: 30px;
-  padding-right: 40px;
-}
-
-div.main-container {
-  max-width: 1200px;
-}
-
-div.tocify {
-  width: 20%;
-  max-width: 260px;
-  max-height: 85%;
-}
-
-@media (min-width: 768px) and (max-width: 991px) {
-  div.tocify {
-    width: 25%;
-  }
-}
-
-@media (max-width: 767px) {
-  div.tocify {
-    width: 100%;
-    max-width: none;
-  }
-}
-
-.tocify ul, .tocify li {
-  line-height: 20px;
-}
-
-.tocify-subheader .tocify-item {
-  font-size: 0.90em;
-}
-
-.tocify .list-group-item {
-  border-radius: 0px;
-}
-
-
-</style>
-
-
 
 </head>
 
@@ -355,16 +268,6 @@ div.tocify {
 
 
 <div class="container-fluid main-container">
-
-
-<!-- setup 3col/9col grid for toc_float and main content  -->
-<div class="row-fluid">
-<div class="col-xs-12 col-sm-4 col-md-3">
-<div id="TOC" class="tocify">
-</div>
-</div>
-
-<div class="toc-content col-xs-12 col-sm-8 col-md-9">
 
 
 
@@ -402,90 +305,19 @@ div.tocify {
 
 
 
-<h1 class="title toc-ignore">R Graphs, Data and Stats</h1>
+<h1 class="title toc-ignore">Libraries</h1>
 <h4 class="author">Bill Perry</h4>
-<h4 class="date">2018/03/14</h4>
+<h4 class="date">6/10/2019</h4>
 
 </div>
 
 
-<div id="r-and-tidyverse" class="section level2">
-<h2>R and Tidyverse</h2>
-<p>I am in the process of developing a website and course for both undergraduates and graduate students for cleaning and analysis of data. Many of the examples here will be focussed on aquatic sciences or environmental monitoring data. I have found graphing the data first and then working to clean the data along the lines of “<a href="HTTP://r4ds.had.co.nz/">R for Data Science</a>” by Garrett Grolemund and Hadley Wickham to be one of the greatest approaches.</p>
-<p>This is also a selfish way to organize my code and snippets in a central place that I can find them and make is available to others that are struggling with R and dataframes.</p>
-<div id="this-file-has-links-to-many-of-the-example-dataframes-that-i-will-use." class="section level3">
-<h3>This file has links to many of the example dataframes that I will use.</h3>
-<p><a href="example_data.html">Example data</a></p>
-</div>
-</div>
-<div id="basics-of-projects-and-data" class="section level2">
-<h2><a href="01_intro.html">1. Basics of projects and data</a></h2>
-<p>Before working on a project, I have found it is useful to ponder what the data will look like, what you want the final dataframe to look like and what you want to do with it. So, first we will go over basics of organization.<br />
-- folders and structure<br />
-- file formats<br />
-- file structure<br />
-- output formats<br />
-- installing R and R studio - basics of the R interface - R projects - installing libraries</p>
-</div>
-<div id="libraries" class="section level2">
-<h2><a href="02_libraries.html">2. Libraries</a></h2>
-<p>The first thing to do is to load libraries and this is the start of how to do that.</p>
-</div>
-<div id="reading-files-and-ggplot" class="section level2">
-<h2><a href="03_ggplot.html">3. Reading files and GGPLOT</a></h2>
-<p>Introduction into reading in excel and csv files and then how to visualize the data using GGPlot2 / GGPlot. In this page, I go over how to load libraries and start to graph with GGplot. Understanding the basics is key and then I go from there. This file includes topics like:<br />
-- read in csv file<br />
-- simple graphs<br />
-- geometries<br />
-- colors and mapping<br />
-- layers</p>
-</div>
-<div id="ggplot-stats-plots" class="section level2">
-<h2><a href="04_ggplot_stats.html">4. GGPLOT stats plots</a></h2>
-<p>This will introduce you to the basic data exploratory graphs and statistics in graphs that will make life a lot easier - box and whisker plot - histograms - mean and standard error plots - time series plots</p>
-</div>
-<div id="dataframe-modification" class="section level2">
-<h2><a href="05_data_modification.html">5. Dataframe modification</a></h2>
-<p>This will show you how to modify the dataframe.</p>
-</div>
-<div id="dataframe-wide-to-long" class="section level2">
-<h2><a href="06_dataframe_widelong.html">6. Dataframe wide to long</a></h2>
-<p>This will show you how to modify the dataframe from wide to long and back. Also it has how to spread and unite values…</p>
-</div>
-<div id="correlation-and-regression" class="section level2">
-<h2><a href="07_correlation_regression.html">7. Correlation and Regression</a></h2>
-<p>Correlations and Regressions. More to come but code is done.</p>
-</div>
-<div id="t-tests" class="section level2">
-<h2><a href="08_ttests.html">8. T Tests</a></h2>
-<p>T tests….</p>
-</div>
-<div id="one-way-anova" class="section level2">
-<h2><a href="09_oneway_anova.html">9. One way ANOVA</a></h2>
-<p>One way anovas</p>
-</div>
-<div id="two-way-anova" class="section level2">
-<h2><a href="10_twoway_anovas.html">10. Two way ANOVA</a></h2>
-<p>One way anovas</p>
-</div>
-<div id="ancova" class="section level2">
-<h2><a href="11_ancova.html">11. ANCOVA</a></h2>
-<p>Ancova and the fun and joy of interactions</p>
-<!-- Global Site Tag (gtag.js) - Google Analytics -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=UA-88373117-4"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments)};
-  gtag('js', new Date());
-
-  gtag('config', 'UA-88373117-4');
-</script>
+<div id="libraries---i-am-working-on-this-and-will-show-how-to-install-and-load-libraries" class="section level3">
+<h3>Libraries - I am working on this and will show how to install and load libraries</h3>
 </div>
 
 
 
-</div>
-</div>
 
 </div>
 

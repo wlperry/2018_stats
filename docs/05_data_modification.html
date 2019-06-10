@@ -1,0 +1,771 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+<meta name="author" content="Bill Perry" />
+
+
+<title>Data Modification</title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 51px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h2 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h3 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h4 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h5 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h6 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #ffffff;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+
+
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Bill Perry</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="https://wlperry.github.io/index.html">Bill's Homepage</a>
+</li>
+<li>
+  <a href="https://wlperry.github.io/2018_stats/index.html">Stats and R Homepage</a>
+</li>
+<li>
+  <a href="about.html">About Bill</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">Data Modification</h1>
+<h4 class="author">Bill Perry</h4>
+<h4 class="date">2018/03/14</h4>
+
+</div>
+
+
+<div id="data-modification-and-cleaning" class="section level2">
+<h2>Data Modification and cleaning</h2>
+<p>So the pattern of this set of code so far has been how to look at the data visually and how it looks and to see outliers. The next goal is to be able to clean the data or remove, reoranize or reformat the data and add new transformed varaibles.</p>
+</div>
+<div id="script" class="section level2">
+<h2>Script</h2>
+<p>Here is the script for this file in R without all this stuff <a href="https://wlperry.github.io/04_data_modification.R">Dataframes 04 R Script</a></p>
+<p>##Data <a href="https://wlperry.github.io/data/grades.csv">Fake Grades</a></p>
+<p>##Load libraries We will read in the main files and load the libraries as we have worked with so far.</p>
+<pre class="r"><code># One new package for summary stats
+#install.packages(&quot;psych&quot;)
+
+# load the libraries each time you restart R
+library(tidyverse)
+library(lubridate)
+library(scales)
+library(skimr)
+library(janitor)
+library(patchwork)
+library(readxl)
+library(kableExtra)
+
+# read in the file:
+mc.df &lt;- read_excel(&quot;data/mc.xlsx&quot;)
+
+# Read in the second file:
+smc.df &lt;- read_excel(&quot;data/smc.xlsx&quot;)
+
+# look at the data
+glimpse(mc.df)</code></pre>
+<pre><code>## Observations: 51
+## Variables: 9
+## $ datetime          &lt;chr&gt; &quot;01/15/2015 09:54&quot;, &quot;01/29/2015 09:10&quot;, &quot;02/12…
+## $ site              &lt;chr&gt; &quot;mc&quot;, &quot;mc&quot;, &quot;mc&quot;, &quot;mc&quot;, &quot;mc&quot;, &quot;mc&quot;, &quot;mc&quot;, &quot;mc&quot;…
+## $ w_temp_c          &lt;dbl&gt; 0.00, NA, 0.00, NA, 5.40, 6.50, 13.50, 13.40, …
+## $ volume_filtered_l &lt;dbl&gt; 0.600, 0.650, 0.500, NA, 0.520, 0.455, 0.425, …
+## $ tare_g            &lt;dbl&gt; 0.1043, 0.1071, 0.1017, NA, 0.1054, 0.1016, 0.…
+## $ dry_105c_g        &lt;dbl&gt; 0.108100, 0.110200, 0.110900, NA, 0.111300, 0.…
+## $ turbidity_ntu     &lt;dbl&gt; 4.98, 4.11, 14.00, NA, 7.94, 5.83, 7.89, 5.22,…
+## $ tp_ugl            &lt;dbl&gt; NA, 25.20, 65.70, NA, 97.60, 7.77, 29.90, 24.1…
+## $ drp_ugl           &lt;dbl&gt; 8.03, 13.00, 51.80, NA, 78.30, 6.53, 8.22, 12.…</code></pre>
+<p>##Joining dataframes together So lets say we have these two dataframes and we want to work with them together - how do we do this?</p>
+<p>###Rbind or append We can bind the two dataframes together as long as they have the same column names and same column numbers. This will <em>append</em> a dataframe to the other. Now when we do code we can work with it all at once. We can also separate the data into smaller dataframes later.</p>
+<pre class="r"><code>mc_smc.df &lt;- rbind(mc.df, smc.df)
+
+glimpse(mc_smc.df)</code></pre>
+<pre><code>## Observations: 102
+## Variables: 9
+## $ datetime          &lt;chr&gt; &quot;01/15/2015 09:54&quot;, &quot;01/29/2015 09:10&quot;, &quot;02/12…
+## $ site              &lt;chr&gt; &quot;mc&quot;, &quot;mc&quot;, &quot;mc&quot;, &quot;mc&quot;, &quot;mc&quot;, &quot;mc&quot;, &quot;mc&quot;, &quot;mc&quot;…
+## $ w_temp_c          &lt;dbl&gt; 0.00, NA, 0.00, NA, 5.40, 6.50, 13.50, 13.40, …
+## $ volume_filtered_l &lt;dbl&gt; 0.600, 0.650, 0.500, NA, 0.520, 0.455, 0.425, …
+## $ tare_g            &lt;dbl&gt; 0.1043, 0.1071, 0.1017, NA, 0.1054, 0.1016, 0.…
+## $ dry_105c_g        &lt;dbl&gt; 0.108100, 0.110200, 0.110900, NA, 0.111300, 0.…
+## $ turbidity_ntu     &lt;dbl&gt; 4.98, 4.11, 14.00, NA, 7.94, 5.83, 7.89, 5.22,…
+## $ tp_ugl            &lt;dbl&gt; NA, 25.20, 65.70, NA, 97.60, 7.77, 29.90, 24.1…
+## $ drp_ugl           &lt;dbl&gt; 8.03, 13.00, 51.80, NA, 78.30, 6.53, 8.22, 12.…</code></pre>
+<p>##The pipe So lets start thinking about how to string a lot of commands together. Before this we have assigned items to a name or environmental varaible with <code>&lt;-</code> bu now what we want to do is sort of the opposite. We want to take an object or output of an object and pass it to the right to do new things with the output. We do this using the pipe command <code>%&gt;%</code>. This takes what is on the left and passes it to the right.</p>
+<p><br></p>
+<pre class="r"><code>mc_smc.df %&gt;% glimpse()</code></pre>
+<pre><code>## Observations: 102
+## Variables: 9
+## $ datetime          &lt;chr&gt; &quot;01/15/2015 09:54&quot;, &quot;01/29/2015 09:10&quot;, &quot;02/12…
+## $ site              &lt;chr&gt; &quot;mc&quot;, &quot;mc&quot;, &quot;mc&quot;, &quot;mc&quot;, &quot;mc&quot;, &quot;mc&quot;, &quot;mc&quot;, &quot;mc&quot;…
+## $ w_temp_c          &lt;dbl&gt; 0.00, NA, 0.00, NA, 5.40, 6.50, 13.50, 13.40, …
+## $ volume_filtered_l &lt;dbl&gt; 0.600, 0.650, 0.500, NA, 0.520, 0.455, 0.425, …
+## $ tare_g            &lt;dbl&gt; 0.1043, 0.1071, 0.1017, NA, 0.1054, 0.1016, 0.…
+## $ dry_105c_g        &lt;dbl&gt; 0.108100, 0.110200, 0.110900, NA, 0.111300, 0.…
+## $ turbidity_ntu     &lt;dbl&gt; 4.98, 4.11, 14.00, NA, 7.94, 5.83, 7.89, 5.22,…
+## $ tp_ugl            &lt;dbl&gt; NA, 25.20, 65.70, NA, 97.60, 7.77, 29.90, 24.1…
+## $ drp_ugl           &lt;dbl&gt; 8.03, 13.00, 51.80, NA, 78.30, 6.53, 8.22, 12.…</code></pre>
+<p>##Mutate So lets say in this dataframe we wanted to calculate the Dry Weight of a sample by subracting the Tare weight from Dry Weight</p>
+<p><code>mc_smc.df &lt;- mc_smc.df %&gt;% mutate(variable = varaible - variable))</code></p>
+<pre class="r"><code># mc_smc.df &lt;- mc_smc.df %&gt;% mutate(variable = varaible - variable))
+
+mc_smc.df &lt;- mc_smc.df %&gt;%
+  mutate(dry_wt_g = dry_105c_g - tare_g)</code></pre>
+<p>So here we made a new column and its all set. Lets say we wanted to calculate the Dry Wt per liter</p>
+<pre class="r"><code># mc_smc.df &lt;- mc_smc.df %&gt;% mutate(variable = varaible / variable))
+
+mc_smc.df &lt;- mc_smc.df %&gt;%
+  mutate(dry_wt_g_l = dry_wt_g/volume_filtered_l)</code></pre>
+<p>So that has done a transformation on two separate variables and would take a while to do one by one. We can also link the mutations together with commas and it will do the same thing above and overwrite the variables again</p>
+<pre class="r"><code># mc_smc.df &lt;- mc_smc.df %&gt;% 
+#                   mutate(
+#                          variable = varaible - variable),
+#                           variable = varaible / variable)
+#                        )
+
+
+mc_smc.df &lt;- mc_smc.df %&gt;%
+  mutate(
+        dry_wt_g = dry_105c_g - tare_g,
+        dry_wt_g_l = dry_wt_g/volume_filtered_l
+       )</code></pre>
+</div>
+<div id="date-times" class="section level2">
+<h2>Date Times</h2>
+<p>So if you look at the data you will see that datetieme is a character variable and not a date time. We can use the same method above to convert that.</p>
+<p>We will use the lubridate package to do this…<br />
+y = year<br />
+m = month<br />
+d = day<br />
+h = hour<br />
+m = minute<br />
+s = second<br />
+<br> You put these in order that they appear in the excel cell and note that if you open a csv and save it again from excel it will convert it to Month - Day - Year Hour: Minute: Second so be aware if there is an error here.</p>
+<pre class="r"><code># you can make dates and time using lubridate
+# This would be the traditional way and maybe a bit slower.
+# mc.df$datetime &lt;- mdy_hm(mc.df$datetime)
+
+# df &lt;- df %&gt;% 
+#  mutate(
+#          variable = mdy_hm(varaible)
+#         )
+
+# There is a way we can change many variaibles at a time
+mc_smc.df &lt;- mc_smc.df %&gt;% 
+  mutate(
+          datetime = mdy_hm(datetime)
+  )</code></pre>
+<p>##Modifying dates So we can now work with this datetime column really easily and pull out parts of it to work with further</p>
+<pre class="r"><code>mc_smc.df &lt;- mc_smc.df %&gt;% 
+  mutate(
+         year = year(datetime),
+         month = month(datetime),
+         day = day(datetime),
+         julian_day = yday(datetime)
+  )</code></pre>
+</div>
+<div id="filtering-data" class="section level2">
+<h2>Filtering data</h2>
+<p>What if you wanted to work with only one species for each of the charactes. This will select only those individuals that are setosa. Note that in this you need <em><code>= =</code></em>.</p>
+<pre class="r"><code>mc_smc_2015.df &lt;- mc_smc.df %&gt;% filter(year==2015)
+
+head(mc_smc_2015.df)</code></pre>
+<pre><code>## # A tibble: 6 x 15
+##   datetime            site  w_temp_c volume_filtered… tare_g dry_105c_g
+##   &lt;dttm&gt;              &lt;chr&gt;    &lt;dbl&gt;            &lt;dbl&gt;  &lt;dbl&gt;      &lt;dbl&gt;
+## 1 2015-01-15 09:54:00 mc         0              0.6    0.104     0.108 
+## 2 2015-01-29 09:10:00 mc        NA              0.65   0.107     0.110 
+## 3 2015-02-12 10:57:00 mc         0              0.5    0.102     0.111 
+## 4 2015-02-26 12:12:00 mc        NA             NA     NA        NA     
+## 5 2015-03-12 11:15:00 mc         5.4            0.52   0.105     0.111 
+## 6 2015-03-26 11:15:00 mc         6.5            0.455  0.102     0.0988
+## # … with 9 more variables: turbidity_ntu &lt;dbl&gt;, tp_ugl &lt;dbl&gt;,
+## #   drp_ugl &lt;dbl&gt;, dry_wt_g &lt;dbl&gt;, dry_wt_g_l &lt;dbl&gt;, year &lt;dbl&gt;,
+## #   month &lt;dbl&gt;, day &lt;int&gt;, julian_day &lt;dbl&gt;</code></pre>
+<p><br></p>
+<p>##Boolean search terms of interest</p>
+<pre class="r"><code>boolean.tbl &lt;- read_csv(&quot;data/boolean.csv&quot;) 
+
+# boolean.tbl %&gt;%
+#   kable(&quot;html&quot;) %&gt;%
+#   kable_styling(bootstrap_options = c(&quot;striped&quot;, &quot;hover&quot;, &quot;condensed&quot;))</code></pre>
+<p><br></p>
+<pre class="r"><code>mc_2015.df &lt;- mc_smc.df %&gt;% filter(year==2015 &amp; site==&quot;mc&quot;) 
+
+head(mc_smc_2015.df)</code></pre>
+<pre><code>## # A tibble: 6 x 15
+##   datetime            site  w_temp_c volume_filtered… tare_g dry_105c_g
+##   &lt;dttm&gt;              &lt;chr&gt;    &lt;dbl&gt;            &lt;dbl&gt;  &lt;dbl&gt;      &lt;dbl&gt;
+## 1 2015-01-15 09:54:00 mc         0              0.6    0.104     0.108 
+## 2 2015-01-29 09:10:00 mc        NA              0.65   0.107     0.110 
+## 3 2015-02-12 10:57:00 mc         0              0.5    0.102     0.111 
+## 4 2015-02-26 12:12:00 mc        NA             NA     NA        NA     
+## 5 2015-03-12 11:15:00 mc         5.4            0.52   0.105     0.111 
+## 6 2015-03-26 11:15:00 mc         6.5            0.455  0.102     0.0988
+## # … with 9 more variables: turbidity_ntu &lt;dbl&gt;, tp_ugl &lt;dbl&gt;,
+## #   drp_ugl &lt;dbl&gt;, dry_wt_g &lt;dbl&gt;, dry_wt_g_l &lt;dbl&gt;, year &lt;dbl&gt;,
+## #   month &lt;dbl&gt;, day &lt;int&gt;, julian_day &lt;dbl&gt;</code></pre>
+</div>
+<div id="pipes-and-ggplot" class="section level2">
+<h2>Pipes and GGPlot</h2>
+<p>Lets try this with a plot. What happens here is it takes the dataframe and then passes it to the ggplot commands. So the dataframe is removed from the ggplot commands. I will show you why in a second that this is really cool.</p>
+<pre class="r"><code>mc_smc.df %&gt;% 
+  ggplot(aes(x=julian_day, y=w_temp_c, color=site)) +
+  geom_point() </code></pre>
+<pre><code>## Warning: Removed 12 rows containing missing values (geom_point).</code></pre>
+<p><img src="05_data_modification_files/figure-html/unnamed-chunk-11-1.png" width="672" /></p>
+<p>So what we can also do is rather than making new dataframes all the time for graphs we can use the pipe command and lead the data into GGPlot</p>
+<pre class="r"><code>mc_smc.df %&gt;% filter(year==2015 &amp; site==&quot;mc&quot;) %&gt;%
+  ggplot(aes(x=julian_day, y=dry_wt_g_l, color=site)) +
+  geom_point() </code></pre>
+<pre><code>## Warning: Removed 1 rows containing missing values (geom_point).</code></pre>
+<p><img src="05_data_modification_files/figure-html/unnamed-chunk-12-1.png" width="672" /></p>
+<p>##Selecting variables What if you wanted to select only certain variables to work with? Now lets use two ways to do the same thing…..</p>
+<pre class="r"><code>mc_smc_drywt.df &lt;- mc_smc.df %&gt;% 
+  select(datetime, julian_day, dry_wt_g_l)</code></pre>
+<p>Lets assume you wanted to select all dry weight and volume filtered you can use things like: <code>starts_with(), ends_with(), contains(),  everything()</code> in various combinations such as</p>
+<pre class="r"><code>mc_smc_drywt.df &lt;- mc_smc.df %&gt;% 
+  select(datetime, julian_day, volume_filtered_l, starts_with(&quot;dry&quot;))</code></pre>
+<p>##What if you wanted see all NA values in a particular variable….</p>
+<pre class="r"><code>mc_smc.df %&gt;% filter(is.na(dry_wt_g_l))</code></pre>
+<pre><code>## # A tibble: 5 x 15
+##   datetime            site  w_temp_c volume_filtered… tare_g dry_105c_g
+##   &lt;dttm&gt;              &lt;chr&gt;    &lt;dbl&gt;            &lt;dbl&gt;  &lt;dbl&gt;      &lt;dbl&gt;
+## 1 2015-02-26 12:12:00 mc       NA                  NA     NA         NA
+## 2 2016-02-11 10:00:00 mc       NA                  NA     NA         NA
+## 3 2016-12-22 10:00:00 mc       NA                  NA     NA         NA
+## 4 2016-07-14 08:00:00 smc      21                  NA     NA         NA
+## 5 2016-12-22 08:45:00 smc       3.72               NA     NA         NA
+## # … with 9 more variables: turbidity_ntu &lt;dbl&gt;, tp_ugl &lt;dbl&gt;,
+## #   drp_ugl &lt;dbl&gt;, dry_wt_g &lt;dbl&gt;, dry_wt_g_l &lt;dbl&gt;, year &lt;dbl&gt;,
+## #   month &lt;dbl&gt;, day &lt;int&gt;, julian_day &lt;dbl&gt;</code></pre>
+<p>##What if you wanted see all NA values</p>
+<pre class="r"><code>mc_smc.df %&gt;% filter(!is.na(dry_wt_g_l))</code></pre>
+<pre><code>## # A tibble: 97 x 15
+##    datetime            site  w_temp_c volume_filtered… tare_g dry_105c_g
+##    &lt;dttm&gt;              &lt;chr&gt;    &lt;dbl&gt;            &lt;dbl&gt;  &lt;dbl&gt;      &lt;dbl&gt;
+##  1 2015-01-15 09:54:00 mc         0              0.6   0.104      0.108 
+##  2 2015-01-29 09:10:00 mc        NA              0.65  0.107      0.110 
+##  3 2015-02-12 10:57:00 mc         0              0.5   0.102      0.111 
+##  4 2015-03-12 11:15:00 mc         5.4            0.52  0.105      0.111 
+##  5 2015-03-26 11:15:00 mc         6.5            0.455 0.102      0.0988
+##  6 2015-04-09 10:00:00 mc        13.5            0.425 0.0959     0.111 
+##  7 2015-04-23 12:50:00 mc        13.4            0.51  0.103      0.108 
+##  8 2015-05-07 14:40:00 mc        20.3            0.55  0.104      0.114 
+##  9 2015-05-21 11:40:00 mc        12.4            0.5   0.102      0.118 
+## 10 2015-06-04 11:25:00 mc        16.8            0.52  0.105      0.120 
+## # … with 87 more rows, and 9 more variables: turbidity_ntu &lt;dbl&gt;,
+## #   tp_ugl &lt;dbl&gt;, drp_ugl &lt;dbl&gt;, dry_wt_g &lt;dbl&gt;, dry_wt_g_l &lt;dbl&gt;,
+## #   year &lt;dbl&gt;, month &lt;dbl&gt;, day &lt;int&gt;, julian_day &lt;dbl&gt;</code></pre>
+<p>##Groups and summmarize data</p>
+<p>Now a really cool thing we can do is to group data and then look at summairies of the data or use it later down the road.</p>
+<p>So lets say we wanted to see the mean temperature by month in each stream</p>
+<pre class="r"><code>mc_smc.df %&gt;% group_by(site, year, month) %&gt;%
+  mutate(
+    mean_temp_c = mean(w_temp_c)
+  )</code></pre>
+<pre><code>## # A tibble: 102 x 16
+## # Groups:   site, year, month [48]
+##    datetime            site  w_temp_c volume_filtered…  tare_g dry_105c_g
+##    &lt;dttm&gt;              &lt;chr&gt;    &lt;dbl&gt;            &lt;dbl&gt;   &lt;dbl&gt;      &lt;dbl&gt;
+##  1 2015-01-15 09:54:00 mc         0              0.6    0.104      0.108 
+##  2 2015-01-29 09:10:00 mc        NA              0.65   0.107      0.110 
+##  3 2015-02-12 10:57:00 mc         0              0.5    0.102      0.111 
+##  4 2015-02-26 12:12:00 mc        NA             NA     NA         NA     
+##  5 2015-03-12 11:15:00 mc         5.4            0.52   0.105      0.111 
+##  6 2015-03-26 11:15:00 mc         6.5            0.455  0.102      0.0988
+##  7 2015-04-09 10:00:00 mc        13.5            0.425  0.0959     0.111 
+##  8 2015-04-23 12:50:00 mc        13.4            0.51   0.103      0.108 
+##  9 2015-05-07 14:40:00 mc        20.3            0.55   0.104      0.114 
+## 10 2015-05-21 11:40:00 mc        12.4            0.5    0.102      0.118 
+## # … with 92 more rows, and 10 more variables: turbidity_ntu &lt;dbl&gt;,
+## #   tp_ugl &lt;dbl&gt;, drp_ugl &lt;dbl&gt;, dry_wt_g &lt;dbl&gt;, dry_wt_g_l &lt;dbl&gt;,
+## #   year &lt;dbl&gt;, month &lt;dbl&gt;, day &lt;int&gt;, julian_day &lt;dbl&gt;,
+## #   mean_temp_c &lt;dbl&gt;</code></pre>
+<p>We can also use the summarize function but it leads to something different. What you get is the grouping variable and the varaibles you are summarizing. I have found a neat way to get others and that is using the <code>first(varaible)</code> summarize term to get the first value of a group.</p>
+<pre class="r"><code>mc_smc.df %&gt;% group_by(site, year, month) %&gt;%
+  summarize(
+    mean_temp_c = mean(w_temp_c)
+  )</code></pre>
+<pre><code>## # A tibble: 48 x 4
+## # Groups:   site, year [4]
+##    site   year month mean_temp_c
+##    &lt;chr&gt; &lt;dbl&gt; &lt;dbl&gt;       &lt;dbl&gt;
+##  1 mc     2015     1       NA   
+##  2 mc     2015     2       NA   
+##  3 mc     2015     3        5.95
+##  4 mc     2015     4       13.4 
+##  5 mc     2015     5       16.4 
+##  6 mc     2015     6       18.6 
+##  7 mc     2015     7       NA   
+##  8 mc     2015     8       19.8 
+##  9 mc     2015     9       19.4 
+## 10 mc     2015    10       16.5 
+## # … with 38 more rows</code></pre>
+<p>You should get used to adding in the term <em><code>na.rm=TRUE</code></em> on all of your calculations. If you don’t you can see the results below.</p>
+<pre class="r"><code>mc_smc.df %&gt;% group_by(site, year, month) %&gt;%
+  summarize(
+    mean_temp_c = mean(w_temp_c),
+    mean_temp_c_2 = mean(w_temp_c, na.rm=TRUE)
+  )</code></pre>
+<pre><code>## # A tibble: 48 x 5
+## # Groups:   site, year [4]
+##    site   year month mean_temp_c mean_temp_c_2
+##    &lt;chr&gt; &lt;dbl&gt; &lt;dbl&gt;       &lt;dbl&gt;         &lt;dbl&gt;
+##  1 mc     2015     1       NA             0   
+##  2 mc     2015     2       NA             0   
+##  3 mc     2015     3        5.95          5.95
+##  4 mc     2015     4       13.4          13.4 
+##  5 mc     2015     5       16.4          16.4 
+##  6 mc     2015     6       18.6          18.6 
+##  7 mc     2015     7       NA            20.1 
+##  8 mc     2015     8       19.8          19.8 
+##  9 mc     2015     9       19.4          19.4 
+## 10 mc     2015    10       16.5          16.5 
+## # … with 38 more rows</code></pre>
+<p>Finally we could also use this for plotting</p>
+<pre class="r"><code>mc_smc.df %&gt;% group_by(site, year, month) %&gt;%
+  summarize(
+    julian_day = first(julian_day),
+    mean_temp_c_2 = mean(w_temp_c, na.rm=TRUE)
+  ) %&gt;%
+  ggplot( aes(x=julian_day, y=mean_temp_c_2))+
+  geom_point()</code></pre>
+<p><img src="05_data_modification_files/figure-html/unnamed-chunk-20-1.png" width="672" /></p>
+<p>##Clean data<br />
+So lets finally use the <em>janitor</em> pacakge to clean up this data. This will make working with data sets from other users a bit easier to work with quickly rather than reformatting all the values manually.<br />
+<br><br />
+Note that this will get rid of empty columns and rows if from an excel sheet and will clean up the variable names.</p>
+<pre class="r"><code>iris.df &lt;- read_csv(&quot;data/iris.csv&quot;) %&gt;%
+  clean_names() %&gt;%
+  remove_empty(c(&quot;rows&quot;, &quot;cols&quot;))</code></pre>
+<pre><code>## Parsed with column specification:
+## cols(
+##   Sepal.Length = col_double(),
+##   Sepal.Width = col_double(),
+##   Petal.Length = col_double(),
+##   Petal.Width = col_double(),
+##   Species = col_character()
+## )</code></pre>
+<pre class="r"><code>head(iris.df)</code></pre>
+<pre><code>## # A tibble: 6 x 5
+##   sepal_length sepal_width petal_length petal_width species
+##          &lt;dbl&gt;       &lt;dbl&gt;        &lt;dbl&gt;       &lt;dbl&gt; &lt;chr&gt;  
+## 1          5.1         3.5          1.4         0.2 setosa 
+## 2         NA           3            1.4         0.2 setosa 
+## 3          4.7         3.2          1.3         0.2 setosa 
+## 4          4.6         3.1          1.5         0.2 setosa 
+## 5          5           3.6          1.4         0.2 setosa 
+## 6          5.4         3.9          1.7         0.4 setosa</code></pre>
+<div id="note-above-what-you-get---you-get-all-of-the-special-characters-removed-capitilizations-are-now-lower-case-and-its-in-snake-case.-it-also-removes-any-empty-rows-and-columns-that-you-get-from-excel-often." class="section level3">
+<h3>Note above what you get - you get all of the special characters removed, capitilizations are now lower case and its in snake case. It also removes any empty rows and columns that you get from excel often.</h3>
+<!-- Global Site Tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-88373117-4"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments)};
+  gtag('js', new Date());
+
+  gtag('config', 'UA-88373117-4');
+</script>
+</div>
+</div>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+
+</body>
+</html>
