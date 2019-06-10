@@ -1,0 +1,11 @@
+﻿Search,code
+greater than,>
+greater than or equal to,>=
+less than,<
+less than or equal to,<=
+is NA,is.na
+is not NA,!is.na
+is not equal to,!=
+is not x,!x
+x | y,x OR y
+x & y,x AND y

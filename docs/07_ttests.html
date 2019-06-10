@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+<meta name="author" content="Bill Perry" />
+
+
+<title>Data Modification</title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 51px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h2 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h3 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h4 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h5 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h6 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #ffffff;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+
+
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Bill Perry</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="https://wlperry.github.io/index.html">Bill's Homepage</a>
+</li>
+<li>
+  <a href="https://wlperry.github.io/2018_stats/index.html">Stats and R Homepage</a>
+</li>
+<li>
+  <a href="about.html">About Bill</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">Data Modification</h1>
+<h4 class="author">Bill Perry</h4>
+<h4 class="date">2018/03/14</h4>
+
+</div>
+
+
+<div id="t-tests" class="section level2">
+<h2>T Tests</h2>
+<p>##Load libraries We will read in the main files and load the libraries as we have worked with so far.</p>
+<pre class="r"><code># One new package for summary stats
+#install.packages(&quot;broom&quot;)
+# install.packages(&quot;GGally&quot;)
+# install.packages(&quot;car&quot;)
+# install.packages(&quot;gvlma&quot;)
+
+
+# load the libraries each time you restart R
+library(tidyverse)
+library(lubridate)
+library(scales)
+library(skimr)
+library(janitor)
+library(patchwork)
+# library(reshape2)
+library(broom)
+library(GGally)
+library(corrplot)
+library(car)
+
+
+# read in the file
+iris.df &lt;- read_csv(&quot;data/iris.csv&quot;) %&gt;%
+  clean_names() %&gt;%
+  remove_empty(c(&quot;rows&quot;, &quot;cols&quot;)) 
+
+glimpse(iris.df)</code></pre>
+<pre><code>## Observations: 150
+## Variables: 5
+## $ sepal_length &lt;dbl&gt; 5.1, NA, 4.7, 4.6, 5.0, 5.4, 4.6, 5.0, 4.4, 4.9, 5.…
+## $ sepal_width  &lt;dbl&gt; 3.5, 3.0, 3.2, 3.1, 3.6, 3.9, 3.4, 3.4, 2.9, 3.1, 3…
+## $ petal_length &lt;dbl&gt; 1.4, 1.4, 1.3, 1.5, 1.4, 1.7, 1.4, 1.5, 1.4, 1.5, 1…
+## $ petal_width  &lt;dbl&gt; 0.2, 0.2, 0.2, 0.2, 0.2, 0.4, 0.3, 0.2, 0.2, 0.1, 0…
+## $ species      &lt;chr&gt; &quot;setosa&quot;, &quot;setosa&quot;, &quot;setosa&quot;, &quot;setosa&quot;, &quot;setosa&quot;, &quot;…</code></pre>
+<p>###Summary Statistics for the better look ###So this is a lot different than thinking about data from excel<br />
+Lets try to do the summary stats on the data now and see how it differs</p>
+<pre class="r"><code># the data you want to look at
+
+skim(iris.df)</code></pre>
+<pre><code>## Skim summary statistics
+##  n obs: 150 
+##  n variables: 5 
+## 
+## ── Variable type:character ───────────────────────────────────────────────────────────────────────
+##  variable missing complete   n min max empty n_unique
+##   species       0      150 150   6  10     0        3
+## 
+## ── Variable type:numeric ─────────────────────────────────────────────────────────────────────────
+##      variable missing complete   n mean   sd  p0 p25  p50 p75 p100
+##  petal_length       0      150 150 3.76 1.77 1   1.6 4.35 5.1  6.9
+##   petal_width       0      150 150 1.2  0.76 0.1 0.3 1.3  1.8  2.5
+##  sepal_length       1      149 150 5.85 0.83 4.3 5.1 5.8  6.4  7.9
+##   sepal_width       0      150 150 3.06 0.44 2   2.8 3    3.3  4.4
+##      hist
+##  ▇▁▁▂▅▅▃▁
+##  ▇▁▁▅▃▃▂▂
+##  ▂▇▅▇▆▅▂▂
+##  ▁▂▅▇▃▂▁▁</code></pre>
+<pre class="r"><code>iris.df %&gt;% group_by(species) %&gt;% skim_to_wide()</code></pre>
+<pre><code>## # A tibble: 12 x 14
+##    type  species variable missing complete n     mean  sd    p0    p25  
+##    &lt;chr&gt; &lt;chr&gt;   &lt;chr&gt;    &lt;chr&gt;   &lt;chr&gt;    &lt;chr&gt; &lt;chr&gt; &lt;chr&gt; &lt;chr&gt; &lt;chr&gt;
+##  1 nume… setosa  petal_l… 0       50       50    1.46  0.17  &quot;1  &quot; &quot;1.4…
+##  2 nume… setosa  petal_w… 0       50       50    0.25  0.11  0.1   &quot;0.2…
+##  3 nume… setosa  sepal_l… 1       49       50    5.01  0.36  4.3   &quot;4.8…
+##  4 nume… setosa  sepal_w… 0       50       50    3.43  0.38  2.3   &quot;3.2…
+##  5 nume… versic… petal_l… 0       50       50    4.26  0.47  &quot;3  &quot; &quot;4  …
+##  6 nume… versic… petal_w… 0       50       50    1.33  &quot;0.2… &quot;1  &quot; &quot;1.2…
+##  7 nume… versic… sepal_l… 0       50       50    5.94  0.52  4.9   &quot;5.6…
+##  8 nume… versic… sepal_w… 0       50       50    2.77  0.31  &quot;2  &quot; 2.52 
+##  9 nume… virgin… petal_l… 0       50       50    5.55  0.55  4.5   &quot;5.1…
+## 10 nume… virgin… petal_w… 0       50       50    2.03  0.27  1.4   &quot;1.8…
+## 11 nume… virgin… sepal_l… 0       50       50    6.59  0.64  4.9   6.23 
+## 12 nume… virgin… sepal_w… 0       50       50    2.97  0.32  2.2   &quot;2.8…
+## # … with 4 more variables: p50 &lt;chr&gt;, p75 &lt;chr&gt;, p100 &lt;chr&gt;, hist &lt;chr&gt;</code></pre>
+</div>
+<div id="wide-to-long-format" class="section level2">
+<h2>Wide to long format</h2>
+<pre class="r"><code># this will add an index to the dataframe so you know what individual is which
+iris_long.df &lt;- iris.df %&gt;% 
+  mutate(individual = row_number()) %&gt;% 
+  gather(trait, measure, -species, - individual)</code></pre>
+</div>
+<div id="outliers" class="section level2">
+<h2>Outliers</h2>
+<pre class="r"><code># Box Plots of data
+iris_long.df %&gt;% group_by(species, trait) %&gt;% 
+  ggplot( aes(x = trait, y = measure, color = species, fill=species))+
+  geom_boxplot(aes(alpha=0.3)) </code></pre>
+<pre><code>## Warning: Removed 1 rows containing non-finite values (stat_boxplot).</code></pre>
+<p><img src="07_ttests_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+<p>These look good for the most part with only one or two significant. Your choice to transform or not.</p>
+<p>##Factors<br />
+Make sure the categorical variable is a factor<br />
+Rearrange the order of groups so that control group is first, followed by treatment groups.<br />
+you can do this by:</p>
+<pre class="r"><code># Make Factors from the different levels long way
+# iris_long.df$species &lt;- as.factor(iris_long.df$species)  
+# iris_long.df$trait &lt;- as.factor(iris_long.df$trait) 
+
+# Make Factors dplyr
+iris_long.df &lt;- iris_long.df %&gt;%
+  mutate(
+   sex = factor(species, 
+                  labels = c(&quot;setosa&quot;, &quot;versicolor&quot;, &quot;virginica&quot;)),
+    trait = factor(trait, 
+                  labels = c(&quot;sepal_length&quot;, &quot;sepal_width&quot;, &quot;petal_length&quot;, &quot;petal_width&quot;))
+  )</code></pre>
+</div>
+<div id="test-for-normality-of-data-and-using-the-broom-package" class="section level2">
+<h2>Test for normality of data and using the broom package</h2>
+<p>So I think this is premature but some people like to test the normality of the data but really you should be assessing the normality of the residuals. But here it goes…</p>
+<pre class="r"><code># turn off scientific notaton
+options(scipen = 999)
+# to turn back on 
+#options(scipen = 0)
+
+# Test for normality of each group and store in shapirowilktests
+# This uses the broom package to get clean output of the test 
+iris_long.df %&gt;% group_by(species, trait) %&gt;% do(tidy(shapiro.test(.$measure)))</code></pre>
+<pre><code>## # A tibble: 12 x 5
+## # Groups:   species, trait [12]
+##    species    trait        statistic     p.value method                    
+##    &lt;chr&gt;      &lt;fct&gt;            &lt;dbl&gt;       &lt;dbl&gt; &lt;chr&gt;                     
+##  1 setosa     sepal_length     0.955 0.0548      Shapiro-Wilk normality te…
+##  2 setosa     sepal_width      0.800 0.000000866 Shapiro-Wilk normality te…
+##  3 setosa     petal_length     0.977 0.456       Shapiro-Wilk normality te…
+##  4 setosa     petal_width      0.972 0.272       Shapiro-Wilk normality te…
+##  5 versicolor sepal_length     0.966 0.158       Shapiro-Wilk normality te…
+##  6 versicolor sepal_width      0.948 0.0273      Shapiro-Wilk normality te…
+##  7 versicolor petal_length     0.978 0.465       Shapiro-Wilk normality te…
+##  8 versicolor petal_width      0.974 0.338       Shapiro-Wilk normality te…
+##  9 virginica  sepal_length     0.962 0.110       Shapiro-Wilk normality te…
+## 10 virginica  sepal_width      0.960 0.0870      Shapiro-Wilk normality te…
+## 11 virginica  petal_length     0.971 0.258       Shapiro-Wilk normality te…
+## 12 virginica  petal_width      0.967 0.181       Shapiro-Wilk normality te…</code></pre>
+<pre class="r"><code>#You can do this on all variables faster with if there was only one grouping
+# tapply(iris_long.df$measure, iris_long.df$species, shapiro.test)</code></pre>
+<p>##Test for homogenetiy of variances</p>
+<p>Best to use the Levenes test compared to the Bartlet test<br />
+uses the car package</p>
+<p><a href="http://www.cookbook-r.com/Statistical_analysis/Homogeneity_of_variance/" class="uri">http://www.cookbook-r.com/Statistical_analysis/Homogeneity_of_variance/</a></p>
+<p>Note however that this is doing the homogeneity test on all traits and not each one which is what you really should do and is not often done. Need to check on this though.</p>
+<pre class="r"><code>#Test for homogeneity of variances by groups
+leveneTest(sepal_length ~ species, data=iris.df)</code></pre>
+<pre><code>## Warning in leveneTest.default(y = y, group = group, ...): group coerced to
+## factor.</code></pre>
+<pre><code>## Levene&#39;s Test for Homogeneity of Variance (center = median)
+##        Df F value   Pr(&gt;F)   
+## group   2  6.0386 0.003022 **
+##       146                    
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
+<pre class="r"><code>#Compared to the Bartlet test
+bartlett.test(sepal_length ~ species, data=iris.df)</code></pre>
+<pre><code>## 
+##  Bartlett test of homogeneity of variances
+## 
+## data:  sepal_length by species
+## Bartlett&#39;s K-squared = 15.308, df = 2, p-value = 0.0004742</code></pre>
+<pre class="r"><code># Bartlett test with interaction
+# bartlett.test(measure ~ interaction(species,trait), data=iris.df)</code></pre>
+<p>Adding in soon</p>
+<!-- Global Site Tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-88373117-4"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments)};
+  gtag('js', new Date());
+
+  gtag('config', 'UA-88373117-4');
+</script>
+</div>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+
+</body>
+</html>

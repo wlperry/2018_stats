@@ -1,0 +1,850 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+<meta name="author" content="Bill Perry" />
+
+
+<title>T Test and One Way ANOVA</title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 51px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h2 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h3 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h4 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h5 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h6 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #ffffff;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+
+
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Bill Perry</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="https://wlperry.github.io/index.html">Bill's Homepage</a>
+</li>
+<li>
+  <a href="https://wlperry.github.io/2018_stats/index.html">Stats and R Homepage</a>
+</li>
+<li>
+  <a href="about.html">About Bill</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">T Test and One Way ANOVA</h1>
+<h4 class="author">Bill Perry</h4>
+<h4 class="date">2018/04/30</h4>
+
+</div>
+
+
+<p>##Load libraries We will read in the main files and load the libraries as we have worked with so far.</p>
+<pre class="r"><code># #Install Packages ----
+# install.packages(&quot;tidyverse&quot;)
+# install.packages(&quot;lubridate&quot;)
+# install.packages(&quot;scales&quot;)
+# install.packages(&quot;readxl&quot;)
+# install.packages(&quot;survminer&quot;)
+# install.packages(&quot;survival&quot;)
+# install.packages(&quot;patchwork&quot;)
+# install.packages(&quot;broom&quot;)
+# ANOVA specific
+# install.packages(&quot;car&quot;)
+# install.packages(&quot;emmeans&quot;)
+# install.packages(&quot;multcompView&quot;)
+
+
+#Load libraries ----
+library(tidyverse)
+library(lubridate)
+library(scales)
+library(readxl)
+library(skimr)
+library(broom)
+library(janitor)
+# library(zoo)
+library(patchwork)
+library(car)
+library(emmeans)
+library(multcompView)</code></pre>
+<div id="read-in-the-file" class="section level2">
+<h2>Read in the file</h2>
+<pre class="r"><code># read in the file
+gene_exp.df &lt;- read_excel(&quot;data/Example data.XLSX&quot;, sheet=&quot;Gene expression analysis&quot;) %&gt;%
+  clean_names() %&gt;%
+  remove_empty(c(&quot;rows&quot;, &quot;cols&quot;)) 
+
+glimpse(gene_exp.df)</code></pre>
+<pre><code>## Observations: 9
+## Variables: 6
+## $ individual &lt;dbl&gt; 1, 2, 3, 4, 5, 6, 7, 8, 9
+## $ experiment &lt;dbl&gt; 1, 1, 1, 2, 2, 2, 3, 3, 3
+## $ control    &lt;dbl&gt; 12.59708, 12.48503, 12.04311, 12.46447, 12.02386, 12.…
+## $ treat1     &lt;dbl&gt; 20.87269, 19.57602, 15.66664, 15.70462, 20.20846, 18.…
+## $ treat2     &lt;dbl&gt; 14.94204, 15.90944, 13.39281, 17.80308, 20.25343, 19.…
+## $ treat3     &lt;dbl&gt; 11.90506, 12.42411, 12.34661, 11.93034, 11.78713, 12.…</code></pre>
+<p>##Summary Statistics for the better look</p>
+<pre class="r"><code># the data you want to look at
+
+skim(gene_exp.df)</code></pre>
+<pre><code>## Skim summary statistics
+##  n obs: 9 
+##  n variables: 6 
+## 
+## ── Variable type:numeric ─────────────────────────────────────────────────────────────────────────
+##    variable missing complete n  mean   sd    p0   p25   p50   p75  p100
+##     control       0        9 9 12.37 0.24 12.02 12.16 12.46 12.53 12.66
+##  experiment       0        9 9  2    0.87  1     1     2     3     3   
+##  individual       0        9 9  5    2.74  1     3     5     7     9   
+##      treat1       0        9 9 17.31 2.9  12.27 15.67 18.15 19.58 20.87
+##      treat2       0        9 9 16.89 2.31 13.39 14.94 17.33 18.06 20.25
+##      treat3       0        9 9 12.44 0.85 11.79 11.93 12.33 12.42 14.58
+##      hist
+##  ▇▃▁▁▃▇▃▇
+##  ▇▁▁▇▁▁▁▇
+##  ▇▃▃▃▃▃▃▃
+##  ▃▁▃▇▁▃▇▇
+##  ▃▇▃▁▃▇▁▇
+##  ▇▆▂▁▁▁▁▂</code></pre>
+<p>##Look at the data We could do this in the wide format but it is a lot easier in long format ## Wide to long format</p>
+<pre class="r"><code># this will add an index to the dataframe so you know what individual is which
+gene_exp_long.df &lt;- gene_exp.df %&gt;%
+  gather(
+    treatment, # this will take all the row headings into a column
+    expression, # this will convert all the measures into a column called expression
+    -experiment, # the - sign tells tidyr not to move those columns
+    -individual
+  ) 
+
+glimpse(gene_exp_long.df)</code></pre>
+<pre><code>## Observations: 36
+## Variables: 4
+## $ individual &lt;dbl&gt; 1, 2, 3, 4, 5, 6, 7, 8, 9, 1, 2, 3, 4, 5, 6, 7, 8, 9,…
+## $ experiment &lt;dbl&gt; 1, 1, 1, 2, 2, 2, 3, 3, 3, 1, 1, 1, 2, 2, 2, 3, 3, 3,…
+## $ treatment  &lt;chr&gt; &quot;control&quot;, &quot;control&quot;, &quot;control&quot;, &quot;control&quot;, &quot;control&quot;…
+## $ expression &lt;dbl&gt; 12.59708, 12.48503, 12.04311, 12.46447, 12.02386, 12.…</code></pre>
+<pre class="r"><code># we could spread it back out to what it was
+gene_exp_wide.df &lt;- gene_exp_long.df %&gt;%
+  spread(treatment, expression)</code></pre>
+</div>
+<div id="look-at-data" class="section level2">
+<h2>Look at data</h2>
+<pre class="r"><code>glimpse(gene_exp_long.df)</code></pre>
+<pre><code>## Observations: 36
+## Variables: 4
+## $ individual &lt;dbl&gt; 1, 2, 3, 4, 5, 6, 7, 8, 9, 1, 2, 3, 4, 5, 6, 7, 8, 9,…
+## $ experiment &lt;dbl&gt; 1, 1, 1, 2, 2, 2, 3, 3, 3, 1, 1, 1, 2, 2, 2, 3, 3, 3,…
+## $ treatment  &lt;chr&gt; &quot;control&quot;, &quot;control&quot;, &quot;control&quot;, &quot;control&quot;, &quot;control&quot;…
+## $ expression &lt;dbl&gt; 12.59708, 12.48503, 12.04311, 12.46447, 12.02386, 12.…</code></pre>
+<p>##Convert to factors So to do this the experiment and individuals are numeric and need to be converted to categories or factors…</p>
+</div>
+<div id="wide-data-to-factors" class="section level2">
+<h2>Wide data to factors</h2>
+<pre class="r"><code># convert things to factors or do calculations
+gene_exp.df &lt;- gene_exp.df %&gt;%
+  mutate(
+    experiment = as.factor(experiment),
+    individual = as.factor(individual)
+  )
+
+# now look at it
+skim(gene_exp.df)</code></pre>
+<pre><code>## Skim summary statistics
+##  n obs: 9 
+##  n variables: 6 
+## 
+## ── Variable type:factor ──────────────────────────────────────────────────────────────────────────
+##    variable missing complete n n_unique              top_counts ordered
+##  experiment       0        9 9        3 1: 3, 2: 3, 3: 3, NA: 0   FALSE
+##  individual       0        9 9        9  1: 1, 2: 1, 3: 1, 4: 1   FALSE
+## 
+## ── Variable type:numeric ─────────────────────────────────────────────────────────────────────────
+##  variable missing complete n  mean   sd    p0   p25   p50   p75  p100
+##   control       0        9 9 12.37 0.24 12.02 12.16 12.46 12.53 12.66
+##    treat1       0        9 9 17.31 2.9  12.27 15.67 18.15 19.58 20.87
+##    treat2       0        9 9 16.89 2.31 13.39 14.94 17.33 18.06 20.25
+##    treat3       0        9 9 12.44 0.85 11.79 11.93 12.33 12.42 14.58
+##      hist
+##  ▇▃▁▁▃▇▃▇
+##  ▃▁▃▇▁▃▇▇
+##  ▃▇▃▁▃▇▁▇
+##  ▇▆▂▁▁▁▁▂</code></pre>
+</div>
+<div id="long-data-to-factors" class="section level2">
+<h2>Long data to factors</h2>
+<pre class="r"><code>#need to make treatment a factor
+gene_exp_long.df &lt;- gene_exp_long.df %&gt;%
+mutate(
+  experiment = as.factor(experiment),
+    individual = as.factor(individual),
+    treatment = as.factor(treatment)
+  )
+
+# now look at it
+skim(gene_exp_long.df)</code></pre>
+<pre><code>## Skim summary statistics
+##  n obs: 36 
+##  n variables: 4 
+## 
+## ── Variable type:factor ──────────────────────────────────────────────────────────────────────────
+##    variable missing complete  n n_unique                     top_counts
+##  experiment       0       36 36        3     1: 12, 2: 12, 3: 12, NA: 0
+##  individual       0       36 36        9         1: 4, 2: 4, 3: 4, 4: 4
+##   treatment       0       36 36        4 con: 9, tre: 9, tre: 9, tre: 9
+##  ordered
+##    FALSE
+##    FALSE
+##    FALSE
+## 
+## ── Variable type:numeric ─────────────────────────────────────────────────────────────────────────
+##    variable missing complete  n  mean sd    p0   p25   p50   p75  p100
+##  expression       0       36 36 14.75  3 11.79 12.34 13.02 17.45 20.87
+##      hist
+##  ▇▁▂▁▁▁▁▁</code></pre>
+<p>##Now to graph the long format data</p>
+<pre class="r"><code># Note the new format allows us to make coding a lot faster
+gene_exp_long.df %&gt;% 
+  group_by(treatment)  %&gt;%
+  ggplot(aes(treatment, expression)) +
+  geom_boxplot()</code></pre>
+<p><img src="08_oneway_anova_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
+</div>
+<div id="t-tests-are-a-great-way-to-compare-two-means.-but-they-can-be-a-bit-limited." class="section level2">
+<h2>T-Tests are a great way to compare two means. But they can be a bit limited.</h2>
+<p>There are several types of T tests and there are a few assumptions Normality Heterogeneity of Variances and a few others we will talk about….</p>
+<p>###Test for normality of each group To do this in wide format it is straight forward<br />
+Here these should be non-signficant so they are not deviating from a normal distribution.</p>
+<pre class="r"><code># Test for normality of each group wide format
+shapiro.test(gene_exp.df$control)</code></pre>
+<pre><code>## 
+##  Shapiro-Wilk normality test
+## 
+## data:  gene_exp.df$control
+## W = 0.8967, p-value = 0.2335</code></pre>
+<pre class="r"><code>shapiro.test(gene_exp.df$treat1)</code></pre>
+<pre><code>## 
+##  Shapiro-Wilk normality test
+## 
+## data:  gene_exp.df$treat1
+## W = 0.94218, p-value = 0.605</code></pre>
+<pre class="r"><code>shapiro.test(gene_exp.df$treat2)</code></pre>
+<pre><code>## 
+##  Shapiro-Wilk normality test
+## 
+## data:  gene_exp.df$treat2
+## W = 0.96413, p-value = 0.8404</code></pre>
+<pre class="r"><code>shapiro.test(gene_exp.df$treat3)</code></pre>
+<pre><code>## 
+##  Shapiro-Wilk normality test
+## 
+## data:  gene_exp.df$treat3
+## W = 0.68571, p-value = 0.0009661</code></pre>
+<p>###Test for homogeneity of variances<br />
+Best to use the Levenes test compared to the Bartlet test<br />
+uses the car package<br />
+<a href="http://www.cookbook-r.com/Statistical_analysis/Homogeneity_of_variance/" class="uri">http://www.cookbook-r.com/Statistical_analysis/Homogeneity_of_variance/</a></p>
+<pre class="r"><code>#Test for homogeneity of variances
+
+leveneTest(expression ~ treatment, data=gene_exp_long.df)</code></pre>
+<pre><code>## Levene&#39;s Test for Homogeneity of Variance (center = median)
+##       Df F value    Pr(&gt;F)    
+## group  3  7.7825 0.0004858 ***
+##       32                      
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
+<pre class="r"><code>#Compared to the Bartlet test
+bartlett.test(expression ~ treatment, data=gene_exp_long.df)</code></pre>
+<pre><code>## 
+##  Bartlett test of homogeneity of variances
+## 
+## data:  expression by treatment
+## Bartlett&#39;s K-squared = 34.668, df = 3, p-value = 0.0000001432</code></pre>
+<pre class="r"><code>#With multiple independent variables, the interaction() function must be used to collapse the IV’s into a single variable with all combinations of the factors. If it is not used, then the will be the wrong degrees of freedom, and the p-value will be wrong.
+
+# bartlett.test(extra ~ interaction(group,some other independent factor), data=sleep.df)</code></pre>
+<p>###Paired T-Tests wide format</p>
+<pre class="r"><code># Paired T-Test - Welch 2 sample -----
+t.test(gene_exp.df$control, gene_exp.df$treat1, paired=TRUE) # Note the 1 and 2 are in quotes so R knows its the column</code></pre>
+<pre><code>## 
+##  Paired t-test
+## 
+## data:  gene_exp.df$control and gene_exp.df$treat1
+## t = -5.0958, df = 8, p-value = 0.0009347
+## alternative hypothesis: true difference in means is not equal to 0
+## 95 percent confidence interval:
+##  -7.174143 -2.703981
+## sample estimates:
+## mean of the differences 
+##               -4.939062</code></pre>
+<p>###Paired T-Tests long format</p>
+<pre class="r"><code># Paired T-Test - Welch 2 sample -----
+# Welch t-test
+# t.test(variable ~ group, dataframe)
+
+# need to make a dataframe with only 2 groups
+cont_t1.df &lt;- gene_exp_long.df %&gt;%
+  filter(treatment == &quot;control&quot; | treatment == &quot;treat1&quot;)
+
+
+t.test(expression ~ treatment, cont_t1.df, paired=TRUE) # Note the 1 and 2 are in quotes so R knows its the column</code></pre>
+<pre><code>## 
+##  Paired t-test
+## 
+## data:  expression by treatment
+## t = -5.0958, df = 8, p-value = 0.0009347
+## alternative hypothesis: true difference in means is not equal to 0
+## 95 percent confidence interval:
+##  -7.174143 -2.703981
+## sample estimates:
+## mean of the differences 
+##               -4.939062</code></pre>
+<p>###Two Sample T-Test - in wide format By default, t.test does not assume equal variances</p>
+<pre class="r"><code># Welch t-test
+t.test(gene_exp.df$control, gene_exp.df$treat1, var.equal=FALSE)</code></pre>
+<pre><code>## 
+##  Welch Two Sample t-test
+## 
+## data:  gene_exp.df$control and gene_exp.df$treat1
+## t = -5.0986, df = 8.1074, p-value = 0.0008939
+## alternative hypothesis: true difference in means is not equal to 0
+## 95 percent confidence interval:
+##  -7.167780 -2.710344
+## sample estimates:
+## mean of x mean of y 
+##  12.37063  17.30969</code></pre>
+<p>###Two Sample T-Test - in long format By default, t.test does not assume equal variances</p>
+<pre class="r"><code># Welch t-test
+t.test(expression ~ treatment, cont_t1.df, var.equal=FALSE)</code></pre>
+<pre><code>## 
+##  Welch Two Sample t-test
+## 
+## data:  expression by treatment
+## t = -5.0986, df = 8.1074, p-value = 0.0008939
+## alternative hypothesis: true difference in means is not equal to 0
+## 95 percent confidence interval:
+##  -7.167780 -2.710344
+## sample estimates:
+## mean in group control  mean in group treat1 
+##              12.37063              17.30969</code></pre>
+</div>
+<div id="one-way-anova" class="section level2">
+<h2>One way Anova</h2>
+</div>
+<div id="great-reading" class="section level2">
+<h2>Great Reading</h2>
+<p>A Great coverage of this material is Dolph Schluters page <a href="https://www.zoology.ubc.ca/~schluter/R/fit-model/" class="uri">https://www.zoology.ubc.ca/~schluter/R/fit-model/</a></p>
+<p>The key thing here is the use of the car package as it is essential for unbalanced designs and the use of Type III sum of squares otherwise Type I sum of squares are used which is rarely good. Weather to use Type II or III is a contentious issue and we will just go with Type III for all of our work</p>
+</div>
+<div id="bartlets-test-for-homogeneity-of-varaince" class="section level2">
+<h2>Bartlets test for homogeneity of varaince</h2>
+<pre class="r"><code>#Compared variances uisng  Bartlet test
+# significant means they differ in varainces but this is close
+bartlett.test(expression ~ treatment, data=gene_exp_long.df)</code></pre>
+<pre><code>## 
+##  Bartlett test of homogeneity of variances
+## 
+## data:  expression by treatment
+## Bartlett&#39;s K-squared = 34.668, df = 3, p-value = 0.0000001432</code></pre>
+</div>
+<div id="anova" class="section level2">
+<h2>ANOVA</h2>
+<p>Now we can run an ANOVA as long as the categories we are testing are factors. When doing this we will test to see if any of the means are different but will not be able to tell what is different yet. Thatis the next step</p>
+<pre class="r"><code># ANOVA - ONE WAY
+# you can do an anova as an anova and not the linear model
+#Run the anova and store it in the model in Values
+expression.model.aov = aov(expression ~ treatment, data=gene_exp_long.df)
+
+#Obtain the anova table
+anova(expression.model.aov)</code></pre>
+<pre><code>## Analysis of Variance Table
+## 
+## Response: expression
+##           Df Sum Sq Mean Sq F value       Pr(&gt;F)    
+## treatment  3 199.26  66.421  18.334 0.0000004189 ***
+## Residuals 32 115.93   3.623                         
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
+</div>
+<div id="save-the-model-for-use-in-word" class="section level2">
+<h2>Save the model for use in word</h2>
+<pre class="r"><code># save model to a text file for excel or whatever
+tidy(expression.model.aov)</code></pre>
+<pre><code>## # A tibble: 2 x 6
+##   term         df sumsq meansq statistic      p.value
+##   &lt;chr&gt;     &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;     &lt;dbl&gt;        &lt;dbl&gt;
+## 1 treatment     3  199.  66.4       18.3  0.000000419
+## 2 Residuals    32  116.   3.62      NA   NA</code></pre>
+<pre class="r"><code>#You can copy this out or save it as an object and then save it as a csv file
+# save the model
+# tidy_expression.model.aov &lt;- tidy(expression.model.aov)
+# write_csv(expression.model.aov, &quot;tidy_anova_expression.csv&quot;)</code></pre>
+</div>
+<div id="plot-residuals" class="section level2">
+<h2>Plot Residuals</h2>
+<pre class="r"><code># Plot residuals
+#Base R plots
+plot(fitted(expression.model.aov), residuals(expression.model.aov))</code></pre>
+<p><img src="08_oneway_anova_files/figure-html/unnamed-chunk-18-1.png" width="672" /></p>
+</div>
+<div id="histogram-of-residuals" class="section level2">
+<h2>Histogram of residuals</h2>
+<pre class="r"><code>#Histogram of residuals
+hist(residuals(expression.model.aov), 
+     col=&quot;darkgray&quot;)</code></pre>
+<p><img src="08_oneway_anova_files/figure-html/unnamed-chunk-19-1.png" width="672" /></p>
+</div>
+<div id="check-for-normality" class="section level2">
+<h2>Check for Normality</h2>
+<pre class="r"><code># check for normally distributed data
+qqnorm(expression.model.aov$res)</code></pre>
+<p><img src="08_oneway_anova_files/figure-html/unnamed-chunk-20-1.png" width="672" /></p>
+</div>
+<div id="statistical-test-of-normality" class="section level2">
+<h2>Statistical Test of Normality</h2>
+<pre class="r"><code>#Test for normality of residuals
+shapiro.test(expression.model.aov$res)</code></pre>
+<pre><code>## 
+##  Shapiro-Wilk normality test
+## 
+## data:  expression.model.aov$res
+## W = 0.9572, p-value = 0.176</code></pre>
+</div>
+<div id="post-f-tests-of-an-anova" class="section level2">
+<h2>Post F tests of an ANOVA</h2>
+<pre class="r"><code># Post F tests
+# Comparisons of species
+lsm = emmeans(expression.model.aov, 
+              &quot;treatment&quot;,
+              adjust=&quot;bonferroni&quot;)
+
+### Means sharing a letter in .group are not significantly different
+#Note that this requires multcompView
+cld(lsm, 
+    alpha=.05,
+    Letters=letters)</code></pre>
+<pre><code>##  treatment emmean    SE df lower.CL upper.CL .group
+##  control     12.4 0.634 32     11.1     13.7  a    
+##  treat3      12.4 0.634 32     11.1     13.7  a    
+##  treat2      16.9 0.634 32     15.6     18.2   b   
+##  treat1      17.3 0.634 32     16.0     18.6   b   
+## 
+## Confidence level used: 0.95 
+## P value adjustment: tukey method for comparing a family of 4 estimates 
+## significance level used: alpha = 0.05</code></pre>
+<pre class="r"><code># Now you have a statistical test of how the means compare
+gene_exp_long.df %&gt;% 
+  group_by(treatment)  %&gt;%
+  ggplot(aes(treatment, expression)) +
+  geom_boxplot()</code></pre>
+<p><img src="08_oneway_anova_files/figure-html/unnamed-chunk-23-1.png" width="672" /></p>
+<pre class="r"><code># what if you wanted a bar plot
+ggplot(gene_exp_long.df, aes(x= treatment))+
+  stat_summary(aes(y=expression), fun.y=mean, geom=&#39;bar&#39;, color=&quot;black&quot;, 
+               fill=&quot;blue&quot;) +
+  stat_summary(aes(y=expression), fun.data = mean_se, geom = &quot;errorbar&quot;, color=&quot;black&quot;, width=0.2)</code></pre>
+<p><img src="08_oneway_anova_files/figure-html/unnamed-chunk-24-1.png" width="672" /></p>
+<!-- Global Site Tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-88373117-4"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments)};
+  gtag('js', new Date());
+
+  gtag('config', 'UA-88373117-4');
+</script>
+</div>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+
+</body>
+</html>
