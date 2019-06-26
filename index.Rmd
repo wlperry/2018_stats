@@ -29,42 +29,52 @@ Before working on a project, I have found it is useful to ponder what the data w
      - installing libraries       
        
 ## [2. Libraries](02_libraries.html)    
-The first thing to do is to load libraries and this is the start of how to do that.
+The first thing to do is to load libraries.    
+These are the addons to R and RStudio that make everything easier. I have included a file with all of the packages that I typically use. Sometimes when updating R and RStudio, you need to reinstall libraires. This file will make life easier. 
 
-## [3. Reading files and GGPLOT](03_ggplot.html)     
-Introduction into reading in excel and csv files and then how to visualize the data using GGPlot2 / GGPlot. In this page, I go over how to load libraries and start to graph with GGplot. Understanding the basics is key and then I go from there. This file includes topics like:    
-     - read in csv file    
+## [3. Reading files](03_importdata.html)     
+Introduction into reading in excel and csv files.  Understanding the basics of importing and exporting data is key and then I go from there.         
+     - read in csv file  
+     - read in excel file    
+     - some tricks - guess_max = 10000
+    
+     
+## [4.GGPLOT Basics](03_ggplot.html)       
+How to make simple graphs and the theory of layered graphics
      - simple graphs  
      - geometries   
      - colors and mapping   
      - layers 
 
-## [4. GGPLOT stats plots](04_ggplot_stats.html)    
+
+
+
+## [5. GGPLOT stats plots](04_ggplot_stats.html)    
 This will introduce you to the basic data exploratory graphs and statistics in graphs that will make life a lot easier
       - box and whisker plot
       - histograms
       - mean and standard error plots
       - time series plots
     
-## [5. Dataframe modification](05_data_modification.html)    
+## [6. Dataframe modification](05_data_modification.html)    
 This will show you how to modify the dataframe.   
 
-## [6. Dataframe wide to long](06_dataframe_widelong.html)    
+## [7. Dataframe wide to long](06_dataframe_widelong.html)    
 This will show you how to modify the dataframe from wide to long and back. Also it has how to spread and unite values... 
 
-## [7. Correlation and Regression](07_correlation_regression.html)  
+## [8. Correlation and Regression](07_correlation_regression.html)  
 Correlations and Regressions. More to come but code is done.    
 
-## [8. T Tests](08_ttests.html)  
+## [9. T Tests](08_ttests.html)  
 T tests....
 
-## [9. One way ANOVA](09_oneway_anova.html)  
+## [10. One way ANOVA](09_oneway_anova.html)  
 One way anovas  
 
-## [10. Two way ANOVA](10_twoway_anovas.html)  
+## [11. Two way ANOVA](10_twoway_anovas.html)  
 One way anovas  
 
-## [11. ANCOVA](11_ancova.html)  
+## [12. ANCOVA](11_ancova.html)  
 Ancova and the fun and joy of interactions
 
 

@@ -409,8 +409,124 @@ div.tocify {
 </div>
 
 
-<div id="libraries---i-am-working-on-this-and-will-show-how-to-install-and-load-libraries" class="section level3">
-<h3>Libraries - I am working on this and will show how to install and load libraries</h3>
+<div id="libraries" class="section level1">
+<h1>Libraries</h1>
+<p>These add functionality to base R. This is similiar to adding apps on your phone.</p>
+<div id="these-are-in-my-mind-the-essential-libraries-for-r" class="section level2">
+<h2>These are in my mind the essential libraries for R</h2>
+<pre class="r"><code># # Libraries I use on a regular basis-----
+install.packages(&quot;devtools&quot;) # install new things
+install.packages(&quot;tidyverse&quot;) # dplyr and piping and ggplot etc
+install.packages(&quot;lubridate&quot;) # dates and times
+install.packages(&quot;scales&quot;) # scales on ggplot ases
+install.packages(&quot;readxl&quot;) # read in excel files
+install.packages(&quot;skimr&quot;) # quick summary stats
+install.packages(&quot;hms&quot;) # useful for time series
+install.packages(&quot;janitor&quot;) # clean up excel imports
+
+devtools::install_github(&quot;thomasp85/patchwork&quot;) # multiple plots
+devtools::install_github(&quot;calligross/ggthemeassist&quot;) # ggplot adjust</code></pre>
+</div>
+<div id="these-libraries-are-useful-for-general-statistics-and-used-quite-often" class="section level2">
+<h2>These libraries are useful for general statistics and used quite often</h2>
+<pre class="r"><code>install.packages(&quot;car&quot;) # stats and ANOVA - essential
+install.packages(&quot;emmeans&quot;) # estimated marginal means for unbalanced designs
+install.packages(&quot;multcomView&quot;) # paired comparisons
+install.packages(&quot;Rmisc&quot;) # stats
+install.packages(&quot;Hmisc&quot;) # stats
+
+install.packages(&quot;broom&quot;) # output models cleanly
+install.packages(&quot;GGally&quot;) # special ggplot graphs
+install.packages(&quot;corrplot&quot;) # correlation plot matricies
+install.packages(&quot;gvlma&quot;) # regressions and assumptions</code></pre>
+</div>
+<div id="these-are-specialized-libraries-that-i-often-use" class="section level2">
+<h2>These are specialized libraries that I often use</h2>
+<pre class="r"><code>install.packages(&quot;akima&quot;) # inputing new values
+install.packages(&quot;survminer&quot;) # survival analysis
+install.packages(&quot;survival&quot;) # survival analysis
+install.packages(&quot;styler&quot;) # style your code - nice
+install.packages(&quot;plotly&quot;) # cool ggplot things
+install.packages(&quot;colorRamps&quot;)
+
+
+install.packages(&quot;pwr&quot;) # power analysis
+
+install.packages(&quot;vegan&quot;) # PCA and other sorts of multidimensional
+install.packages(&quot;factoextra&quot;)
+
+# mixed models
+install.packages(&quot;lmerTest&quot;)
+install.packages(&quot;blme&quot;) </code></pre>
+</div>
+<div id="finally-here-are-some-lesser-used-pacakges" class="section level2">
+<h2>Finally here are some lesser used pacakges</h2>
+<pre class="r"><code># these are special that you likely will not use 
+# devtools::install_github(&quot;seasmith/AlignAssign&quot;)
+# install.packages(&quot;data.table&quot;)
+# install.packages(&quot;RMySQL&quot;) # access MySQLserver
+# install.packages(&quot;xts&quot;)  # not used
+# install.packages(&quot;rLakeAnalyzer&quot;) # used for the lake analyzer scripts
+# install.packages(&quot;LakeMetabolizer&quot;)
+# install.packages(&quot;zoo&quot;)</code></pre>
+</div>
+<div id="to-get-the-libraires-running---some-need-to-only-be-run-one-time" class="section level2">
+<h2>To get the libraires running - some need to only be run one time</h2>
+<pre class="r"><code># Run Once and in Addins ----
+library(styler)
+library(ggThemeAssist)</code></pre>
+</div>
+<div id="other-libraries-i-use-each-and-ever-time" class="section level2">
+<h2>Other libraries I use each and ever time</h2>
+<pre class="r"><code># Load in all scripts ---
+library(tidyverse)  </code></pre>
+<pre><code>## ── Attaching packages ──────────────────────────── tidyverse 1.2.1 ──</code></pre>
+<pre><code>## ✔ ggplot2 3.2.0     ✔ purrr   0.3.2
+## ✔ tibble  2.1.3     ✔ dplyr   0.8.1
+## ✔ tidyr   0.8.3     ✔ stringr 1.4.0
+## ✔ readr   1.3.1     ✔ forcats 0.4.0</code></pre>
+<pre><code>## ── Conflicts ─────────────────────────────── tidyverse_conflicts() ──
+## ✖ dplyr::filter() masks stats::filter()
+## ✖ dplyr::lag()    masks stats::lag()</code></pre>
+<pre class="r"><code>library(lubridate)  </code></pre>
+<pre><code>## 
+## Attaching package: &#39;lubridate&#39;</code></pre>
+<pre><code>## The following object is masked from &#39;package:base&#39;:
+## 
+##     date</code></pre>
+<pre class="r"><code>library(scales) </code></pre>
+<pre><code>## 
+## Attaching package: &#39;scales&#39;</code></pre>
+<pre><code>## The following object is masked from &#39;package:purrr&#39;:
+## 
+##     discard</code></pre>
+<pre><code>## The following object is masked from &#39;package:readr&#39;:
+## 
+##     col_factor</code></pre>
+<pre class="r"><code>library(readxl)
+library(skimr)</code></pre>
+<pre><code>## 
+## Attaching package: &#39;skimr&#39;</code></pre>
+<pre><code>## The following object is masked from &#39;package:stats&#39;:
+## 
+##     filter</code></pre>
+<pre class="r"><code>library(janitor)</code></pre>
+<pre><code>## 
+## Attaching package: &#39;janitor&#39;</code></pre>
+<pre><code>## The following objects are masked from &#39;package:stats&#39;:
+## 
+##     chisq.test, fisher.test</code></pre>
+<pre class="r"><code>library(patchwork)</code></pre>
+<!-- Global Site Tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-88373117-4"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments)};
+  gtag('js', new Date());
+
+  gtag('config', 'UA-88373117-4');
+</script>
+</div>
 </div>
 
 

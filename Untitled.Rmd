@@ -1,0 +1,7 @@
+---
+title: "Reading files"
+author: "Bill Perry"
+date: "6/26/2019"
+output: html_document
+---
+

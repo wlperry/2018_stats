@@ -10,97 +10,26 @@ output:
    number_sections:  FALSE
    
 ---
-## Create Directories     
-So lets create a project with all of the subdirectories on your computer. Create a folder somewhere - I usually have the following format:      
-
-1. r_projects        
-
-    * 2018_stats      
-    
-        + archive      
-        + data     
-        + documents  
-        + scripts   
-        + figures   
-        + output   
-         
-
-##Create Project     
-
-Now click - ```File - New Project``` and create a project called 2018_stats in your R Projects Folder. This is what you will open to start working on the project and then you can work with scripts in there.      
-
-Try doing this based on what we did last week.    
-Remember to creat the sub directories manually in the *`files pane`*     
-
-> scripts   
-> data    
-> documents     
-> figures    
-> final_data   
-
-
-
-## Download Data      
-
-I have placed example data files below. You can also access the iris dataframe from within R using the code ```iris.df <- iris``` in your R script. You should download these files and put them in the data directory of your project.      
-
-[iris.csv](https://wlperry.github.io/2018_stats/data/iris.csv)     
- 
-[iris_excel.xlsx](https://wlperry.github.io/2018_stats/data/iris_excel.xlsx)    
-
-R script we might get through in class
-[GGplot R Script](https://wlperry.github.io/2018_stats/02_ggplot_script.R)    
-
-## Create R Script       
-
-Now to create the R Script that we will work with. Click ```File - New File - R Script```. This will open a file and you need to save it into the ```Scripts``` directory.      
-Click ```File - Save As``` and name the file what you want and save it in your scripts folder. What will you name the file?      
-
-Now is where the fun begins.
-
-```{r, message=FALSE, warning=FALSE}
+## Load Libraries    
+```{r}
 # load the libraries each time you restart R
 library(tidyverse)
 library(lubridate)
 library(readxl)
 library(scales)
 library(skimr)
+library(janitor)
 library(patchwork)
-
-# install.packages("devtools")
-# devtools::install_github("thomasp85/patchwork")
-
-# read in the csv file
-# note here we are using relative file paths to find the file
-# try hitting "" and then tab inside of the "" - this will bring up choices
-iris.df <- read_csv("data/iris.csv")
-
-#'Lets read in the iris excel file
-#'The only thing that you might need to do is specify the sheet if you use 
-#'multiple sheets
-#'
-
-iris_excel.df <- read_excel("data/iris_excel.xlsx", sheet="iris_excel")	
-# if there is only one sheet - no worries
-
-
 ```
 
 
-##View Data     
-Look at the data with glimpse
-
-```{r}
-glimpse(iris.df)
+## Read in the file
+```{r 03_read_data}
+iris.df <- read_csv("data/iris.csv", guess_max = 10000)
 ```
 
-Look at the top or bottle of the data
-```{r}
-head(iris.df)
-# tail(iris.df)
-```
 
-##Plot data       
+## Plot data       
 So below I have added in data=, y= and x= but they are not really necessary
 ```{r}
 ggplot(data=iris.df, aes(x=Petal.Length, y=Petal.Width)) +	
@@ -125,7 +54,7 @@ ggplot(data=iris.df) +
   geom_point(aes(x=Petal.Length, y=Petal.Width))	
 ```
 
-##Colors of points      
+## Colors of points      
 Note in the above graph all of the points are black although we know there are three species. We can do two things with this. We can add a color to the graph
 
 ```{r}
@@ -141,7 +70,7 @@ ggplot(data=iris.df, aes(x=Petal.Length, y=Petal.Width, color=Species)) +
 
 ```
 
-##Size of points   
+## ize of points   
 
 We could also just make the point sizes all just larger by entering the size parameter outside of the aesthetics parentheses.
 ```{r}
@@ -161,7 +90,7 @@ ggplot(data=iris.df, aes(x=Petal.Length, y=Petal.Width, color=Species)) +
 
 
 
-##Shapes of Points    
+## Shapes of Points    
 We could also map the type of point shape to the species   
 
 ```{r}
@@ -219,7 +148,7 @@ ggplot(data=iris.df, aes(x=Petal.Length, y=Petal.Width, shape=Species, color=Spe
   # theme(plot.title = element_text(hjust = 0.5))
 ```
 
-##Time series plots    
+## Time series plots    
 Now its time to work with data like we usually use in data on buoys and sensors - time series plots. These can be a bit trickier but tidyverse and the scales package come into their own now.
 ###Read in the data
 ```{r}
@@ -230,13 +159,13 @@ streams.df <- read_csv("data/streams_q_gage_no3.csv", guess_max = 10000)
 glimpse(streams.df)
 ```
 
-##Basic time series plot
+## Basic time series plot
 ```{r}
 ggplot(streams.df, aes(datetime, no3_mgl, color=site)) +
   geom_point()
 ```
 
-##Scales - time series
+## Scales - time series
 ```{r}
 ggplot(streams.df, aes(datetime, no3_mgl, color=site)) +
   geom_point() +
@@ -247,7 +176,7 @@ ggplot(streams.df, aes(datetime, no3_mgl, color=site)) +
 ```
 
 
-##Themes
+## Themes
 ```{r before last}
 ggplot(streams.df, aes(datetime, no3_mgl, color=site)) +
   geom_point() +
@@ -258,7 +187,7 @@ ggplot(streams.df, aes(datetime, no3_mgl, color=site)) +
   theme_bw()
 ```
 
-##Theme - adjust text
+## Theme - adjust text
 ```{r last code}
 ggplot(streams.df, aes(datetime, no3_mgl, color=site)) +
   geom_point() +
@@ -275,7 +204,7 @@ ggplot(streams.df, aes(datetime, no3_mgl, color=site)) +
 ```
 
 
-##Final time series plot
+## Final time series plot
 So lets make all the changes to the graph that we might want to do
 
 ```{r}

@@ -1,0 +1,127 @@
+---
+title: "Reading files"
+author: "Bill Perry"
+date: "6/26/2019"
+output: html_document
+---
+## Create Directories     
+So lets create a project with all of the subdirectories on your computer. Create a folder somewhere - I usually have the following format:     
+(this can also be done in RStudio or in your computer outside of RStudio)   
+
+1. r_projects        
+
+    * 2018_stats      
+    
+        + archive      
+        + data     
+        + documents  
+        + scripts   
+        + figures   
+        + output   
+         
+
+## Create Project     
+
+Now click - ```File - New Project``` and create a project called 2018_stats in your R Projects Folder. This is what you will open to start working on the project and then you can work with scripts in there.      
+
+Try doing this based on what we did last week.    
+Remember to create the sub directories manually in the *`files pane`* if you did not do it on your computer first        
+
+> scripts   
+> data    
+> documents     
+> figures    
+> final_data   
+
+
+
+## Download Data      
+
+I have placed example data files below. You can also access the iris dataframe from within R using the code ```iris.df <- iris``` in your R script. You should download these files and put them in the data directory of your project.      
+
+[iris.csv](https://wlperry.github.io/2018_stats/data/iris.csv)     
+ 
+[iris_excel.xlsx](https://wlperry.github.io/2018_stats/data/iris_excel.xlsx)    
+
+## Create R Script          
+
+Now to create the R Script that we will work with. Click ```File - New File - R Script```. This will open a file and you need to save it into the ```Scripts``` directory.      
+Click ```File - Save As``` and name the file what you want and save it in your scripts folder. What will you name the file?      
+
+Now is where the fun begins.
+
+```{r 03_Load_ibraries, message=FALSE, warning=FALSE}
+# Install packages if you did not do this before
+# install.packages("devtools")
+# install.packages("tidyverse") # dplyr and piping and ggplot etc
+# install.packages("lubridate") # dates and times
+# install.packages("scales") # scales on ggplot ases
+# install.packages("readxl") # read in excel files
+# install.packages("skimr") # quick summary stats
+# install.packages("janitor") # clean up excel imports
+# devtools::install_github("thomasp85/patchwork")
+
+# load the libraries each time you restart R
+library(tidyverse)
+library(lubridate)
+library(readxl)
+library(scales)
+library(skimr)
+library(janitor)
+library(patchwork)
+```
+
+
+```{r 03_read_csv, message=FALSE, warning=FALSE}
+# read in the csv file
+# note here we are using relative file paths to find the file
+# try hitting "" and then tab inside of the "" - this will bring up choices
+iris.df <- read_csv("data/iris.csv")
+```
+
+
+```{r 03_read_excel, message=FALSE, warning=FALSE}
+#'Lets read in the iris excel file
+#'The only thing that you might need to do is specify the sheet if you use 
+#'multiple sheets
+#'
+
+iris_excel.df <- read_excel("data/iris_excel.xlsx", sheet="iris_excel")	
+# if there is only one sheet you dont need to specify
+```
+
+
+## View Data     
+Look at the data with glimpse
+```{r, 03_glimpse}
+glimpse(iris.df)
+```
+
+Look at the top or bottle of the data
+```{r, 03_head}
+head(iris.df)
+# tail(iris.df)
+```
+
+## So there can be special cases when you are importing data.    
+1. The main issue is if there is missing data at the start of the file, read will get confused sometimes. To fix this we can use the guess_max statmement   
+```{r 03_guess_max}
+iris.df <- read_csv("data/iris.csv", guess_max = 10000)
+```
+
+
+
+
+
+
+
+
+<!-- Global Site Tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-88373117-4"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments)};
+  gtag('js', new Date());
+
+  gtag('config', 'UA-88373117-4');
+</script>

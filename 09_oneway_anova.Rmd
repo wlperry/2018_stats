@@ -313,7 +313,7 @@ lsm = emmeans(expression.model.aov,
 
 ### Means sharing a letter in .group are not significantly different
 #Note that this requires multcompView
-cld(lsm, 
+multcomp::cld(lsm,
     alpha=.05,
     Letters=letters)
 ```
