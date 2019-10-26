@@ -1,0 +1,441 @@
+---
+title: "Data Modification"
+author: "Bill Perry"
+date: "2018/03/14"
+output:
+  html_document:
+    toc: true
+    toc_float: true
+---
+## Correlation and Regression
+
+
+##Load libraries
+We will read in the main files and load the libraries as we have worked with so far.   
+
+```{r, message=FALSE, warning=FALSE}
+# One new package for summary stats
+# install.packages("broom")
+# install.packages("GGally")
+# install.packages("car")
+# install.packages("gvlma")
+# install.packages("corrplot")
+# install.packages("gvlma")
+
+# load the libraries each time you restart R
+library(tidyverse)
+library(readxl)
+library(lubridate)
+library(scales)
+library(skimr)
+library(janitor)
+library(patchwork)
+# library(reshape2)
+library(broom)
+library(GGally)
+library(corrplot)
+library(car)
+library(gvlma)
+```
+
+
+```{r}
+# read in the file
+iris.df <- read_excel("data/iris_excel.xlsx") %>%
+  clean_names() %>%
+  remove_empty(c("rows", "cols")) 
+
+glimpse(iris.df)
+
+```
+
+##An excellent description of the stats for AOV and regression is here:  
+https://www.zoology.ubc.ca/~schluter/R/fit-model/
+
+##Summary Statistics for the better look
+##So this is a lot different than thinking about data from excel    
+Lets try to do the summary stats on the data now and see how it differs
+```{r}
+# the data you want to look at
+
+skim(iris.df)
+
+```
+   
+## Look at the relationships the hard way
+```{r}
+
+iris.df %>% ggplot(aes(x=species, y=petal_width )) + geom_boxplot()
+
+```
+
+  
+   
+
+## Long to Wide format
+```{r}
+# this will add an index to the dataframe so you know what individual is which
+iris_long.df <- iris.df %>% 
+  # mutate(sample = row_number()) %>% 
+  gather(part, measure, -species)
+
+```
+
+
+
+## Outliers
+
+```{r}
+# Box Plots of data
+iris_long.df %>% 
+  ggplot( aes(x = part, y = measure, color = species, fill=species))+
+  geom_boxplot(alpha=0.3) 
+```
+
+
+## Test for normality of data and using the broom package     
+So I think this is premature but some people like to test the normality of the data but really you should be assessing the normality of the residuals. But here it goes...
+
+```{r}
+# turn off scientific notaton
+options(scipen = 999)
+# to turn back on 
+#options(scipen = 0)
+
+# Test for normality of each group and store in shapirowilktests
+# This uses the broom package to get clean output of the test 
+iris_long.df %>% group_by(species, part) %>% do(tidy(shapiro.test(.$measure)))
+
+#You can do this on all variables faster with if there was only one grouping
+# tapply(iris_long.df$measure, iris_long.df$species, shapiro.test)
+```  
+
+
+
+
+## Correlations Plots    
+This info is from:     
+http://stackoverflow.com/questions/29697009/correlation-matrix-plot-with-ggplot2      
+and    
+https://www.r-bloggers.com/plot-matrix-with-the-r-package-ggally/     
+and   
+http://ggobi.github.io/ggally/#canonical_correlation_analysis     
+```{r message=TRUE, warning=TRUE}
+iris.df %>% select(sepal_length, sepal_width, petal_length, petal_width) %>%
+  ggpairs()
+```
+
+
+##Look at the correlation matrix
+```{r}
+# correlation matrix of the data with only the numeric data in a dataframe
+# the old way - the same really
+# cor(setosa.df[,1:4], method = "pearson") # , method = c("pearson", "kendall", "spearman")
+# need to only have numeric varaibles
+iris.df %>% select(-species) %>% cor() 
+
+```
+
+
+# Correlation test
+```{r}
+petals.cor <- cor.test(iris.df$petal_length, iris.df$petal_width)
+
+# can see by calling model
+petals.cor
+
+```
+
+```{r}
+# other way
+cor.test(~ petal_length + petal_width, iris.df)
+
+```
+
+
+```{r}
+str(petals.cor)
+```
+
+
+```{r}
+# You can extract values from the cor.test() object like this:
+
+petals.cor$estimate
+
+petals.cor$p.value
+```
+
+```{r}
+# This calculates the correlation coefficient and the degrees of freedom
+iris.df %>% summarize(petal_cor = cor.test(petal_length, petal_width)$estimate,
+                   nuts_df = cor.test(petal_length, petal_width)$parameter,
+                   nuts.pvalue = cor.test(petal_length, petal_width)$p.value)
+```
+
+```{r}
+iris.df %>%  do(tidy(cor.test(.$petal_length, .$petal_width))) 
+# can be done with grouping variables as well
+```
+
+
+
+
+
+##Regressions
+
+###Read in files
+```{r}
+stds.df <- read_excel("data/standards.xlsx")
+
+glimpse(stds.df)
+```
+
+###Stds long
+```{r}
+sts_long.df <- stds.df %>%
+  gather(analyte, abs, -replicate, - std)
+```
+
+
+###Linear Regression  
+Linear regression models    
+```{r}
+# Fit our regression model
+# regression formula and dataframte
+
+drp.model <- lm(data=stds.df, drp ~ std) 
+
+# Summarize and print the results
+summary(drp.model) # show regression coefficients table
+
+```
+
+###AOV table of regression
+```{r}
+anova(drp.model)
+
+```
+
+```{r}
+# # # # # # # # # # # # # # # # # # 
+# TYPE II SUM OF SQUARES
+#
+#
+# # # # # # # # # # # # # # # # # # 
+Anova(drp.model, type="II")
+```
+
+```{r}
+# # # # # # # # # # # # # # # # # # 
+# TYPE III SUM OF SQUARES
+#
+## # # # # # # # # # # # # # # # # # 
+Anova(drp.model, type="III")
+# NOTE THERE IS NO DIFFERENCE
+
+```
+
+###Plot of the Regression {#simple_regplot}
+```{r}
+plot(data=stds.df, drp ~ std, main="Regression Plot")
+abline(drp.model, col="red")
+```
+
+###Regression plot with GGPLOT which is a bit nicer in my opinion {#ggplot_regplot}
+```{r}
+ggplot(stds.df, aes(x = std, y = drp)) + 
+  geom_smooth(method = "lm") +
+  geom_point()
+```
+
+###We can use this to get more information about the model fit
+```{r}
+# Confidence intervals for the sepal model
+confint(drp.model)
+```
+
+##Linear Regresson Assumptions  
+Ordinary least squares regression relies on several assumptions   
+1. residuals are normally distributed and homoscedastic   
+2. errors are independent    
+3. relationships are linear     
+Investigate these assumptions visually by plotting your model:  
+
+###Histogram of residuals
+```{r}
+# histogram of residuals
+hist(residuals(drp.model))
+```
+
+###Diagnostic Plots
+```{r}
+par(mar = c(4, 4, 2, 2), mfrow = c(1, 2)) 
+plot(drp.model, which = c(1, 2)) # "which" argument optional
+```
+
+
+###Non‐constant Error Variance or Homoscedasticity 
+```{r}
+# Evaluate homoscedasticity
+# non-constant error variance test
+ncvTest(drp.model)
+```
+
+###Test for normality of residuals      
+to confirm the qqplot  
+```{r}
+#Test for normality of residuals
+shapiro.test(drp.model$res)
+
+```  
+   
+### Save residuals for further analyses 
+```{r}
+# # now to put the residuals next to the data and make sure that NAs are included
+# Not sure why it has an error but it works.
+stds.df$residuals[!is.na(stds.df$std)]<-residuals(lm(data=stds.df, drp ~ std, na.action=na.omit))
+
+head(stds.df)
+```
+  
+
+###Now to add in the predicted values    
+you could also do this with a formula from the output of the model  
+```{r}
+# this produces the fitted values for the model
+
+fitted(drp.model)
+```
+
+
+###Store fitted values in dataframe 
+```{r}
+# now to see a plot of fitted and observed-----
+stds.df$fitted[!is.na(stds.df$std)]<-fitted(lm(data=stds.df, drp ~ std, na.action=na.omit))
+
+head(stds.df)
+
+ggplot(stds.df)  +
+    geom_point(aes(x = std, y = drp), color="blue")+
+     geom_point(aes(x = std, y = fitted), color="red")+
+    geom_line(aes(x = std, y = fitted), color="red")
+```
+    
+##Other packages that do similiar things maybe better.       
+    
+###The gvlma package can do a lot of this automatically {#gvlma}
+```{r}
+ #install.packages("gvlma")
+# library(gvlma)
+
+# Global test of model assumptions
+gvmodel <- gvlma(drp.model)
+summary(gvmodel)
+```    
+
+
+  
+  
+  
+  
+##Advanced    
+This is all secondary and more advanced items that you may or may not wish to deal with.  
+   
+   
+### We can also look to see what is in the model that is stored as Values   
+ 
+```{r}
+class(drp.model)
+names(drp.model)
+methods(class = class(drp.model))[1:9]
+```
+
+
+
+The code above came from    
+http://tutorials.iq.harvard.edu/R/Rstatistics/Rstatistics.html    
+there are a lot of good examples of comparing models and a lot more about regression not included here.
+
+###Different code for a QQPlot for normality
+
+```{r}
+qqPlot(drp.model, main="QQ Plot") #qq plot for studentized resid
+```
+
+
+###leverage plots  
+```{r}
+leveragePlots(drp.model) # leverage plots
+```
+
+###Assess the role of outliers 
+
+```{r}
+# Assessing Outliers
+outlierTest(drp.model) # Bonferonni p-value for most extreme obs
+
+```
+
+###Examine the influence plot using Cook's Distance
+```{r}
+# Influence Plot
+influencePlot(drp.model, id.method="identify", main="Influence Plot", sub="Circle
+size is proportial to Cook's Distance" )
+
+```
+
+
+
+   
+###Plot studentized residuals vs. fitted values  
+  
+```{r}
+# plot studentized residuals vs. fitted values
+spreadLevelPlot(drp.model)
+```
+  
+Non‐independence of Errors  
+```{r}
+# Test for Autocorrelated Errors
+durbinWatsonTest(drp.model)
+```
+
+
+
+
+
+
+###STANDARDIZED REGRESSION - CONVERTED TO Z SCORES
+
+```{r}
+# # Regression analyses, standardized
+drp_z.model <- lm(scale(stds.df$drp) ~ scale(stds.df$std))
+summary(drp_z.model)
+
+# # The function fitted returns predicted scores whereas the function resid returns residuals
+# # THIS IS HOW TO SAVE THE RESIDUALS INTO THE VARIABLE E FOR EROR
+# ex$e <- resid(modelweight_lenght.z)
+```
+
+###Confidence intervals of the standardized regression
+```{r}
+confint(drp_z.model)
+```
+
+
+
+
+
+
+   
+
+<!-- Global Site Tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-88373117-4"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments)};
+  gtag('js', new Date());
+
+  gtag('config', 'UA-88373117-4');
+</script>

@@ -1,0 +1,233 @@
+---
+title: "Data Modification"
+author: "Bill Perry"
+date: "2018/03/14"
+output:
+  html_document:
+    toc: true
+    toc_float: true
+---
+## Data Modification and cleaning
+So the pattern of this set of code so far has been how to look at the data visually and how it looks and to see outliers.  The next goal is to be able to clean the data or remove, reoranize or reformat the data and add new transformed varaibles.     
+
+
+##Load libraries
+We will read in the main files and load the libraries as we have worked with so far.   
+
+```{r, message=FALSE, warning=FALSE}
+# One new package for summary stats
+#install.packages("psych")
+
+# load the libraries each time you restart R
+library(tidyverse)
+library(lubridate)
+library(scales)
+library(skimr)
+library(janitor)
+library(patchwork)
+library(readxl)
+
+# read in the file
+mc.df <- read_excel("data/mc.xlsx")
+smc.df <- read_excel("data/smc.xlsx")
+
+glimpse(mc.df)
+```
+
+
+##Joining dataframes together
+So lets say we have these two dataframes and we want to work with them together - how do we do this.
+We can bind the two dataframes together as long as they have the same column names and same column numbers. This will append a dataframe to the other. Now when we do code we can work with it all at once.      
+
+We can also separate them out later   
+```{r}
+mc_smc.df <- rbind(mc.df, smc.df)
+head(mc_smc.df)
+```
+
+
+##The pipe
+So lets start thinking about how to string a lot of commands together. Before this we have assigned items to a name or environmental varaible with ```<-``` bu now what we want to do is sort of the opposite.  We want to take an object or output of an object and pass it to the right to do new things with the output. We do this using the pipe command ```%>%```. This takes what is on the left and passes it to the right.    
+
+<br>    
+
+
+##Mutate
+So lets say in this dataframe we wanted to calculate the Dry Weight of a sample by subracting the Tare weight from Dry Weight    
+
+```{r}
+mc_smc.df <- mc_smc.df %>%
+  mutate(dry_wt_g = dry_105c_g - tare_g)
+```
+
+So here we made a new column and its all set. Lets say we wanted to calculate the Dry Wt per liter
+```{r}
+mc_smc.df <- mc_smc.df %>%
+  mutate(dry_wt_g_l = dry_wt_g/volume_filtered_l)
+```
+
+So that has done a transformation on two separate variables and would take a while to do one by one. We can also link the mutations together with commas and it will do the same thing above and overwrite the variables again
+```{r}
+mc_smc.df <- mc_smc.df %>%
+  mutate(
+        dry_wt_g = dry_105c_g - tare_g,
+        dry_wt_g_l = dry_wt_g/volume_filtered_l
+       )
+```
+
+## Date Times
+So if you look at the data you will see that datetieme is a character variable and not a date time. We can use the same method above to convert that.    
+
+We will use the lubridate package to do this...
+```{r}
+# you can make dates and time using lubridate
+# This would be the traditional way and maybe a bit slower.
+# mc.df$datetime <- mdy_hm(mc.df$datetime)
+
+# There is a way we can change many varaibles at a time
+mc_smc.df <- mc_smc.df %>% 
+  mutate(
+          datetime = mdy_hm(datetime)
+  )
+
+```
+
+##Modifying dates
+So we can now work with this datetime column really easily and pull out parts of it to work with further
+```{r}
+mc_smc.df <- mc_smc.df %>% 
+  mutate(
+         year = year(datetime),
+         month = month(datetime),
+         day = day(datetime),
+         julian_day = yday(datetime)
+  )
+```
+
+
+##Pipes and ggplot  
+Lets try this with a plot.  What happens here is it takes the dataframe and then passes it to the ggplot commands. So the dataframe is removed from the ggplot commands. I will show you why in a second that this is really cool.
+
+```{r}
+mc_smc.df %>% 
+  ggplot(aes(x=julian_day, y=w_temp_c, color=site)) +
+  geom_point() 
+```
+
+
+
+
+# Filtering data   
+What if you wanted to work with only one species for each of the charactes. This will select only those individuals that are setosa. Note that in this you need *`= = `*. 
+```{r}
+mc_smc_2015.df <- mc_smc.df %>% filter(year==2015)
+
+head(mc_smc_2015.df)
+```
+
+<br>
+
+##Boolean search terms of interest    
+```{r table2, eval=FALSE, message=FALSE, include=FALSE, results='asis', warnings=FALSE}
+# tabl <- "  # create a simple table # should be a dataframe to make it with kable
+# | Search                    | code        |  
+# |---------------------------|-------------|
+# | greater than              |   `>`       |
+# | greater than or equal to  |   `>=`      |  
+# | less than                 |   `<`       |
+# | less than or equal to     |   `<=`      | 
+# | is NA                     |   is.na     |
+# | is not NA                 |   !is.na    |
+# | is not equal to           |   !=        |
+# | is not x                  |   !x        |
+# | x | y                     |	x OR y      |  
+# | x & y                     |	x AND y     |  
+
+
+
+
+# "
+# cat(tabl) # output the table in a format good for HTML/PDF/docx conversion
+```
+<br>
+
+```{r}
+mc_2015.df <- mc_smc.df %>% filter(year==2015 & site=="mc") 
+
+head(mc_smc_2015.df)
+```
+
+
+
+
+```{r}
+mc_smc.df %>% filter(year==2015 & site=="mc") %>%
+  ggplot(aes(x=julian_day, y=dry_wt_g_l, color=site)) +
+  geom_point() 
+```
+
+
+##Selecting variables
+What if you wanted to select only certain variables to work with? Now lets use two ways to do the same thing.....   
+
+```{r}
+mc_smc_drywt.df <- mc_smc.df %>% 
+  select(datetime, julian_day, dry_wt_g_l)
+
+```
+
+
+Lets assume you wanted to select all dry weight and volume filtered  you can use things like: 
+````starts_with(), ends_with(), contains(),  everything()```` in various combinations such as
+
+```{r}
+mc_smc_drywt.df <- mc_smc.df %>% 
+  select(datetime, julian_day, volume_filtered_l, starts_with("dry"))
+```
+
+
+
+##What if you wanted see all NA values
+```{r}
+mc_smc.df %>% filter(is.na(dry_wt_g_l))
+```
+
+##What if you wanted see all NA values
+```{r}
+mc_smc.df %>% filter(!is.na(dry_wt_g_l))
+```
+
+
+
+
+
+
+
+
+
+##Clean data     
+So lets finally use the *janitor* pacakge to clean up this data. This will make working with data sets from other users a bit easier to work with quickly rather than reformatting all the values manually.    
+<br>    
+Note that this will get rid of empty columns and rows if from an excel sheet and will clean up the variable names.   
+
+```{r}
+iris.df <- iris %>%
+  clean_names() %>%
+  remove_empty(c("rows", "cols")) 
+
+```
+
+
+
+   
+   
+
+<!-- Global Site Tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-88373117-4"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments)};
+  gtag('js', new Date());
+
+  gtag('config', 'UA-88373117-4');
+</script>

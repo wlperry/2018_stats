@@ -365,22 +365,22 @@ div.tocify {
 
 <h1 class="title toc-ignore">R Graphs, Data and Stats</h1>
 <h4 class="author">Bill Perry</h4>
-<h4 class="date">2018/03/14</h4>
+<h4 class="date">2019/09/30</h4>
 
 </div>
 
 
-<div id="r-and-tidyverse" class="section level2">
-<h2>R and Tidyverse</h2>
-<p>I am in the process of developing a website and course for both undergraduates and graduate students for cleaning and analysis of data. Many of the examples here will be focussed on aquatic sciences or environmental monitoring data. I have found graphing the data first and then working to clean the data along the lines of “<a href="HTTP://r4ds.had.co.nz/">R for Data Science</a>” by Garrett Grolemund and Hadley Wickham to be one of the greatest approaches.</p>
+<div id="r-and-tidyverse" class="section level1">
+<h1>R and Tidyverse</h1>
+<p>I am in the process of developing a website and course for cleaning and analysis of data. Many of the examples here will be focussed on aquatic sciences or environmental monitoring data. I have found graphing the data first and then working to clean the data along the lines of “<a href="HTTP://r4ds.had.co.nz/">R for Data Science</a>” by Garrett Grolemund and Hadley Wickham to be one of the greatest approaches and will follow it in spirit here wiht a focus on aquatic sciences.</p>
 <p>This is also a selfish way to organize my code and snippets in a central place that I can find them and make is available to others that are struggling with R and dataframes.</p>
+<p>This will also contain much of the material presented at GLEON 21 in Canada 2019.</p>
 <div id="this-file-has-links-to-many-of-the-example-dataframes-that-i-will-use." class="section level3">
 <h3>This file has links to many of the example dataframes that I will use.</h3>
 <p><a href="example_data.html">Example data</a></p>
 </div>
-</div>
 <div id="basics-of-projects-and-data" class="section level2">
-<h2><a href="01_intro.html">1. Basics of projects and data</a></h2>
+<h2><a href="000_intro.html">Basics of projects and data</a></h2>
 <p>Before working on a project, I have found it is useful to ponder what the data will look like, what you want the final dataframe to look like and what you want to do with it. So, first we will go over basics of organization.<br />
 - folders and structure<br />
 - file formats<br />
@@ -388,65 +388,82 @@ div.tocify {
 - output formats<br />
 - installing R and R studio - basics of the R interface - R projects - installing libraries</p>
 </div>
-<div id="libraries" class="section level2">
-<h2><a href="02_libraries.html">2. Libraries</a></h2>
-<p>The first thing to do is to load libraries.<br />
-These are the addons to R and RStudio that make everything easier. I have included a file with all of the packages that I typically use. Sometimes when updating R and RStudio, you need to reinstall libraires. This file will make life easier.</p>
+<div id="installing-packages-and-loading-libraries" class="section level2">
+<h2><a href="001_basics_and_install_packages.html">Installing Packages and Loading Libraries</a></h2>
+<p>This page contains many of the packages I use with the installation codes and how to load the libraries.</p>
 </div>
-<div id="reading-files" class="section level2">
-<h2><a href="03_importdata.html">3. Reading files</a></h2>
-<p>Introduction into reading in excel and csv files. Understanding the basics of importing and exporting data is key and then I go from there.<br />
-- read in csv file<br />
-- read in excel file<br />
-- some tricks - guess_max = 10000</p>
+<div id="reading-in-files-and-plotting" class="section level2">
+<h2><a href="01_reading_in_data_and_graphing.html">1. Reading in files and plotting</a></h2>
+<p>The intial steps to using tidyverse is to use readr to load the dataframes. Then the next step is to beign graphing the data. This page does over most of the basics of plotting.</p>
 </div>
-<div id="ggplot-basics" class="section level2">
-<h2><a href="03_ggplot.html">4.GGPLOT Basics</a></h2>
+<div id="advanced-plotting" class="section level2">
+<h2><a href="02_Finalized_Plotting.html">2. Advanced Plotting</a></h2>
+<p>This page goes over some of the more advanced plotting command and tricks for GGPlot.</p>
+</div>
+<div id="plot-layout-with-patchworkd" class="section level2">
+<h2><a href="02_5_Patchwork_plotting.html">2.5 Plot layout with Patchworkd</a></h2>
+<p>This page covers how to do adavnce plot layout with Patchwork.</p>
+</div>
+<div id="statistical-plots-for-ggplot" class="section level2">
+<h2><a href="03_Means_and_standarderror_plotting.html">3.Statistical Plots for GGPlot</a></h2>
 <p>How to make simple graphs and the theory of layered graphics - simple graphs<br />
 - geometries<br />
 - colors and mapping<br />
 - layers</p>
 </div>
-<div id="ggplot-stats-plots" class="section level2">
-<h2><a href="04_ggplot_stats.html">5. GGPLOT stats plots</a></h2>
-<p>This will introduce you to the basic data exploratory graphs and statistics in graphs that will make life a lot easier - box and whisker plot - histograms - mean and standard error plots - time series plots</p>
+<div id="modifing-variables-and-summarizing-data" class="section level2">
+<h2><a href="04_Modifying_variables_mutating_summarizing.html">4. Modifing variables and summarizing data</a></h2>
+<p>This page covers some of the basics for doing math and summarizing data</p>
 </div>
-<div id="dataframe-modification" class="section level2">
-<h2><a href="05_data_modification.html">6. Dataframe modification</a></h2>
-<p>This will show you how to modify the dataframe.</p>
+<div id="selecting-and-filtering-data" class="section level2">
+<h2><a href="05_Modifying_dataframes_selecting_filtering.html">5. Selecting and filtering data</a></h2>
+<p>Removing and reording columns and then filtering out certain parts of data is a critical issue in datascience.</p>
 </div>
-<div id="dataframe-wide-to-long" class="section level2">
-<h2><a href="06_dataframe_widelong.html">7. Dataframe wide to long</a></h2>
+<div id="dates-and-times-with-lubridate" class="section level2">
+<h2><a href="06_Modifying_variables_datetimes.html">6. Dates and times with lubridate</a></h2>
 <p>This will show you how to modify the dataframe from wide to long and back. Also it has how to spread and unite values…</p>
 </div>
-<div id="correlation-and-regression" class="section level2">
-<h2><a href="07_correlation_regression.html">8. Correlation and Regression</a></h2>
-<p>Correlations and Regressions. More to come but code is done.</p>
+<div id="converting-between-long-and-wide-dataframes" class="section level2">
+<h2><a href="07_Modifying_dataframe_structure_long_wid.html">7. Converting between long and wide dataframes</a></h2>
+<p>Switching between wide and long dataframe structure is critigcal for graphing and statistics.</p>
 </div>
-<div id="t-tests" class="section level2">
-<h2><a href="08_ttests.html">9. T Tests</a></h2>
-<p>T tests….</p>
+<div id="factors" class="section level2">
+<h2><a href="08_Forcates_factors.html">8. Factors</a></h2>
+<p>Modifying factor order is necessary for specialized graphing and also for statistics. This will cover how to do that.</p>
 </div>
-<div id="one-way-anova" class="section level2">
-<h2><a href="09_oneway_anova.html">10. One way ANOVA</a></h2>
-<p>One way anovas</p>
+<div id="joining-two-dataframes" class="section level2">
+<h2><a href="09_Joining_dataframes.html">9. Joining two dataframes</a></h2>
+<p>Bringing two dataframes together is often necessary and this covers some of the bascis of how to do this.</p>
 </div>
-<div id="two-way-anova" class="section level2">
-<h2><a href="10_twoway_anovas.html">11. Two way ANOVA</a></h2>
-<p>One way anovas</p>
+<div id="ifelse-and-case_when" class="section level2">
+<h2><a href="10_Falgging_andifelse_casewhen.html">10. IfElse and case_when</a></h2>
+<p>How to flag data usign ifelse and case_when. This is useful to flag data or to categorize data.</p>
 </div>
-<div id="ancova" class="section level2">
-<h2><a href="11_ancova.html">12. ANCOVA</a></h2>
-<p>Ancova and the fun and joy of interactions</p>
-<!-- Global Site Tag (gtag.js) - Google Analytics -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=UA-88373117-4"></script>
+<div id="preparing-data-for-rlakeanalyzer" class="section level2">
+<h2><a href="21_Lake_analyzer_data_prep.html">21. Preparing data for rLakeAnalyzer</a></h2>
+<p>This will cover some of the tricks for preparing data to be analyzed in rLakeAnalyzer.</p>
+</div>
+<div id="working-with-sonde-data" class="section level2">
+<h2><a href="22_Exosonde_processing.html">22. Working with sonde data</a></h2>
+<p>THis will cover how to work with sonde data and then graph that data. This data is from Lake Tanganyika and is not to be published or used without permission.</p>
+</div>
+<div id="retreiving-data-from-a-list" class="section level2">
+<h2><a href="23_Retreiving_data_from_list.html">23. Retreiving data from a list</a></h2>
+<p>This provides a neat trick on how to extract certain datetime chunks from a larger dataframe.</p>
+</div>
+<div id="lake-isopleth-plots-or-heat-plots-for-lake-depth-time-and-tempreature-or-oxygen" class="section level2">
+<h2><a href="24_lake_heatmaps.html">24. Lake isopleth plots or heat plots for lake depth time and tempreature or oxygen</a></h2>
+<p>This expands on what was presented at GLEON 18 in New Paltz, New York by GLEON graduate students. I have put that code up here for public use.</p>
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-88373117-6"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments)};
+  function gtag(){dataLayer.push(arguments);}
   gtag('js', new Date());
 
-  gtag('config', 'UA-88373117-4');
+  gtag('config', 'UA-88373117-6');
 </script>
+</div>
 </div>
 
 

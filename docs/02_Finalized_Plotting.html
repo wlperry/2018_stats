@@ -1,0 +1,721 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="Bill Perry" />
+
+
+<title>Intermediate GGPlot Stats</title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 51px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h2 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h3 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h4 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h5 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h6 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #ffffff;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Bill Perry</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="https://wlperry.github.io/index.html">Bill's Homepage</a>
+</li>
+<li>
+  <a href="https://wlperry.github.io/2018_stats/index.html">Stats and R Homepage</a>
+</li>
+<li>
+  <a href="about.html">About Bill</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">Intermediate GGPlot Stats</h1>
+<h4 class="author">Bill Perry</h4>
+<h4 class="date">2018/03/14</h4>
+
+</div>
+
+
+<p>The goal of this slide set is to show you how to make publication ready graphs and expand on what we have done in the basic plotting series. The goal of this is to use GGPlot and later on I will show you how to use patchwork which allows more flexibility in plot layout.</p>
+<div id="load-libraries" class="section level2">
+<h2>Load libraries</h2>
+<pre class="r"><code># install.packages(&quot;devtools&quot;)
+# devtools::install_github(&quot;thomasp85/patchwork&quot;)
+
+# load the libraries each time you restart R
+library(&quot;readxl&quot;) # read in excel files
+library(&quot;tidyverse&quot;) # dplyr and piping and ggplot etc
+library(&quot;lubridate&quot;) # dates and times
+library(&quot;scales&quot;) # scales on ggplot ases
+library(&quot;skimr&quot;) # quick summary stats
+library(&quot;janitor&quot;) # clean up excel imports
+library(&quot;patchwork&quot;) # multipanel graphs</code></pre>
+<p>##Read files<br />
+## Long fromat data<br />
+The key to plotting in GGPlot is to use long format data. Later on we will cover how to convert between wide and long fomat. You can look at wide fromat data and see the difference.</p>
+<pre class="r"><code># Long format data
+south_long.df &lt;- read_csv(&quot;data/south_lake_long.csv&quot;)</code></pre>
+<pre><code>## Parsed with column specification:
+## cols(
+##   permanent_id = col_double(),
+##   lake_name = col_character(),
+##   date = col_date(format = &quot;&quot;),
+##   group = col_character(),
+##   org_l = col_double(),
+##   year = col_double()
+## )</code></pre>
+<pre class="r"><code>head(south_long.df)</code></pre>
+<pre><code>## # A tibble: 6 x 6
+##   permanent_id lake_name date       group      org_l  year
+##          &lt;dbl&gt; &lt;chr&gt;     &lt;date&gt;     &lt;chr&gt;      &lt;dbl&gt; &lt;dbl&gt;
+## 1    131846593 South     1994-06-30 cladoceran  3.89  1994
+## 2    131846593 South     1994-07-27 cladoceran  6.11  1994
+## 3    131846593 South     1994-08-31 cladoceran  5.44  1994
+## 4    131846593 South     1995-06-19 cladoceran  1.26  1995
+## 5    131846593 South     1995-08-08 cladoceran  4.1   1995
+## 6    131846593 South     1995-09-13 cladoceran  2.82  1995</code></pre>
+<div id="wide-format-data" class="section level3">
+<h3>Wide format data</h3>
+<p>This is the format you typically enter data into spreadsheet is. You can use TidyR and gather or pivot_longer to convert this to the long format.</p>
+<pre class="r"><code>south_wide.df &lt;- read_csv(&quot;data/south_lake.csv&quot;)</code></pre>
+<pre><code>## Parsed with column specification:
+## cols(
+##   permanent_id = col_double(),
+##   lake_name = col_character(),
+##   date = col_date(format = &quot;&quot;),
+##   cladoceran = col_double(),
+##   copepod = col_double()
+## )</code></pre>
+<pre class="r"><code>head(south_wide.df)</code></pre>
+<pre><code>## # A tibble: 6 x 5
+##   permanent_id lake_name date       cladoceran copepod
+##          &lt;dbl&gt; &lt;chr&gt;     &lt;date&gt;          &lt;dbl&gt;   &lt;dbl&gt;
+## 1    131846593 South     1994-06-30       3.89    23.5
+## 2    131846593 South     1994-07-27       6.11    26.6
+## 3    131846593 South     1994-08-31       5.44    24.7
+## 4    131846593 South     1995-06-19       1.26    22.9
+## 5    131846593 South     1995-08-08       4.1     23.0
+## 6    131846593 South     1995-09-13       2.82    64.2</code></pre>
+</div>
+</div>
+<div id="plotting-long-format-data" class="section level1">
+<h1>Plotting long format data</h1>
+<p>When you plot data from long format data, you need to specify a grouping statement inside the aes statement like -<br />
+group = This will separate data<br />
+color = This will map a color to each group<br />
+linetype = This will map a linetype to each group<br />
+fill = This will map a fill to each group<br />
+shape = This will map a symbl shape to each group</p>
+<pre class="r"><code># Plotting long format data ------
+# notice that it plots all the data and is sort of a mess...
+# there are no groupings of cladocerans or copepods
+ggplot(south_long.df, aes(date, org_l, shape = group)) + # sometimes necessary is , group = group
+  geom_point()+
+  geom_line()</code></pre>
+<p><img src="02_Finalized_Plotting_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
+<div id="adding-color" class="section level3">
+<h3>Adding color</h3>
+<p>You can add a color = statement followed by a grouping variable and it will change colors based on the number of groups.</p>
+<pre class="r"><code># Mapping a color to data groups ----
+# If you add &quot;, color=group&quot; inside of the aes statement it will map a color to
+# each group and it is sometimes necessary to add &quot;, group = group&quot;
+ggplot(south_long.df, aes(date, org_l, color=group)) + 
+  geom_point()+
+  geom_line()</code></pre>
+<p><img src="02_Finalized_Plotting_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+<pre class="r"><code># Mapping shape, size, and linetype------
+# this also applies to shape, linestyle and sizes (you won&#39;t want to do size)
+# , shape = group
+# , linetype = group
+# , size = group
+
+ggplot(south_long.df, aes(date, org_l, color=group, shape = group)) + 
+  geom_point()+
+  geom_line()</code></pre>
+<p><img src="02_Finalized_Plotting_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
+</div>
+<div id="statistical-plots" class="section level3">
+<h3>Statistical plots</h3>
+<p>Looking at distributions of data using box and whisker plots can be very helpful this can be added as a layer to the plot</p>
+<pre class="r"><code># Now lets look at some statistical plot
+# try adding in geom_boxplot()
+
+ggplot(south_long.df, aes(group, org_l, color=group)) + 
+  geom_boxplot() +
+  geom_point() </code></pre>
+<p><img src="02_Finalized_Plotting_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
+</div>
+<div id="dodging-points" class="section level3">
+<h3>Dodging points</h3>
+<p>Notice above that the pints are overlapping and adding in a position statement to the geom_point statement can fix that</p>
+<pre class="r"><code># to fix overlying points
+ggplot(south_long.df, aes(group, org_l, color=group)) + 
+  geom_boxplot() +
+  geom_point(position= position_jitterdodge(jitter.width = 0.3))</code></pre>
+<p><img src="02_Finalized_Plotting_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
+</div>
+<div id="adding-custom-colors-shapes-fills" class="section level3">
+<h3>Adding custom colors, shapes, fills</h3>
+<p>Once you have mapped a color, fill, or shape to your groups you can add in a scale_color_manual, scale_fill_manual, or scale_shape_manual statement to adjust these proporties.</p>
+<pre class="r"><code># Final publication quality graph-----
+# now we can add axes labels and custom colors
+ggplot(south_long.df, aes(date, org_l, color=group)) + # sometimes necessary is , group = group
+  geom_point()+
+  geom_line()  +
+  scale_color_manual(name = &quot;Group&quot;, 
+                     values = c(&quot;blue&quot;, &quot;red&quot;),
+                     labels = c(&quot;Cladoceran&quot;, &quot;Copepod&quot;)) +
+  theme(axis.text.x = element_text(size=12, face=&quot;bold&quot;, angle=45, hjust=1))</code></pre>
+<p><img src="02_Finalized_Plotting_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
+</div>
+<div id="adding-custom-scales-on-the-axes" class="section level3">
+<h3>Adding custom scales on the axes</h3>
+<p>You can add in custom scales to the differnet axes. These can be scale_x(or y)_date<br />
+scale_x(or y)_datetime<br />
+scale_x(or y)_continuous<br />
+scale_x(or y)_log<br />
+etc…..</p>
+<pre class="r"><code># Final publication quality graph-----
+# now we can add axes labels and custom colors
+ggplot(south_long.df, aes(date, org_l, color=group)) + # sometimes necessary is , group = group
+  geom_point()+
+  geom_line() +
+  labs(x = &quot;Date&quot;, y = expression(bold(&quot;Animals (No. L&quot;^-1*&quot;)&quot;))) +
+  scale_x_date(date_breaks = &quot;3 month&quot;,
+               limits = as_date(c(&#39;1994-06-01&#39;, &#39;2006-12-31&#39;)),
+               labels=date_format(&quot;%Y-%m-%d&quot;), expand=c(0,0))   +
+  scale_color_manual(name = &quot;Group&quot;, 
+                     values = c(&quot;blue&quot;, &quot;red&quot;),
+                     labels = c(&quot;Cladoceran&quot;, &quot;Copepod&quot;)) +
+  theme(axis.text.x = element_text(size=12, face=&quot;bold&quot;, angle=45, hjust=1))</code></pre>
+<p><img src="02_Finalized_Plotting_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
+<p>You can also change the data breaks in a simple manner</p>
+<pre class="r"><code># Note here the labels on the X Axis are too frequent - try changing this below....
+# try 6 months, 12 months, 1 years, 52 weeks 
+ggplot(south_long.df, aes(date, org_l, color=group)) + # sometimes necessary is , group = group
+  geom_point()+
+  geom_line() +
+  labs(x = &quot;Date&quot;, y = expression(bold(&quot;Animals (No. L&quot;^-1*&quot;)&quot;))) +
+  scale_x_date(date_breaks = &quot;52 weeks&quot;,
+               limits = as_date(c(&#39;1994-06-01&#39;, &#39;2006-12-31&#39;)),
+               labels=date_format(&quot;%Y-%m-%d&quot;), expand=c(0,0)) +
+  scale_color_manual(name = &quot;Group&quot;, 
+                     values = c(&quot;blue&quot;, &quot;red&quot;),
+                     labels = c(&quot;Cladoceran&quot;, &quot;Copepod&quot;))  +
+  theme(axis.text.x = element_text(size=12, face=&quot;bold&quot;, angle=45, hjust=1))</code></pre>
+<p><img src="02_Finalized_Plotting_files/figure-html/unnamed-chunk-11-1.png" width="672" /></p>
+</div>
+<div id="adding-in-custom-axes-labels" class="section level3">
+<h3>Adding in custom axes labels</h3>
+<p>You can take axes labels to the next step with the expression statment.</p>
+<pre class="r"><code># Final publication quality graph-----
+# now we can add axes labels and custom colors
+ggplot(south_long.df, aes(date, org_l, color=group)) + # sometimes necessary is , group = group
+  geom_point()+
+  geom_line() +
+  labs(x = &quot;Date&quot;, y = expression(bold(&quot;Animals (No. L&quot;^-1*&quot;)&quot;))) +
+  scale_x_date(date_breaks = &quot;3 month&quot;,
+               limits = as_date(c(&#39;1994-06-01&#39;, &#39;2006-12-31&#39;)),
+               labels=date_format(&quot;%Y-%m-%d&quot;), expand=c(0,0))  +
+  scale_color_manual(name = &quot;Group&quot;, 
+                     values = c(&quot;blue&quot;, &quot;red&quot;),
+                     labels = c(&quot;Cladoceran&quot;, &quot;Copepod&quot;)) +
+  theme(axis.text.x = element_text(size=12, face=&quot;bold&quot;, angle=45, hjust=1)) </code></pre>
+<p><img src="02_Finalized_Plotting_files/figure-html/unnamed-chunk-12-1.png" width="672" /></p>
+</div>
+<div id="facetting-graphs" class="section level2">
+<h2>Facetting graphs</h2>
+<p>You can also break up data by facetting the data.<br />
+The use of facet_wrap and facet_grid only differ slightly<br />
+### Facet_wrap</p>
+<pre class="r"><code># Facetting graphs -----
+# So lets begin to break it up a bit more... this is a busy graph... what
+# if we wanted to see two separate graphs?
+
+# Facet wrap ---- 
+# sort of flows graphs around by a variable
+ggplot(south_long.df, aes(date, org_l, color=group)) + # sometimes necessary is , group = group
+  geom_point()+
+  geom_line() +
+  labs(x = &quot;Date&quot;, y = expression(bold(&quot;Animals (No. L&quot;^-1*&quot;)&quot;))) +
+  scale_x_date(date_breaks = &quot;12 month&quot;,
+               limits = as_date(c(&#39;1994-06-01&#39;, &#39;2006-12-31&#39;)),
+               labels=date_format(&quot;%Y-%m-%d&quot;), expand=c(0,0))  +
+  theme(axis.text.x = element_text(size=12, face=&quot;bold&quot;, angle=45, hjust=1)) +
+  scale_color_manual(name = &quot;Group&quot;, 
+                     values = c(&quot;blue&quot;, &quot;red&quot;),
+                     labels = c(&quot;Cladoceran&quot;, &quot;Copepod&quot;)) +
+  facet_wrap(~group)</code></pre>
+<p><img src="02_Finalized_Plotting_files/figure-html/unnamed-chunk-13-1.png" width="672" /></p>
+<div id="facet_grid" class="section level3">
+<h3>Facet_grid</h3>
+<pre class="r"><code># Facet_grid -----
+# lets you make a grid of one or two variables in a grid
+
+ggplot(south_long.df, aes(date, org_l, color=group)) + # sometimes necessary is , group = group
+  geom_point()+
+  geom_line() +
+  labs(x = &quot;Date&quot;, y = expression(bold(&quot;Animals (No. L&quot;^-1*&quot;)&quot;))) +
+  scale_x_date(date_breaks = &quot;12 month&quot;,
+               limits = as_date(c(&#39;1994-06-01&#39;, &#39;2006-12-31&#39;)),
+               labels=date_format(&quot;%Y-%m-%d&quot;), expand=c(0,0))  +
+  theme(axis.text.x = element_text(size=12, face=&quot;bold&quot;, angle=45, hjust=1)) +
+  scale_color_manual(name = &quot;Group&quot;, 
+                     values = c(&quot;blue&quot;, &quot;red&quot;),
+                     labels = c(&quot;Cladoceran&quot;, &quot;Copepod&quot;)) +
+  facet_grid(.~group) # rows by columns</code></pre>
+<p><img src="02_Finalized_Plotting_files/figure-html/unnamed-chunk-14-1.png" width="672" /></p>
+</div>
+<div id="facet_grid-vertical" class="section level3">
+<h3>Facet_grid vertical</h3>
+<pre class="r"><code># Facet_grid vertical ----
+ggplot(south_long.df, aes(date, org_l, color=group)) + # sometimes necessary is , group = group
+  geom_point()+
+  geom_line() +
+  labs(x = &quot;Date&quot;, y = expression(bold(&quot;Animals (No. L&quot;^-1*&quot;)&quot;))) +
+  scale_x_date(date_breaks = &quot;12 month&quot;,
+               limits = as_date(c(&#39;1994-06-01&#39;, &#39;2006-12-31&#39;)),
+               labels=date_format(&quot;%Y-%m-%d&quot;), expand=c(0,0))  +
+  theme(axis.text.x = element_text(size=12, face=&quot;bold&quot;, angle=45, hjust=1)) +
+  scale_color_manual(name = &quot;Group&quot;, 
+                     values = c(&quot;blue&quot;, &quot;red&quot;),
+                     labels = c(&quot;Cladoceran&quot;, &quot;Copepod&quot;)) +
+  facet_grid(group~.) # rows by columns</code></pre>
+<p><img src="02_Finalized_Plotting_files/figure-html/unnamed-chunk-15-1.png" width="672" /></p>
+</div>
+<div id="labeller-for-facets" class="section level3">
+<h3>Labeller for facets</h3>
+<p>You can also do custom lables and titles for each facet using labeller.</p>
+<pre class="r"><code># Relabelling facet titles -----
+# now if we wanted to relabel the graphs we can do that as well
+
+ggplot(south_long.df, aes(date, org_l, color=group)) + # sometimes necessary is , group = group
+  geom_point()+
+  geom_line() +
+  labs(x = &quot;Date&quot;, y = expression(bold(&quot;Animals (No. L&quot;^-1*&quot;)&quot;))) +
+  scale_x_date(date_breaks = &quot;12 month&quot;,
+               limits = as_date(c(&#39;1994-06-01&#39;, &#39;2006-12-31&#39;)),
+               labels=date_format(&quot;%Y-%m-%d&quot;), expand=c(0,0))  +
+  theme(axis.text.x = element_text(size=12, face=&quot;bold&quot;, angle=45, hjust=1),
+        strip.background = element_rect(fill = NA),
+        strip.text = element_text(size = 14, face = &quot;bold&quot;, hjust = 0)) +
+  scale_color_manual(name = &quot;Group&quot;, 
+                     values = c(&quot;blue&quot;, &quot;red&quot;),
+                     labels = c(&quot;Cladoceran&quot;, &quot;Copepod&quot;)) +
+  facet_grid(.~group,
+             labeller = labeller(group = c(&quot;cladoceran&quot; = &quot;a) Cladoceran&quot;,
+                                             &quot;copepod&quot; = &quot;b) Copepod&quot;))) # rows by columns</code></pre>
+<p><img src="02_Finalized_Plotting_files/figure-html/unnamed-chunk-16-1.png" width="672" /></p>
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-88373117-6"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-88373117-6');
+</script>
+</div>
+</div>
+</div>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+
+</body>
+</html>

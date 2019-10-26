@@ -8,5 +8,28 @@ output: html_document
 ## These are a collection of datasets that we will use:     
 I am in the process of putting them in Github CSV files to download in R directly
 
-[beetle.csv](https://wlperry.github.io/2018_stats/data/beetle.csv)     
-[beetle.xlsx](https://wlperry.github.io/2018_stats/data/beetle.xlsx)      
+[south_lake.csv](https://wlperry.github.io/2018_stats/data/south_lake.csv)     
+[south_lake_long.csv](https://wlperry.github.io/2018_stats/data/south_lake_long.csv) [reduced_lake_long_genus_species.csv](https://wlperry.github.io/2018_stats/data/south_lake_long.csv)    
+[mendota_temp.csv](https://wlperry.github.io/2018_stats/data/mendota_temp.csv)     
+
+## Excel Files
+[south_lake.xlsx](https://wlperry.github.io/2018_stats/data/south_lake.xlsx)      
+
+
+
+
+
+
+
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-88373117-6"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-88373117-6');
+</script>
+
+

@@ -1,0 +1,203 @@
+---
+title: "Intermediate GGPlot Stats"
+author: "Bill Perry"
+date: "2018/03/14"
+output:
+  html_document:
+    toc: true
+    toc_float: true
+---
+
+##Load libraries
+##Read files
+```{r, message=FALSE, warning=FALSE}
+
+# install.packages("devtools")
+# devtools::install_github("thomasp85/patchwork")
+
+# load the libraries each time you restart R
+library(tidyverse)
+library(lubridate)
+library(scales)
+library(skimr)
+library(patchwork)
+
+# read in the file
+iris.df <- read_csv("data/iris.csv")
+
+glimpse(iris.df)
+```
+
+##Here is the R script
+R script we might get through in class
+[GGplot 3 R Script](https://wlperry.github.io/2018_stats/03_ggplot_stats.R)    
+
+
+##Simple summary statistics     
+We can use the skimr package to get simple summary statitstics but these are often not that helpful to look at the data
+
+```{r}
+skim(iris.df)
+```
+
+##Skim_to_wide wide stats
+```{r}
+skim_to_wide(iris.df)
+```
+
+
+
+##Simple histograms
+
+```{r}
+#Hitograms with GGPLOT
+ggplot(data=iris.df, aes(iris.df$Sepal.Length)) + 
+  geom_histogram() +
+  labs (title="Sepal Length", x="Sepal Length", y="Count")
+```
+
+
+##Histogram binwiths
+```{r}
+#Hitograms with GGPLOT
+ggplot(data=iris.df, aes(iris.df$Sepal.Length)) + 
+  geom_histogram(col="blue", fill="blue", alpha=.7, binwidth = 1) +
+  labs (title="Sepal Length", x="Sepal Length", y="Count")
+```
+
+##Fccetted histograms
+```{r}
+###What if you want to look at all of the species separately
+ggplot(data=iris.df, aes(iris.df$Sepal.Length)) + 
+  geom_histogram(binwidth = .5,  col="blue", fill="blue", alpha=.7) +
+  labs (title="Sepal Length", x="Sepal Length", y="Count") + 
+  facet_wrap(~Species, scales = "free") # allows the scales to be free and you can comment this out to see what happens
+
+```
+
+##Other visualizations
+###Dot plots
+
+
+```{r}
+ggplot(data=iris.df, aes(x= Species, y=Sepal.Length)) + 
+  geom_dotplot(binwidth=0.1, col="blue", fill="blue", alpha=.7, stackdir = "center", binaxis = "y") +
+  labs (title="Sepal Length", x="Sepal Length", y="Count") 
+```
+
+###Box and Whisker
+```{r}
+# Box and Whisker plots with limits ####
+ggplot(iris.df, aes(x = Species, y = Sepal.Length))+
+  geom_boxplot() 
+```
+
+###Vioin plots
+```{r}
+ggplot(data=iris.df, aes(x= Species, y=Sepal.Length)) + 
+  geom_violin(col="blue", fill="blue", alpha=.7, stackdir = "center", binaxis = "y") +
+  labs (title="Sepal Length")+
+  labs (x="Sepal Length", y="Count") 
+```
+
+###Saving plots 
+```{r}
+
+violin.plot <- ggplot(data=iris.df, aes(x= Species, y=Sepal.Length)) + 
+  geom_violin(col="blue", fill="blue", alpha=.7) +
+  labs (title="Sepal Length")+
+  labs (x="Sepal Length", y="Count") 
+violin.plot
+
+#Save the file with sizes
+ggsave("figures/violin.plot.tiff",plot=violin.plot, width=6, height=6, dpi = 300)
+
+
+
+```
+
+##Statistical plots     
+So now lets try to do a few plots that are useful for publication. the first will be a mean and standard error plot and we will try this with multiple data in wide format
+
+##Plotting multiple variables - wide format
+First lets just plot Species versus Sepal Length.
+```{r}
+ggplot(iris.df, aes(x=Species)) +
+  geom_point(aes(y=Sepal.Length))
+```
+
+Now lets add Sepal.Width
+```{r}
+ggplot(iris.df, aes(x=Species)) +
+  geom_point(aes(y=Sepal.Length), color="blue") +
+  geom_point(aes(y=Sepal.Width), color="red")
+```
+
+##Means
+Now what if you wanted only to show the means
+```{r}
+ggplot(iris.df, aes(x=Species))+
+  stat_summary(aes(y=Sepal.Length), fun.y=mean, geom='point', shape=23, size=3, color="red", fill="red") 
+```
+
+Add in the second mean
+Now what if you wanted only to show the means
+```{r}
+ggplot(iris.df, aes(x=Species))+
+  stat_summary(aes(y=Sepal.Length), fun.y=mean, geom='point', shape=23, size=3, color="red", fill="red") +
+    stat_summary(aes(y=Sepal.Width), fun.y=mean, geom='point', shape=23, size=3, color="red", fill="blue") 
+```
+
+Now your boss of course wants standard error bars on each mean... no problem
+
+```{r}
+ggplot(iris.df, aes(x=Species))+
+  stat_summary(aes(y=Sepal.Length), fun.y=mean, geom='point', shape=23, size=3, color="red", fill="red") +
+    stat_summary(aes(y=Sepal.Width), fun.y=mean, geom='point', shape=23, size=3, color="blue", fill="blue") +
+   stat_summary(aes(y=Sepal.Length), fun.data = mean_se, geom = "errorbar", color="red", width=.1) +
+    stat_summary(aes(y=Sepal.Width),fun.data = mean_se, geom = "errorbar", color="blue", width=.1) 
+
+```
+
+you could also do standard deviation
+```{r}
+ggplot(iris.df, aes(x=Species))+
+  stat_summary(aes(y=Sepal.Length), fun.y=mean, geom='point', shape=23, size=3, color="red", fill="red") +
+    stat_summary(aes(y=Sepal.Width), fun.y=mean, geom='point', shape=23, size=3, color="blue", fill="blue") +
+   stat_summary(aes(y=Sepal.Length), fun.data = mean_sdl, geom = "errorbar", color="red", width=.1) +
+    stat_summary(aes(y=Sepal.Width),fun.data = mean_sdl, geom = "errorbar", color="blue", width=.1) 
+
+```
+
+###Position_dodge - move points
+Now you boss says great but the error bars overlap... can you fix this?
+
+```{r}
+ggplot(iris.df, aes(x=Species))+
+  stat_summary(aes(y=Sepal.Length), fun.y=mean, geom='point', shape=23, size=3, color="red", 
+               fill="red", position=position_nudge(x = 0.12, y = 0)) +
+    stat_summary(aes(y=Sepal.Width), fun.y=mean, geom='point', shape=23, size=3, color="blue", 
+                 fill="blue") +
+   stat_summary(aes(y=Sepal.Length), fun.data = mean_sdl, geom = "errorbar", color="red", width=0.1,
+                position=position_nudge(x = 0.12, y = 0)) +
+    stat_summary(aes(y=Sepal.Width),fun.data = mean_sdl, geom = "errorbar", color="blue", width=0.1) 
+
+```
+
+
+
+
+
+
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-88373117-2', 'auto');
+  ga('send', 'pageview');
+
+</script>

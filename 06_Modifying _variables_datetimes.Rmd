@@ -1,0 +1,129 @@
+---
+title: "06_Modifying_variables_datetimes"
+author: "Bill Perry"
+date: "10/17/2019"
+output: html_document
+---
+
+# Load Libraries
+Again, we use these libraries almost all the time in every script   
+```{r}
+# Load Libraries ----
+# this is done each time you run a script
+library("readxl") # read in excel files
+library("tidyverse") # dplyr and piping and ggplot etc
+library("lubridate") # dates and times
+library("scales") # scales on ggplot ases
+library("skimr") # quick summary stats
+library("janitor") # clean up excel imports
+library("patchwork") # multipanel graphs
+
+```
+
+# Read in files
+Read in the files and this is an example of a sonde deployement in part of Lake Tanganyika and only is a short cast in the upper depths.    
+```{r}
+# So now we have seen how to look at the data
+# What if we wanted to modify the data in terms of columns or rows
+
+# lets read in a new file to add some complexity for fun
+exo.df <- read_csv("data/lt_exo_2017_01_23_datetimes.csv")
+
+head(exo.df)
+```
+
+# Paste using tidyR
+using the mutate command we can change the datatime variable and paste together the date and the time variables with a space as a searator. This will create a character variable. This then needs to be converted to a datatime
+```{r}
+# So when this comes in 
+  # what type of variable is date?
+  # what type of variable is time?
+# What if we wanted to make a datetime column?
+
+# Mutate and paste ----
+# sep is the separator and you just list the variables you want to paste togeher
+exo.df <- exo.df %>% 
+  mutate(datetime = paste(date, time, sep=" "))
+```
+
+
+# Separate 
+just in case you wanted to separate two variables.
+```{r}
+# what if you wanted to separate these varaibles?
+exo.df <- exo.df %>% 
+  separate(datetime, c("newdate", "newtime"), sep=" ", remove=FALSE)
+```
+
+
+```{r}
+# note if you wanted to separte newdate into "year", "month", "day" what would you do?
+exo.df <- exo.df
+
+```
+
+
+# Lubridate
+when you want to convert a variable into a Date or datetime (POSIXct) variable you can use the abbreviations in front of the variable to convert it.     
+y = year              
+m = month              
+d = day               
+h = hour              
+m = minute               
+s = second              
+
+
+```{r}
+# Dates and times -----
+# Once you know how to mutate data you can now use lubridate to work with dates
+# Sometimes dates and times come in as characters rather than date format
+# So we have date and we have datetime but how do we make R understand
+# that these are not characters and are POSIXct date times or Dates
+
+# for datetime we do...
+exo.df <- exo.df %>% 
+  mutate(datetime = mdy_hms(datetime))
+```
+
+
+## What is datetime really - When did Time begin?
+In R date time like in UNIX is the nubmber of seconds since 1970-01-01 00:00:00 and that will comme in handy in a few minutes.
+```{r}
+# What do you think we would do for the date column? 
+# Modify the code below
+exo.df <- exo.df %>% 
+  mutate(date = (date))
+```
+
+# Rounding time
+Someitmes you need to make up data that is within a minute or so of each other. It is likely not possible to match them up perfectly and sometime rounding time to the nearest common time is necessary. You can use this using the set of parameters below.
+```{r}
+# How can we modify the datetime to 
+exo.df <- exo.df %>% 
+          mutate(datetime = ymd_hms(format(
+                 strptime("1970-01-01", "%Y-%m-%d", tz = "UTC") +
+                 round(as.numeric(ymd_hms(datetime)) / 300) * 300)))
+```
+
+# So if time is in seconds and we want to round to .... we would use ....
+# 5 minutes is 300 seconds
+# 15 minutes is 900 seconds
+# 1 hour is 3600 seconds
+
+# why do this - if you have two datasets and you want them to join together 
+# you would need to do this.
+
+# I may or may not go into timezones here but it gets messy fast
+# Personally I stick with UTC that has no daylight savings and no timezone
+
+
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-88373117-6"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-88373117-6');
+</script>

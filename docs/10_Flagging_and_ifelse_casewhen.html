@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="Bill Perry" />
+
+<meta name="date" content="2019-10-17" />
+
+<title>10_Flagging_and_ifelse_casewhen</title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<script src="site_libs/htmlwidgets-1.5.1/htmlwidgets.js"></script>
+<script src="site_libs/plotly-binding-4.9.0/plotly.js"></script>
+<script src="site_libs/typedarray-0.1/typedarray.min.js"></script>
+<link href="site_libs/crosstalk-1.0.0/css/crosstalk.css" rel="stylesheet" />
+<script src="site_libs/crosstalk-1.0.0/js/crosstalk.min.js"></script>
+<link href="site_libs/plotly-htmlwidgets-css-1.46.1/plotly-htmlwidgets.css" rel="stylesheet" />
+<script src="site_libs/plotly-main-1.46.1/plotly-latest.min.js"></script>
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 51px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h2 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h3 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h4 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h5 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h6 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #ffffff;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Bill Perry</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="https://wlperry.github.io/index.html">Bill's Homepage</a>
+</li>
+<li>
+  <a href="https://wlperry.github.io/2018_stats/index.html">Stats and R Homepage</a>
+</li>
+<li>
+  <a href="about.html">About Bill</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">10_Flagging_and_ifelse_casewhen</h1>
+<h4 class="author">Bill Perry</h4>
+<h4 class="date">10/17/2019</h4>
+
+</div>
+
+
+<pre class="r"><code># Load Libraries ----
+# this is done each time you run a script
+library(&quot;readxl&quot;) # read in excel files
+library(&quot;tidyverse&quot;) # dplyr and piping and ggplot etc
+library(&quot;lubridate&quot;) # dates and times
+library(&quot;scales&quot;) # scales on ggplot ases
+library(&quot;skimr&quot;) # quick summary stats
+library(&quot;janitor&quot;) # clean up excel imports
+library(&quot;patchwork&quot;) # multipanel graphs
+library(&quot;plotly&quot;)</code></pre>
+<pre><code>## 
+## Attaching package: &#39;plotly&#39;</code></pre>
+<pre><code>## The following object is masked from &#39;package:ggplot2&#39;:
+## 
+##     last_plot</code></pre>
+<pre><code>## The following object is masked from &#39;package:stats&#39;:
+## 
+##     filter</code></pre>
+<pre><code>## The following object is masked from &#39;package:graphics&#39;:
+## 
+##     layout</code></pre>
+<pre class="r"><code># read in file ----
+lakes.df &lt;- read_csv(&quot;data/Reduced_Lake_Long_Genus_Species.csv&quot;)</code></pre>
+<pre><code>## Parsed with column specification:
+## cols(
+##   permanent_id = col_double(),
+##   lake_name = col_character(),
+##   date = col_date(format = &quot;&quot;),
+##   group = col_character(),
+##   genus_species = col_character(),
+##   org_l = col_double(),
+##   year = col_double()
+## )</code></pre>
+<pre class="r"><code># Lets say we want to look at the data and figure out where outliers are
+
+# I personally like to see what I am doing first
+# lets look at only Cladocerans first
+lakes.df %&gt;% 
+  filter(group==&#39;Cladoceran&#39;) %&gt;%
+  ggplot(aes(lake_name, org_l, color=group)) +
+  geom_point(
+  ) </code></pre>
+<p><img src="10_Flagging_and_ifelse_casewhen_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
+<pre class="r"><code># Points overlap and you might want to spread them out a bit
+lakes.df %&gt;% 
+  filter(group==&#39;Cladoceran&#39;) %&gt;%
+  ggplot(aes(lake_name, org_l, color=group)) +
+  geom_point(
+    position= position_jitterdodge(jitter.width = 0.3)
+  ) </code></pre>
+<p><img src="10_Flagging_and_ifelse_casewhen_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
+<pre class="r"><code># There are some high values - how can we figure out what they are...
+# there are a few aproaches
+clad.plot &lt;- lakes.df %&gt;% 
+  filter(group==&#39;Cladoceran&#39;) %&gt;%
+  ggplot(aes(lake_name, org_l, color=group)) +
+  geom_point(
+    position= position_jitterdodge(jitter.width = 0.3)
+  ) 
+clad.plot</code></pre>
+<p><img src="10_Flagging_and_ifelse_casewhen_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+<pre class="r"><code># I personally like the plotly package and GGPlotly
+clad.plot &lt;- lakes.df %&gt;% 
+  filter(group==&#39;Cladoceran&#39;) %&gt;%
+  ggplot(aes(lake_name, org_l, color=group, date=date, lake_name = lake_name, genus_species= genus_species)) +
+  geom_point(
+    position= position_jitterdodge(jitter.width = 0.1)
+  ) 
+clad.plot</code></pre>
+<p><img src="10_Flagging_and_ifelse_casewhen_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
+<pre class="r"><code>ggplotly(clad.plot, tooltip = c(&quot;date&quot;, &quot;genus_species&quot;))</code></pre>
+<div id="htmlwidget-c84a2f4b101c04233c31" style="width:672px;height:480px;" class="plotly html-widget"></div>
+<script type="application/json" data-for="htmlwidget-c84a2f4b101c04233c31">{"x":{"data":[{"x":[1.34440196549986,1.26935910976026,1.3141819947632,1.27086367562879,1.27714686552063,1.34212807703298,1.29319898420945,1.29757202216424,1.32707474790514,1.28187735818792,1.32645302594174,1.30557709003333,1.31559053980745,1.26882847952656,1.35102377794683,1.26740541143809,1.33446496792603,1.27260839790106,1.32976156736258,1.28215723575559,1.29362306436524,1.34481741057243,1.34378447891213,1.29882356487215,1.34646831119899,1.27696493270341,1.31067484638188,1.26680371384136,1.35473734964617,1.1900122953346,1.13791782974731,1.21521766383667,1.21348287551664,1.16677298196591,1.165725504281,1.14728203401901,1.15464766048826,1.18752164712641,1.1453371910844,1.15743893745821,1.17768086711876,1.18445454854518,1.20630567916669,1.2219616999384,1.16410241452977,1.22214256078005,1.23009898427408,1.17015313021839,1.21575081241317,1.20501412968151,1.15821677558124,1.137526096683,1.15250324143562,1.23111263422761,1.16397542739287,1.16622116575018,1.2280453104293,1.23172267754562,1.02368659018539,1.04765638401732,1.06201849654317,1.01580360289663,1.02450422686525,1.06772570365574,1.06487290181685,1.07199697934557,1.04149414000567,1.0860729921842,1.1045476477826,1.02006443436258,1.08384733134881,1.06493436195888,1.02953219453339,1.03476538260002,1.05438387976028,1.09272479331121,1.02556787000503,1.02466101599857,1.04935405247379,1.06174896964803,1.06186840084847,1.09144191620871,1.10560869385954,1.07520729738753,1.03811964050401,1.05155362086371,1.10187263579573,0.986800974025391,0.977302673109807,0.908833064534701,0.927046419610269,0.927634721831419,0.965545497671701,0.979338164464571,0.922973563056439,0.931586344796233,0.939391776709817,0.961995906406082,0.952573036658578,0.894806063733995,0.91243843336124,0.931012085615657,0.910749443760142,0.939104332402348,0.930166742531583,0.911219957424328,0.949175788159482,0.97111964256037,0.921343875443563,0.892144422209822,0.933885777089745,0.963675277400762,0.897522919345647,0.975148407206871,0.913174956291914,0.951636756840162,0.813969188998453,0.76773249132093,0.789575874735601,0.824026861810125,0.773034523474053,0.850203966302797,0.855246905470267,0.855425976915285,0.827451779250987,0.857255845679902,0.855955417826772,0.786217817990109,0.828241506800987,0.779698056331836,0.762843365501612,0.86178449220024,0.763882347149774,0.771286726323888,0.769198593334295,0.860831458936445,0.765936043625697,0.827156335744075,0.77981393574737,0.803542403876781,0.776056262198836,0.781151475803927,0.76533738442231,0.788306333497167,0.797282995749265,0.728481705952436,0.694183924002573,0.680529701453634,0.711985772452317,0.642464283807203,0.718575036688708,0.641267830901779,0.63943639092613,0.735211344854906,0.637511244346388,0.649210574943572,0.700818093167618,0.709361802088097,0.732759161572903,0.69623381246347,0.703354742377996,0.645354398991913,0.687681773770601,0.688756767520681,0.667658433783799,0.6616014147643,0.654360353271477,0.700397871644236,0.644353093695827,0.686876655812375,0.732247837167233,0.639179205638357,0.722125879838131,0.707493738434277,2.29665228889789,2.35452331837732,2.3473407487385,2.29190872609615,2.29055234719999,2.32417402628344,2.34005188590381,2.36152305160649,2.31965016000904,2.27993351113982,2.28742181009147,2.26913651514333,2.30783631377853,2.2787637187168,2.34194190595299,2.36004114151001,2.31751204279717,2.31214069235139,2.35097335781902,2.35529879429378,2.27769556844141,2.35042143131141,2.29544486014638,2.27833020435646,2.32251902164426,2.31134043640923,2.32020845401566,2.31471177733038,2.3081826608628,2.22566523735877,2.21784700059798,2.16533264159225,2.15481336340308,2.15806377222762,2.21474332648795,2.20191357713193,2.21697050037328,2.14538518602494,2.19185986635275,2.1629680053331,2.22500488436781,2.18612091632094,2.21500387617853,2.16952192483004,2.17120528786909,2.14533395613544,2.21227810850833,2.13897422407754,2.23692321800627,2.206574281957,2.22410699464381,2.19570482363924,2.16216439793352,2.2134819815401,2.18398310337216,2.17347929810639,2.15626036676113,2.23447535361629,2.0263702836819,2.0325819357764,2.07211882795673,2.09222453001421,2.04684585474897,2.06397475688718,2.05622815347742,2.06013067674357,2.0829930705484,2.05741136379074,2.10867006783374,2.07250770602841,2.07818498662673,2.01991810302716,2.06583559380379,2.04315474093892,2.02485656815115,2.01573022336233,2.06042455150746,2.08381552554201,2.11118449675851,2.10711373423692,2.04684753715992,2.08778237570077,2.06765084753279,2.05886452097911,2.07859040969051,2.03466694902163,2.08869309988804,1.925420314027,1.95166212993208,1.94392096863594,1.98229826330207,1.9676317875972,1.90976577051915,1.92856352718081,1.90594002096914,1.98138109899592,1.92446763992775,1.91006939073559,1.92970312368125,1.97795049196575,1.97783548156731,1.98094270480797,1.94169146192726,1.95115048335865,1.97460241350345,1.92588773323223,1.96435229561757,1.96356363201048,1.94494597814046,1.9563644947717,1.92697538156062,1.98007797750179,1.89223664181773,1.96067260950804,1.89758075126447,1.91330387014896,1.79640270026866,1.84858755127061,1.83479320586193,1.84788863263093,1.79083135079127,1.81726547710132,1.80996392178349,1.77464775016997,1.85687677660026,1.85007107490674,1.81767039047554,1.80094741468783,1.81420348172542,1.77006968767382,1.83499796444084,1.77195071873721,1.76957732047886,1.8507392876083,1.76977168419398,1.84241011813283,1.77235381999053,1.76558963514399,1.80315676734317,1.78459682818502,1.77863855820615,1.82833533897065,1.77011947573628,1.85611397624016,1.83566763259005,1.67661259523593,1.66959307026118,1.70694922022522,1.65272721694782,1.71010291290004,1.70513195691165,1.69564398759976,1.72293466017582,1.73058403800242,1.65183079983108,1.73173844914418,1.67692349860445,1.69431795922574,1.70194488896523,1.71330065529328,1.63890552481171,1.65166404233314,1.6644579713,1.67499051827472,1.68123527786229,1.71046000942588,1.72096804974135,1.65861354426015,1.64016041071154,1.65474297963083,1.70637691444717,1.66939655561,1.64445437791292,1.64324261578731,3.29656193093397,3.27585892272182,3.32955076624639,3.27317123161629,3.35671606636606,3.28155454501975,3.33856682144105,3.35278762385715,3.33368418004829,3.33799313930795,3.30050078188069,3.34442359681707,3.35903314659372,3.33783131523523,3.31836858959869,3.35972790259402,3.35219766020309,3.34179576528259,3.34282163181342,3.32859653853811,3.26865871513728,3.33488642971497,3.29009118122049,3.34108023748267,3.34237308634911,3.33062772767153,3.28857483319007,3.31858192780055,3.3008006580174,3.21880183310714,3.18088409425691,3.17401571895462,3.15464410854038,3.18626038047951,3.22939809223171,3.18213250241242,3.22897786060348,3.15586624809075,3.1774848961737,3.20754843866453,3.14638157016598,3.17844837810844,3.15830553648993,3.22322954109404,3.19873631955124,3.15461829607375,3.16490131684113,3.14560049795546,3.14260954051279,3.14203556505963,3.18080907019321,3.14495980218053,3.19754434179049,3.18599727107212,3.1842773323413,3.15522817771416,3.18401912690606,3.18938728219364,3.02651152992621,3.03544766728301,3.0553583821049,3.05581395349,3.08319311286323,3.02027494139038,3.02416750588454,3.09696016472299,3.10091308790725,3.06680226475,3.06978808613494,3.01497038356028,3.02661630250514,3.09328190232627,3.05704573299736,3.0825839424273,3.02054565700237,3.09400158182252,3.08985335465986,3.04904790497385,3.08889226692263,3.08164288057014,3.01938661800232,3.11207794481888,3.02852236696053,3.08047609578352,3.1054267301457,3.10472579507623,3.07702893523965,2.9513008648064,2.95659178178757,2.94060191588942,2.95815055163112,2.98607859199401,2.96936215138994,2.9417499581119,2.94209353253245,2.96150007504039,2.9708280474646,2.93535549058579,2.96545435874723,2.92825472103432,2.96253257407807,2.97392871866468,2.95944861182943,2.94362499965355,2.98552149292082,2.91529037735891,2.91651270759758,2.98714693847578,2.94087152760476,2.88769300498534,2.97696071881801,2.91458313257899,2.98389027740341,2.92411226767581,2.89003874764312,2.89918126536068,2.80976476792712,2.84970595047344,2.84319745297544,2.79832895302679,2.80954808895476,2.80203752617817,2.81312890227418,2.81721068269107,2.83103774483316,2.80993054625578,2.84024291585665,2.7947563476162,2.80376392113976,2.78748517574277,2.84019421264529,2.83690148228779,2.8023372204043,2.83304951081518,2.78422219075728,2.83157183721196,2.76378063303418,2.78911477727816,2.84836429343559,2.84473691922612,2.84412484846544,2.81983079391066,2.77154738337267,2.83723041343037,2.81294491037261,2.67295967810787,2.73582983347587,2.685736219096,2.65223204179201,2.66958007472567,2.69781824916136,2.72935324613936,2.63886266048066,2.73361548960675,2.65763059065212,2.63842490518,2.65569695674349,2.7337596276775,2.66051513552666,2.70027284277603,2.73249835185707,2.65419759922661,2.64845344524365,2.677950764657,2.71784174959175,2.63942526276223,2.65902606898453,2.73462353902869,2.6842109993333,2.7266549318796,2.63987129153684,2.69928154016379,2.6831240846077,2.6742135528475,4.33680130573921,4.27642293665558,4.3023629729636,4.28047605359461,4.35961504054721,4.32752483324148,4.35850021780934,4.31327734652441,4.30176887486596,4.27829476455227,4.35511340238154,4.33410520714242,4.33143605734222,4.35661187476944,4.28499080825131,4.27623665058054,4.34521892899647,4.30071569192223,4.26373955430463,4.3033587386366,4.28417724706233,4.26375791456085,4.29378839111887,4.34289880639408,4.28749974432867,4.27738826100249,4.35231426090468,4.20560758579522,4.15894181192853,4.14583338710945,4.21378016509116,4.16557163852267,4.21763413632289,4.16178376651369,4.23273620530963,4.16003784122877,4.17449347900692,4.18994336682372,4.21734503987245,4.22820983189158,4.23400986669585,4.18531944728456,4.21638164683245,4.19815850486048,4.21069407274481,4.15826197494753,4.14655060111545,4.21148937367834,4.21392942208331,4.2153056519106,4.18548043556511,4.14580605919473,4.16536061284132,4.2319282368524,4.07049008719623,4.09951412416995,4.04136784980074,4.10479326972272,4.06517239345703,4.02276084180921,4.08874653072562,4.09077165247872,4.08703630508389,4.09328929753974,4.04252708163112,4.06024109434802,4.01622247304767,4.01391472932883,4.04566099161748,4.05471668958198,4.07434955642093,4.0205502596451,4.08865670675877,4.05364553600084,4.09045171500184,4.04261376000941,4.06713475505821,4.09488228145055,4.05447696938645,4.06583121248987,4.09133189481217,3.88957143069711,3.92477962456178,3.96906976802275,3.9500258684624,3.91361173447221,3.961381771788,3.92288213118445,3.97200810757931,3.91032863038126,3.9380537503399,3.92500134990551,3.91598245543428,3.92807436180301,3.94263485658448,3.9601747081615,3.98270302030724,3.92062526636291,3.90922204095405,3.957486316422,3.93913470220286,3.9379659506958,3.9814967521932,3.88925903672352,3.90442898797337,3.90074097332545,3.9444832778303,3.94756331518292,3.82856433207635,3.76384790798184,3.80969089274295,3.77730589178391,3.82331687991973,3.83959575195331,3.83011716990732,3.82029818070587,3.83232715788763,3.84616251362022,3.81165127679706,3.85465791453607,3.85908690020442,3.80432312751655,3.84286714552436,3.7786877096165,3.78214881084859,3.83297231136821,3.82588191062678,3.79071651729755,3.76359630043153,3.85995800527744,3.76563433867414,3.77652943760622,3.7929175788071,3.76544568124227,3.7757660286501,3.66834898465313,3.67484506426845,3.72979830463883,3.69684515746776,3.70699648021255,3.63978701457381,3.70061337274965,3.73200987509917,3.65589623707347,3.7171198370168,3.66852792529389,3.69666219183709,3.64914459153078,3.73229321825784,3.6912499953527,3.66180673160125,3.69648099571932,3.72374328891747,3.73219505865127,3.68581414488144,3.66559428165201,3.7196346054785,3.70843198802322,3.70580642917193,3.69698624876328,3.68192494818941,3.73046528191771],"y":[4.96289,1.05,0.67,7.18333,0.135,0,0.18,1.27688,0,2.44601,6.76852,0.661,3.23,0.14401,3.59274,2.0625,1.87258,0,0,2.33,0.02252,0.05,0.04689,1.50417,0.45,0.7125,0.8625,0,0.1625,0,0,0,1.00833,0.135,0.665,0.135,0,2.38095,0.22539,1.38519,8.12087,0.9975,0.40804,1.08871,0.825,0,0.375,0.42011,5.32,0,0,2.62566,0.475,0.15,0.3,0,0,0.08125,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2.37891,0.3,1.34,0.15,7.83,9.31,3.15,3.63911,1.61565,3.40259,1.73148,0.93484,5.985,0.57606,2.18952,2.5875,6.12399,6.188,1.63541,6.4,4.97748,9.05,0.7033,19.475,9.3,1.0875,0.825,5.80645,0.08125,1.39453,0,1.675,2.24167,0.675,16.91,12.15,0,0,1.84899,2.77,0,0,2.18422,4.95968,0,0,0,0,0,0.07658,0.55,17.91073,0.95,2.3,1.2,1.65,0,1.725,0,0,0,0,0,0,0,0,0.125,0,0,0,0,0,0,0,0,0,0,0.16667,0,0,0,0,0,0,0,0,0,0,0.135,0,0,0,0.05,0,0,0.08333,0.03067,0.11131,0,0,0.02346,0,0,0.98458,0.06769,1.322,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1.05,1.35,0.38043,1.51086,2.44499,1.05,0.64,0.06,3.33333,0.368,0.47897,1.10417,0,0.09383,0.3966,0.32389,3.11667,0.1532,0.85,0,0,0.45914,0.17007,0.3375,0.125,1.325,0.55948,0.325,1.07313,0,0,0,0,0,0,0,1.264,0,0,0,0,0.44,0,0,0.32389,0,0,0,0.1,1.65,0,0,0,0,0,0,0,0,1.975,22.68,6.36463,56.20397,2.78729,7.45,20.58,12.255,12.79167,4.11956,19.52976,26.55556,17.8,5.55926,7.25212,23.07692,11.20583,7.68491,8.54722,7.76667,7.95,27.82879,8.29082,30.5775,6.975,9.45,33.10232,10.5,2.83776,0.0625,0.02627,0,0,0,0.02838,0.056,0,0.10286,0,0,0,0,0,0.07037,0,0.0485,0,0,0.025,0,0,0,0,0,0.38,0,0.12146,0,0,0,0,0,0.05141,0.02838,0,0,0.09,0,0,0,0,0,0,0,0,0.01173,0,0,0,0,0.24,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0.03125,0.10508,0.2644,0.269,1.49093,0.19863,0.049,1.90024,0.9,1.16505,0.21389,0.29167,3.01635,0.27778,0.98519,1.63676,0.77595,0.09383,1.52593,2.625,1.17047,0.09073,2.18,0.62222,0.11832,2.94,0.18333,1.24494,1.16039,7.96875,1.12964,7.2899,3.619,1.42666,10.58393,12.22278,16.17841,10.62643,55.60459,14.21389,10.18889,3.09643,14.22222,1.33704,4.78439,6.91077,1.30185,2.25185,0.6,2.69564,7.89315,3.36,4.97778,5.31912,2.845,3.91667,3.37045,1.65771,31.60741,0.00403,0,3.36593,0.00762,0.35289,0.22,1.2747,5.15,1.625,1.09173,3.29218,1.6625,2.59583,0.35,0,2.59722,0.4625,12.12903,5.90081,0,33.92857,0,22.3,1.8,2.11043,10.82058,0.881,0,0,0,0,0,0,0,0,2.675,0.43095,0,0.19,0.175,1.85,0.07003,6.42222,2.3125,0,2.77984,0,4.2517,0,0.1,0,1.43427,1.16922,0,0,0,0,0,0,0,0,3.35,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0.00403,0,0.06351,0,0,0.05,0,0.2,0,0,0,0,0.23333,0,0,0.14167,0,0,1.30282,0,0,0.03556,0.7,0,0,0,0,0,0,7.95968,0.07236,0.05102,5.191,0.95602,7.5,3.375,0,0,48.355,3.296,17.65,5.53221,3.25833,4.7175,1.45161,0,12.82099,0,0,2.8,0,0,2.97619],"text":["date: 1995-06-13<br />genus_species: Holopedium_giberum","date: 1996-06-18<br />genus_species: Holopedium_giberum","date: 1994-06-20<br />genus_species: Holopedium_giberum","date: 2001-07-11<br />genus_species: Holopedium_giberum","date: 2005-07-12<br />genus_species: Holopedium_giberum","date: 2004-07-13<br />genus_species: Holopedium_giberum","date: 2006-07-13<br />genus_species: Holopedium_giberum","date: 1996-07-19<br />genus_species: Holopedium_giberum","date: 2000-07-20<br />genus_species: Holopedium_giberum","date: 1994-07-25<br />genus_species: Holopedium_giberum","date: 1997-07-08<br />genus_species: Holopedium_giberum","date: 1999-07-08<br />genus_species: Holopedium_giberum","date: 1998-07-09<br />genus_species: Holopedium_giberum","date: 2003-07-09<br />genus_species: Holopedium_giberum","date: 1997-08-12<br />genus_species: Holopedium_giberum","date: 1998-08-12<br />genus_species: Holopedium_giberum","date: 1996-08-14<br />genus_species: Holopedium_giberum","date: 1995-08-15<br />genus_species: Holopedium_giberum","date: 2000-08-16<br />genus_species: Holopedium_giberum","date: 1999-08-18<br />genus_species: Holopedium_giberum","date: 1994-08-23<br />genus_species: Holopedium_giberum","date: 2004-08-03<br />genus_species: Holopedium_giberum","date: 2003-08-06<br />genus_species: Holopedium_giberum","date: 2005-08-09<br />genus_species: Holopedium_giberum","date: 2006-08-09<br />genus_species: Holopedium_giberum","date: 2002-09-13<br />genus_species: Holopedium_giberum","date: 2002-09-18<br />genus_species: Holopedium_giberum","date: 1995-09-07<br />genus_species: Holopedium_giberum","date: 2001-09-07<br />genus_species: Holopedium_giberum","date: 1995-06-13<br />genus_species: Diaphanosoma_brachyurum","date: 1996-06-18<br />genus_species: Diaphanosoma_brachyurum","date: 1994-06-20<br />genus_species: Diaphanosoma_brachyurum","date: 2001-07-11<br />genus_species: Diaphanosoma_brachyurum","date: 2005-07-12<br />genus_species: Diaphanosoma_brachyurum","date: 2004-07-13<br />genus_species: Diaphanosoma_brachyurum","date: 2006-07-13<br />genus_species: Diaphanosoma_brachyurum","date: 1996-07-19<br />genus_species: Diaphanosoma_brachyurum","date: 2000-07-20<br />genus_species: Diaphanosoma_brachyurum","date: 1994-07-25<br />genus_species: Diaphanosoma_brachyurum","date: 1997-07-08<br />genus_species: Diaphanosoma_brachyurum","date: 1999-07-08<br />genus_species: Diaphanosoma_brachyurum","date: 1998-07-09<br />genus_species: Diaphanosoma_brachyurum","date: 2003-07-09<br />genus_species: Diaphanosoma_brachyurum","date: 1997-08-12<br />genus_species: Diaphanosoma_brachyurum","date: 1998-08-12<br />genus_species: Diaphanosoma_brachyurum","date: 1996-08-14<br />genus_species: Diaphanosoma_brachyurum","date: 1995-08-15<br />genus_species: Diaphanosoma_brachyurum","date: 2000-08-16<br />genus_species: Diaphanosoma_brachyurum","date: 1999-08-18<br />genus_species: Diaphanosoma_brachyurum","date: 1994-08-23<br />genus_species: Diaphanosoma_brachyurum","date: 2004-08-03<br />genus_species: Diaphanosoma_brachyurum","date: 2003-08-06<br />genus_species: Diaphanosoma_brachyurum","date: 2005-08-09<br />genus_species: Diaphanosoma_brachyurum","date: 2006-08-09<br />genus_species: Diaphanosoma_brachyurum","date: 2002-09-13<br />genus_species: Diaphanosoma_brachyurum","date: 2002-09-18<br />genus_species: Diaphanosoma_brachyurum","date: 1995-09-07<br />genus_species: Diaphanosoma_brachyurum","date: 2001-09-07<br />genus_species: Diaphanosoma_brachyurum","date: 1995-06-13<br />genus_species: Diaphanosoma_birgei","date: 1996-06-18<br />genus_species: Diaphanosoma_birgei","date: 1994-06-20<br />genus_species: Diaphanosoma_birgei","date: 2001-07-11<br />genus_species: Diaphanosoma_birgei","date: 2005-07-12<br />genus_species: Diaphanosoma_birgei","date: 2004-07-13<br />genus_species: Diaphanosoma_birgei","date: 2006-07-13<br />genus_species: Diaphanosoma_birgei","date: 1996-07-19<br />genus_species: Diaphanosoma_birgei","date: 2000-07-20<br />genus_species: Diaphanosoma_birgei","date: 1994-07-25<br />genus_species: Diaphanosoma_birgei","date: 1997-07-08<br />genus_species: Diaphanosoma_birgei","date: 1999-07-08<br />genus_species: Diaphanosoma_birgei","date: 1998-07-09<br />genus_species: Diaphanosoma_birgei","date: 2003-07-09<br />genus_species: Diaphanosoma_birgei","date: 1997-08-12<br />genus_species: Diaphanosoma_birgei","date: 1998-08-12<br />genus_species: Diaphanosoma_birgei","date: 1996-08-14<br />genus_species: Diaphanosoma_birgei","date: 1995-08-15<br />genus_species: Diaphanosoma_birgei","date: 2000-08-16<br />genus_species: Diaphanosoma_birgei","date: 1999-08-18<br />genus_species: Diaphanosoma_birgei","date: 1994-08-23<br />genus_species: Diaphanosoma_birgei","date: 2004-08-03<br />genus_species: Diaphanosoma_birgei","date: 2003-08-06<br />genus_species: Diaphanosoma_birgei","date: 2005-08-09<br />genus_species: Diaphanosoma_birgei","date: 2006-08-09<br />genus_species: Diaphanosoma_birgei","date: 2002-09-13<br />genus_species: Diaphanosoma_birgei","date: 2002-09-18<br />genus_species: Diaphanosoma_birgei","date: 1995-09-07<br />genus_species: Diaphanosoma_birgei","date: 2001-09-07<br />genus_species: Diaphanosoma_birgei","date: 1995-06-13<br />genus_species: Daphnia_pulex","date: 1996-06-18<br />genus_species: Daphnia_pulex","date: 1994-06-20<br />genus_species: Daphnia_pulex","date: 2001-07-11<br />genus_species: Daphnia_pulex","date: 2005-07-12<br />genus_species: Daphnia_pulex","date: 2004-07-13<br />genus_species: Daphnia_pulex","date: 2006-07-13<br />genus_species: Daphnia_pulex","date: 1996-07-19<br />genus_species: Daphnia_pulex","date: 2000-07-20<br />genus_species: Daphnia_pulex","date: 1994-07-25<br />genus_species: Daphnia_pulex","date: 1997-07-08<br />genus_species: Daphnia_pulex","date: 1999-07-08<br />genus_species: Daphnia_pulex","date: 1998-07-09<br />genus_species: Daphnia_pulex","date: 2003-07-09<br />genus_species: Daphnia_pulex","date: 1997-08-12<br />genus_species: Daphnia_pulex","date: 1998-08-12<br />genus_species: Daphnia_pulex","date: 1996-08-14<br />genus_species: Daphnia_pulex","date: 1995-08-15<br />genus_species: Daphnia_pulex","date: 2000-08-16<br />genus_species: Daphnia_pulex","date: 1999-08-18<br />genus_species: Daphnia_pulex","date: 1994-08-23<br />genus_species: Daphnia_pulex","date: 2004-08-03<br />genus_species: Daphnia_pulex","date: 2003-08-06<br />genus_species: Daphnia_pulex","date: 2005-08-09<br />genus_species: Daphnia_pulex","date: 2006-08-09<br />genus_species: Daphnia_pulex","date: 2002-09-13<br />genus_species: Daphnia_pulex","date: 2002-09-18<br />genus_species: Daphnia_pulex","date: 1995-09-07<br />genus_species: Daphnia_pulex","date: 2001-09-07<br />genus_species: Daphnia_pulex","date: 1995-06-13<br />genus_species: Daphnia_catawba","date: 1996-06-18<br />genus_species: Daphnia_catawba","date: 1994-06-20<br />genus_species: Daphnia_catawba","date: 2001-07-11<br />genus_species: Daphnia_catawba","date: 2005-07-12<br />genus_species: Daphnia_catawba","date: 2004-07-13<br />genus_species: Daphnia_catawba","date: 2006-07-13<br />genus_species: Daphnia_catawba","date: 1996-07-19<br />genus_species: Daphnia_catawba","date: 2000-07-20<br />genus_species: Daphnia_catawba","date: 1994-07-25<br />genus_species: Daphnia_catawba","date: 1997-07-08<br />genus_species: Daphnia_catawba","date: 1999-07-08<br />genus_species: Daphnia_catawba","date: 1998-07-09<br />genus_species: Daphnia_catawba","date: 2003-07-09<br />genus_species: Daphnia_catawba","date: 1997-08-12<br />genus_species: Daphnia_catawba","date: 1998-08-12<br />genus_species: Daphnia_catawba","date: 1996-08-14<br />genus_species: Daphnia_catawba","date: 1995-08-15<br />genus_species: Daphnia_catawba","date: 2000-08-16<br />genus_species: Daphnia_catawba","date: 1999-08-18<br />genus_species: Daphnia_catawba","date: 1994-08-23<br />genus_species: Daphnia_catawba","date: 2004-08-03<br />genus_species: Daphnia_catawba","date: 2003-08-06<br />genus_species: Daphnia_catawba","date: 2005-08-09<br />genus_species: Daphnia_catawba","date: 2006-08-09<br />genus_species: Daphnia_catawba","date: 2002-09-13<br />genus_species: Daphnia_catawba","date: 2002-09-18<br />genus_species: Daphnia_catawba","date: 1995-09-07<br />genus_species: Daphnia_catawba","date: 2001-09-07<br />genus_species: Daphnia_catawba","date: 1995-06-13<br />genus_species: Bosmina_longirostris","date: 1996-06-18<br />genus_species: Bosmina_longirostris","date: 1994-06-20<br />genus_species: Bosmina_longirostris","date: 2001-07-11<br />genus_species: Bosmina_longirostris","date: 2005-07-12<br />genus_species: Bosmina_longirostris","date: 2004-07-13<br />genus_species: Bosmina_longirostris","date: 2006-07-13<br />genus_species: Bosmina_longirostris","date: 1996-07-19<br />genus_species: Bosmina_longirostris","date: 2000-07-20<br />genus_species: Bosmina_longirostris","date: 1994-07-25<br />genus_species: Bosmina_longirostris","date: 1997-07-08<br />genus_species: Bosmina_longirostris","date: 1999-07-08<br />genus_species: Bosmina_longirostris","date: 1998-07-09<br />genus_species: Bosmina_longirostris","date: 2003-07-09<br />genus_species: Bosmina_longirostris","date: 1997-08-12<br />genus_species: Bosmina_longirostris","date: 1998-08-12<br />genus_species: Bosmina_longirostris","date: 1996-08-14<br />genus_species: Bosmina_longirostris","date: 1995-08-15<br />genus_species: Bosmina_longirostris","date: 2000-08-16<br />genus_species: Bosmina_longirostris","date: 1999-08-18<br />genus_species: Bosmina_longirostris","date: 1994-08-23<br />genus_species: Bosmina_longirostris","date: 2004-08-03<br />genus_species: Bosmina_longirostris","date: 2003-08-06<br />genus_species: Bosmina_longirostris","date: 2005-08-09<br />genus_species: Bosmina_longirostris","date: 2006-08-09<br />genus_species: Bosmina_longirostris","date: 2002-09-13<br />genus_species: Bosmina_longirostris","date: 2002-09-18<br />genus_species: Bosmina_longirostris","date: 1995-09-07<br />genus_species: Bosmina_longirostris","date: 2001-09-07<br />genus_species: Bosmina_longirostris","date: 1995-06-20<br />genus_species: Holopedium_giberum","date: 1996-06-26<br />genus_species: Holopedium_giberum","date: 1994-06-28<br />genus_species: Holopedium_giberum","date: 1999-06-29<br />genus_species: Holopedium_giberum","date: 2000-07-11<br />genus_species: Holopedium_giberum","date: 2005-07-11<br />genus_species: Holopedium_giberum","date: 2006-07-11<br />genus_species: Holopedium_giberum","date: 2004-07-13<br />genus_species: Holopedium_giberum","date: 1997-07-14<br />genus_species: Holopedium_giberum","date: 1998-07-14<br />genus_species: Holopedium_giberum","date: 1996-07-23<br />genus_species: Holopedium_giberum","date: 2001-07-09<br />genus_species: Holopedium_giberum","date: 2003-07-09<br />genus_species: Holopedium_giberum","date: 1998-08-10<br />genus_species: Holopedium_giberum","date: 2000-08-14<br />genus_species: Holopedium_giberum","date: 1999-08-16<br />genus_species: Holopedium_giberum","date: 1997-08-18<br />genus_species: Holopedium_giberum","date: 1994-08-02<br />genus_species: Holopedium_giberum","date: 1996-08-20<br />genus_species: Holopedium_giberum","date: 2002-08-22<br />genus_species: Holopedium_giberum","date: 2004-08-03<br />genus_species: Holopedium_giberum","date: 1994-08-31<br />genus_species: Holopedium_giberum","date: 2003-08-06<br />genus_species: Holopedium_giberum","date: 1995-08-08<br />genus_species: Holopedium_giberum","date: 2005-08-08<br />genus_species: Holopedium_giberum","date: 2006-08-08<br />genus_species: Holopedium_giberum","date: 1995-09-14<br />genus_species: Holopedium_giberum","date: 2002-09-19<br />genus_species: Holopedium_giberum","date: 2001-09-05<br />genus_species: Holopedium_giberum","date: 1995-06-20<br />genus_species: Diaphanosoma_brachyurum","date: 1996-06-26<br />genus_species: Diaphanosoma_brachyurum","date: 1994-06-28<br />genus_species: Diaphanosoma_brachyurum","date: 1999-06-29<br />genus_species: Diaphanosoma_brachyurum","date: 2000-07-11<br />genus_species: Diaphanosoma_brachyurum","date: 2005-07-11<br />genus_species: Diaphanosoma_brachyurum","date: 2006-07-11<br />genus_species: Diaphanosoma_brachyurum","date: 2004-07-13<br />genus_species: Diaphanosoma_brachyurum","date: 1997-07-14<br />genus_species: Diaphanosoma_brachyurum","date: 1998-07-14<br />genus_species: Diaphanosoma_brachyurum","date: 1996-07-23<br />genus_species: Diaphanosoma_brachyurum","date: 2001-07-09<br />genus_species: Diaphanosoma_brachyurum","date: 2003-07-09<br />genus_species: Diaphanosoma_brachyurum","date: 1998-08-10<br />genus_species: Diaphanosoma_brachyurum","date: 2000-08-14<br />genus_species: Diaphanosoma_brachyurum","date: 1999-08-16<br />genus_species: Diaphanosoma_brachyurum","date: 1997-08-18<br />genus_species: Diaphanosoma_brachyurum","date: 1994-08-02<br />genus_species: Diaphanosoma_brachyurum","date: 1996-08-20<br />genus_species: Diaphanosoma_brachyurum","date: 2002-08-22<br />genus_species: Diaphanosoma_brachyurum","date: 2004-08-03<br />genus_species: Diaphanosoma_brachyurum","date: 1994-08-31<br />genus_species: Diaphanosoma_brachyurum","date: 2003-08-06<br />genus_species: Diaphanosoma_brachyurum","date: 1995-08-08<br />genus_species: Diaphanosoma_brachyurum","date: 2005-08-08<br />genus_species: Diaphanosoma_brachyurum","date: 2006-08-08<br />genus_species: Diaphanosoma_brachyurum","date: 1995-09-14<br />genus_species: Diaphanosoma_brachyurum","date: 2002-09-19<br />genus_species: Diaphanosoma_brachyurum","date: 2001-09-05<br />genus_species: Diaphanosoma_brachyurum","date: 1995-06-20<br />genus_species: Diaphanosoma_birgei","date: 1996-06-26<br />genus_species: Diaphanosoma_birgei","date: 1994-06-28<br />genus_species: Diaphanosoma_birgei","date: 1999-06-29<br />genus_species: Diaphanosoma_birgei","date: 2000-07-11<br />genus_species: Diaphanosoma_birgei","date: 2005-07-11<br />genus_species: Diaphanosoma_birgei","date: 2006-07-11<br />genus_species: Diaphanosoma_birgei","date: 2004-07-13<br />genus_species: Diaphanosoma_birgei","date: 1997-07-14<br />genus_species: Diaphanosoma_birgei","date: 1998-07-14<br />genus_species: Diaphanosoma_birgei","date: 1996-07-23<br />genus_species: Diaphanosoma_birgei","date: 2001-07-09<br />genus_species: Diaphanosoma_birgei","date: 2003-07-09<br />genus_species: Diaphanosoma_birgei","date: 1998-08-10<br />genus_species: Diaphanosoma_birgei","date: 2000-08-14<br />genus_species: Diaphanosoma_birgei","date: 1999-08-16<br />genus_species: Diaphanosoma_birgei","date: 1997-08-18<br />genus_species: Diaphanosoma_birgei","date: 1994-08-02<br />genus_species: Diaphanosoma_birgei","date: 1996-08-20<br />genus_species: Diaphanosoma_birgei","date: 2002-08-22<br />genus_species: Diaphanosoma_birgei","date: 2004-08-03<br />genus_species: Diaphanosoma_birgei","date: 1994-08-31<br />genus_species: Diaphanosoma_birgei","date: 2003-08-06<br />genus_species: Diaphanosoma_birgei","date: 1995-08-08<br />genus_species: Diaphanosoma_birgei","date: 2005-08-08<br />genus_species: Diaphanosoma_birgei","date: 2006-08-08<br />genus_species: Diaphanosoma_birgei","date: 1995-09-14<br />genus_species: Diaphanosoma_birgei","date: 2002-09-19<br />genus_species: Diaphanosoma_birgei","date: 2001-09-05<br />genus_species: Diaphanosoma_birgei","date: 1995-06-20<br />genus_species: Daphnia_pulex","date: 1996-06-26<br />genus_species: Daphnia_pulex","date: 1994-06-28<br />genus_species: Daphnia_pulex","date: 1999-06-29<br />genus_species: Daphnia_pulex","date: 2000-07-11<br />genus_species: Daphnia_pulex","date: 2005-07-11<br />genus_species: Daphnia_pulex","date: 2006-07-11<br />genus_species: Daphnia_pulex","date: 2004-07-13<br />genus_species: Daphnia_pulex","date: 1997-07-14<br />genus_species: Daphnia_pulex","date: 1998-07-14<br />genus_species: Daphnia_pulex","date: 1996-07-23<br />genus_species: Daphnia_pulex","date: 2001-07-09<br />genus_species: Daphnia_pulex","date: 2003-07-09<br />genus_species: Daphnia_pulex","date: 1998-08-10<br />genus_species: Daphnia_pulex","date: 2000-08-14<br />genus_species: Daphnia_pulex","date: 1999-08-16<br />genus_species: Daphnia_pulex","date: 1997-08-18<br />genus_species: Daphnia_pulex","date: 1994-08-02<br />genus_species: Daphnia_pulex","date: 1996-08-20<br />genus_species: Daphnia_pulex","date: 2002-08-22<br />genus_species: Daphnia_pulex","date: 2004-08-03<br />genus_species: Daphnia_pulex","date: 1994-08-31<br />genus_species: Daphnia_pulex","date: 2003-08-06<br />genus_species: Daphnia_pulex","date: 1995-08-08<br />genus_species: Daphnia_pulex","date: 2005-08-08<br />genus_species: Daphnia_pulex","date: 2006-08-08<br />genus_species: Daphnia_pulex","date: 1995-09-14<br />genus_species: Daphnia_pulex","date: 2002-09-19<br />genus_species: Daphnia_pulex","date: 2001-09-05<br />genus_species: Daphnia_pulex","date: 1995-06-20<br />genus_species: Daphnia_catawba","date: 1996-06-26<br />genus_species: Daphnia_catawba","date: 1994-06-28<br />genus_species: Daphnia_catawba","date: 1999-06-29<br />genus_species: Daphnia_catawba","date: 2000-07-11<br />genus_species: Daphnia_catawba","date: 2005-07-11<br />genus_species: Daphnia_catawba","date: 2006-07-11<br />genus_species: Daphnia_catawba","date: 2004-07-13<br />genus_species: Daphnia_catawba","date: 1997-07-14<br />genus_species: Daphnia_catawba","date: 1998-07-14<br />genus_species: Daphnia_catawba","date: 1996-07-23<br />genus_species: Daphnia_catawba","date: 2001-07-09<br />genus_species: Daphnia_catawba","date: 2003-07-09<br />genus_species: Daphnia_catawba","date: 1998-08-10<br />genus_species: Daphnia_catawba","date: 2000-08-14<br />genus_species: Daphnia_catawba","date: 1999-08-16<br />genus_species: Daphnia_catawba","date: 1997-08-18<br />genus_species: Daphnia_catawba","date: 1994-08-02<br />genus_species: Daphnia_catawba","date: 1996-08-20<br />genus_species: Daphnia_catawba","date: 2002-08-22<br />genus_species: Daphnia_catawba","date: 2004-08-03<br />genus_species: Daphnia_catawba","date: 1994-08-31<br />genus_species: Daphnia_catawba","date: 2003-08-06<br />genus_species: Daphnia_catawba","date: 1995-08-08<br />genus_species: Daphnia_catawba","date: 2005-08-08<br />genus_species: Daphnia_catawba","date: 2006-08-08<br />genus_species: Daphnia_catawba","date: 1995-09-14<br />genus_species: Daphnia_catawba","date: 2002-09-19<br />genus_species: Daphnia_catawba","date: 2001-09-05<br />genus_species: Daphnia_catawba","date: 1995-06-20<br />genus_species: Bosmina_longirostris","date: 1996-06-26<br />genus_species: Bosmina_longirostris","date: 1994-06-28<br />genus_species: Bosmina_longirostris","date: 1999-06-29<br />genus_species: Bosmina_longirostris","date: 2000-07-11<br />genus_species: Bosmina_longirostris","date: 2005-07-11<br />genus_species: Bosmina_longirostris","date: 2006-07-11<br />genus_species: Bosmina_longirostris","date: 2004-07-13<br />genus_species: Bosmina_longirostris","date: 1997-07-14<br />genus_species: Bosmina_longirostris","date: 1998-07-14<br />genus_species: Bosmina_longirostris","date: 1996-07-23<br />genus_species: Bosmina_longirostris","date: 2001-07-09<br />genus_species: Bosmina_longirostris","date: 2003-07-09<br />genus_species: Bosmina_longirostris","date: 1998-08-10<br />genus_species: Bosmina_longirostris","date: 2000-08-14<br />genus_species: Bosmina_longirostris","date: 1999-08-16<br />genus_species: Bosmina_longirostris","date: 1997-08-18<br />genus_species: Bosmina_longirostris","date: 1994-08-02<br />genus_species: Bosmina_longirostris","date: 1996-08-20<br />genus_species: Bosmina_longirostris","date: 2002-08-22<br />genus_species: Bosmina_longirostris","date: 2004-08-03<br />genus_species: Bosmina_longirostris","date: 1994-08-31<br />genus_species: Bosmina_longirostris","date: 2003-08-06<br />genus_species: Bosmina_longirostris","date: 1995-08-08<br />genus_species: Bosmina_longirostris","date: 2005-08-08<br />genus_species: Bosmina_longirostris","date: 2006-08-08<br />genus_species: Bosmina_longirostris","date: 1995-09-14<br />genus_species: Bosmina_longirostris","date: 2002-09-19<br />genus_species: Bosmina_longirostris","date: 2001-09-05<br />genus_species: Bosmina_longirostris","date: 1996-06-17<br />genus_species: Holopedium_giberum","date: 1995-06-19<br />genus_species: Holopedium_giberum","date: 1999-06-29<br />genus_species: Holopedium_giberum","date: 1994-06-30<br />genus_species: Holopedium_giberum","date: 1998-07-13<br />genus_species: Holopedium_giberum","date: 1997-07-14<br />genus_species: Holopedium_giberum","date: 1996-07-15<br />genus_species: Holopedium_giberum","date: 2003-07-15<br />genus_species: Holopedium_giberum","date: 2001-07-17<br />genus_species: Holopedium_giberum","date: 2000-07-18<br />genus_species: Holopedium_giberum","date: 2006-07-18<br />genus_species: Holopedium_giberum","date: 2005-07-19<br />genus_species: Holopedium_giberum","date: 1994-07-27<br />genus_species: Holopedium_giberum","date: 2004-07-06<br />genus_species: Holopedium_giberum","date: 2004-08-11<br />genus_species: Holopedium_giberum","date: 2003-08-12<br />genus_species: Holopedium_giberum","date: 2002-08-13<br />genus_species: Holopedium_giberum","date: 2006-08-15<br />genus_species: Holopedium_giberum","date: 2005-08-16<br />genus_species: Holopedium_giberum","date: 1998-08-17<br />genus_species: Holopedium_giberum","date: 1997-08-18<br />genus_species: Holopedium_giberum","date: 1996-08-19<br />genus_species: Holopedium_giberum","date: 2000-08-21<br />genus_species: Holopedium_giberum","date: 1999-08-23<br />genus_species: Holopedium_giberum","date: 1994-08-31<br />genus_species: Holopedium_giberum","date: 2001-08-07<br />genus_species: Holopedium_giberum","date: 1995-08-08<br />genus_species: Holopedium_giberum","date: 2002-09-10<br />genus_species: Holopedium_giberum","date: 1995-09-13<br />genus_species: Holopedium_giberum","date: 1996-06-17<br />genus_species: Diaphanosoma_brachyurum","date: 1995-06-19<br />genus_species: Diaphanosoma_brachyurum","date: 1999-06-29<br />genus_species: Diaphanosoma_brachyurum","date: 1994-06-30<br />genus_species: Diaphanosoma_brachyurum","date: 1998-07-13<br />genus_species: Diaphanosoma_brachyurum","date: 1997-07-14<br />genus_species: Diaphanosoma_brachyurum","date: 1996-07-15<br />genus_species: Diaphanosoma_brachyurum","date: 2003-07-15<br />genus_species: Diaphanosoma_brachyurum","date: 2001-07-17<br />genus_species: Diaphanosoma_brachyurum","date: 2000-07-18<br />genus_species: Diaphanosoma_brachyurum","date: 2006-07-18<br />genus_species: Diaphanosoma_brachyurum","date: 2005-07-19<br />genus_species: Diaphanosoma_brachyurum","date: 1994-07-27<br />genus_species: Diaphanosoma_brachyurum","date: 2004-07-06<br />genus_species: Diaphanosoma_brachyurum","date: 2004-08-11<br />genus_species: Diaphanosoma_brachyurum","date: 2003-08-12<br />genus_species: Diaphanosoma_brachyurum","date: 2002-08-13<br />genus_species: Diaphanosoma_brachyurum","date: 2006-08-15<br />genus_species: Diaphanosoma_brachyurum","date: 2005-08-16<br />genus_species: Diaphanosoma_brachyurum","date: 1998-08-17<br />genus_species: Diaphanosoma_brachyurum","date: 1997-08-18<br />genus_species: Diaphanosoma_brachyurum","date: 1996-08-19<br />genus_species: Diaphanosoma_brachyurum","date: 2000-08-21<br />genus_species: Diaphanosoma_brachyurum","date: 1999-08-23<br />genus_species: Diaphanosoma_brachyurum","date: 1994-08-31<br />genus_species: Diaphanosoma_brachyurum","date: 2001-08-07<br />genus_species: Diaphanosoma_brachyurum","date: 1995-08-08<br />genus_species: Diaphanosoma_brachyurum","date: 2002-09-10<br />genus_species: Diaphanosoma_brachyurum","date: 1995-09-13<br />genus_species: Diaphanosoma_brachyurum","date: 1996-06-17<br />genus_species: Diaphanosoma_birgei","date: 1995-06-19<br />genus_species: Diaphanosoma_birgei","date: 1999-06-29<br />genus_species: Diaphanosoma_birgei","date: 1994-06-30<br />genus_species: Diaphanosoma_birgei","date: 1998-07-13<br />genus_species: Diaphanosoma_birgei","date: 1997-07-14<br />genus_species: Diaphanosoma_birgei","date: 1996-07-15<br />genus_species: Diaphanosoma_birgei","date: 2003-07-15<br />genus_species: Diaphanosoma_birgei","date: 2001-07-17<br />genus_species: Diaphanosoma_birgei","date: 2000-07-18<br />genus_species: Diaphanosoma_birgei","date: 2006-07-18<br />genus_species: Diaphanosoma_birgei","date: 2005-07-19<br />genus_species: Diaphanosoma_birgei","date: 1994-07-27<br />genus_species: Diaphanosoma_birgei","date: 2004-07-06<br />genus_species: Diaphanosoma_birgei","date: 2004-08-11<br />genus_species: Diaphanosoma_birgei","date: 2003-08-12<br />genus_species: Diaphanosoma_birgei","date: 2002-08-13<br />genus_species: Diaphanosoma_birgei","date: 2006-08-15<br />genus_species: Diaphanosoma_birgei","date: 2005-08-16<br />genus_species: Diaphanosoma_birgei","date: 1998-08-17<br />genus_species: Diaphanosoma_birgei","date: 1997-08-18<br />genus_species: Diaphanosoma_birgei","date: 1996-08-19<br />genus_species: Diaphanosoma_birgei","date: 2000-08-21<br />genus_species: Diaphanosoma_birgei","date: 1999-08-23<br />genus_species: Diaphanosoma_birgei","date: 1994-08-31<br />genus_species: Diaphanosoma_birgei","date: 2001-08-07<br />genus_species: Diaphanosoma_birgei","date: 1995-08-08<br />genus_species: Diaphanosoma_birgei","date: 2002-09-10<br />genus_species: Diaphanosoma_birgei","date: 1995-09-13<br />genus_species: Diaphanosoma_birgei","date: 1996-06-17<br />genus_species: Daphnia_pulex","date: 1995-06-19<br />genus_species: Daphnia_pulex","date: 1999-06-29<br />genus_species: Daphnia_pulex","date: 1994-06-30<br />genus_species: Daphnia_pulex","date: 1998-07-13<br />genus_species: Daphnia_pulex","date: 1997-07-14<br />genus_species: Daphnia_pulex","date: 1996-07-15<br />genus_species: Daphnia_pulex","date: 2003-07-15<br />genus_species: Daphnia_pulex","date: 2001-07-17<br />genus_species: Daphnia_pulex","date: 2000-07-18<br />genus_species: Daphnia_pulex","date: 2006-07-18<br />genus_species: Daphnia_pulex","date: 2005-07-19<br />genus_species: Daphnia_pulex","date: 1994-07-27<br />genus_species: Daphnia_pulex","date: 2004-07-06<br />genus_species: Daphnia_pulex","date: 2004-08-11<br />genus_species: Daphnia_pulex","date: 2003-08-12<br />genus_species: Daphnia_pulex","date: 2002-08-13<br />genus_species: Daphnia_pulex","date: 2006-08-15<br />genus_species: Daphnia_pulex","date: 2005-08-16<br />genus_species: Daphnia_pulex","date: 1998-08-17<br />genus_species: Daphnia_pulex","date: 1997-08-18<br />genus_species: Daphnia_pulex","date: 1996-08-19<br />genus_species: Daphnia_pulex","date: 2000-08-21<br />genus_species: Daphnia_pulex","date: 1999-08-23<br />genus_species: Daphnia_pulex","date: 1994-08-31<br />genus_species: Daphnia_pulex","date: 2001-08-07<br />genus_species: Daphnia_pulex","date: 1995-08-08<br />genus_species: Daphnia_pulex","date: 2002-09-10<br />genus_species: Daphnia_pulex","date: 1995-09-13<br />genus_species: Daphnia_pulex","date: 1996-06-17<br />genus_species: Daphnia_catawba","date: 1995-06-19<br />genus_species: Daphnia_catawba","date: 1999-06-29<br />genus_species: Daphnia_catawba","date: 1994-06-30<br />genus_species: Daphnia_catawba","date: 1998-07-13<br />genus_species: Daphnia_catawba","date: 1997-07-14<br />genus_species: Daphnia_catawba","date: 1996-07-15<br />genus_species: Daphnia_catawba","date: 2003-07-15<br />genus_species: Daphnia_catawba","date: 2001-07-17<br />genus_species: Daphnia_catawba","date: 2000-07-18<br />genus_species: Daphnia_catawba","date: 2006-07-18<br />genus_species: Daphnia_catawba","date: 2005-07-19<br />genus_species: Daphnia_catawba","date: 1994-07-27<br />genus_species: Daphnia_catawba","date: 2004-07-06<br />genus_species: Daphnia_catawba","date: 2004-08-11<br />genus_species: Daphnia_catawba","date: 2003-08-12<br />genus_species: Daphnia_catawba","date: 2002-08-13<br />genus_species: Daphnia_catawba","date: 2006-08-15<br />genus_species: Daphnia_catawba","date: 2005-08-16<br />genus_species: Daphnia_catawba","date: 1998-08-17<br />genus_species: Daphnia_catawba","date: 1997-08-18<br />genus_species: Daphnia_catawba","date: 1996-08-19<br />genus_species: Daphnia_catawba","date: 2000-08-21<br />genus_species: Daphnia_catawba","date: 1999-08-23<br />genus_species: Daphnia_catawba","date: 1994-08-31<br />genus_species: Daphnia_catawba","date: 2001-08-07<br />genus_species: Daphnia_catawba","date: 1995-08-08<br />genus_species: Daphnia_catawba","date: 2002-09-10<br />genus_species: Daphnia_catawba","date: 1995-09-13<br />genus_species: Daphnia_catawba","date: 1996-06-17<br />genus_species: Bosmina_longirostris","date: 1995-06-19<br />genus_species: Bosmina_longirostris","date: 1999-06-29<br />genus_species: Bosmina_longirostris","date: 1994-06-30<br />genus_species: Bosmina_longirostris","date: 1998-07-13<br />genus_species: Bosmina_longirostris","date: 1997-07-14<br />genus_species: Bosmina_longirostris","date: 1996-07-15<br />genus_species: Bosmina_longirostris","date: 2003-07-15<br />genus_species: Bosmina_longirostris","date: 2001-07-17<br />genus_species: Bosmina_longirostris","date: 2000-07-18<br />genus_species: Bosmina_longirostris","date: 2006-07-18<br />genus_species: Bosmina_longirostris","date: 2005-07-19<br />genus_species: Bosmina_longirostris","date: 1994-07-27<br />genus_species: Bosmina_longirostris","date: 2004-07-06<br />genus_species: Bosmina_longirostris","date: 2004-08-11<br />genus_species: Bosmina_longirostris","date: 2003-08-12<br />genus_species: Bosmina_longirostris","date: 2002-08-13<br />genus_species: Bosmina_longirostris","date: 2006-08-15<br />genus_species: Bosmina_longirostris","date: 2005-08-16<br />genus_species: Bosmina_longirostris","date: 1998-08-17<br />genus_species: Bosmina_longirostris","date: 1997-08-18<br />genus_species: Bosmina_longirostris","date: 1996-08-19<br />genus_species: Bosmina_longirostris","date: 2000-08-21<br />genus_species: Bosmina_longirostris","date: 1999-08-23<br />genus_species: Bosmina_longirostris","date: 1994-08-31<br />genus_species: Bosmina_longirostris","date: 2001-08-07<br />genus_species: Bosmina_longirostris","date: 1995-08-08<br />genus_species: Bosmina_longirostris","date: 2002-09-10<br />genus_species: Bosmina_longirostris","date: 1995-09-13<br />genus_species: Bosmina_longirostris","date: 1996-06-17<br />genus_species: Holopedium_giberum","date: 1994-06-28<br />genus_species: Holopedium_giberum","date: 1999-06-29<br />genus_species: Holopedium_giberum","date: 1998-07-13<br />genus_species: Holopedium_giberum","date: 1997-07-14<br />genus_species: Holopedium_giberum","date: 2003-07-15<br />genus_species: Holopedium_giberum","date: 2001-07-17<br />genus_species: Holopedium_giberum","date: 2000-07-18<br />genus_species: Holopedium_giberum","date: 2006-07-18<br />genus_species: Holopedium_giberum","date: 2005-07-19<br />genus_species: Holopedium_giberum","date: 1996-07-22<br />genus_species: Holopedium_giberum","date: 1994-07-27<br />genus_species: Holopedium_giberum","date: 2004-07-06<br />genus_species: Holopedium_giberum","date: 1998-08-10<br />genus_species: Holopedium_giberum","date: 2004-08-11<br />genus_species: Holopedium_giberum","date: 2002-08-13<br />genus_species: Holopedium_giberum","date: 2006-08-15<br />genus_species: Holopedium_giberum","date: 2005-08-16<br />genus_species: Holopedium_giberum","date: 1997-08-18<br />genus_species: Holopedium_giberum","date: 1996-08-19<br />genus_species: Holopedium_giberum","date: 2000-08-21<br />genus_species: Holopedium_giberum","date: 1999-08-23<br />genus_species: Holopedium_giberum","date: 1994-08-31<br />genus_species: Holopedium_giberum","date: 2001-08-07<br />genus_species: Holopedium_giberum","date: 1995-08-09<br />genus_species: Holopedium_giberum","date: 1995-09-12<br />genus_species: Holopedium_giberum","date: 2002-09-24<br />genus_species: Holopedium_giberum","date: 1996-06-17<br />genus_species: Diaphanosoma_brachyurum","date: 1994-06-28<br />genus_species: Diaphanosoma_brachyurum","date: 1999-06-29<br />genus_species: Diaphanosoma_brachyurum","date: 1998-07-13<br />genus_species: Diaphanosoma_brachyurum","date: 1997-07-14<br />genus_species: Diaphanosoma_brachyurum","date: 2003-07-15<br />genus_species: Diaphanosoma_brachyurum","date: 2001-07-17<br />genus_species: Diaphanosoma_brachyurum","date: 2000-07-18<br />genus_species: Diaphanosoma_brachyurum","date: 2006-07-18<br />genus_species: Diaphanosoma_brachyurum","date: 2005-07-19<br />genus_species: Diaphanosoma_brachyurum","date: 1996-07-22<br />genus_species: Diaphanosoma_brachyurum","date: 1994-07-27<br />genus_species: Diaphanosoma_brachyurum","date: 2004-07-06<br />genus_species: Diaphanosoma_brachyurum","date: 1998-08-10<br />genus_species: Diaphanosoma_brachyurum","date: 2004-08-11<br />genus_species: Diaphanosoma_brachyurum","date: 2002-08-13<br />genus_species: Diaphanosoma_brachyurum","date: 2006-08-15<br />genus_species: Diaphanosoma_brachyurum","date: 2005-08-16<br />genus_species: Diaphanosoma_brachyurum","date: 1997-08-18<br />genus_species: Diaphanosoma_brachyurum","date: 1996-08-19<br />genus_species: Diaphanosoma_brachyurum","date: 2000-08-21<br />genus_species: Diaphanosoma_brachyurum","date: 1999-08-23<br />genus_species: Diaphanosoma_brachyurum","date: 1994-08-31<br />genus_species: Diaphanosoma_brachyurum","date: 2001-08-07<br />genus_species: Diaphanosoma_brachyurum","date: 1995-08-09<br />genus_species: Diaphanosoma_brachyurum","date: 1995-09-12<br />genus_species: Diaphanosoma_brachyurum","date: 2002-09-24<br />genus_species: Diaphanosoma_brachyurum","date: 1996-06-17<br />genus_species: Diaphanosoma_birgei","date: 1994-06-28<br />genus_species: Diaphanosoma_birgei","date: 1999-06-29<br />genus_species: Diaphanosoma_birgei","date: 1998-07-13<br />genus_species: Diaphanosoma_birgei","date: 1997-07-14<br />genus_species: Diaphanosoma_birgei","date: 2003-07-15<br />genus_species: Diaphanosoma_birgei","date: 2001-07-17<br />genus_species: Diaphanosoma_birgei","date: 2000-07-18<br />genus_species: Diaphanosoma_birgei","date: 2006-07-18<br />genus_species: Diaphanosoma_birgei","date: 2005-07-19<br />genus_species: Diaphanosoma_birgei","date: 1996-07-22<br />genus_species: Diaphanosoma_birgei","date: 1994-07-27<br />genus_species: Diaphanosoma_birgei","date: 2004-07-06<br />genus_species: Diaphanosoma_birgei","date: 1998-08-10<br />genus_species: Diaphanosoma_birgei","date: 2004-08-11<br />genus_species: Diaphanosoma_birgei","date: 2002-08-13<br />genus_species: Diaphanosoma_birgei","date: 2006-08-15<br />genus_species: Diaphanosoma_birgei","date: 2005-08-16<br />genus_species: Diaphanosoma_birgei","date: 1997-08-18<br />genus_species: Diaphanosoma_birgei","date: 1996-08-19<br />genus_species: Diaphanosoma_birgei","date: 2000-08-21<br />genus_species: Diaphanosoma_birgei","date: 1999-08-23<br />genus_species: Diaphanosoma_birgei","date: 1994-08-31<br />genus_species: Diaphanosoma_birgei","date: 2001-08-07<br />genus_species: Diaphanosoma_birgei","date: 1995-08-09<br />genus_species: Diaphanosoma_birgei","date: 1995-09-12<br />genus_species: Diaphanosoma_birgei","date: 2002-09-24<br />genus_species: Diaphanosoma_birgei","date: 1996-06-17<br />genus_species: Daphnia_pulex","date: 1994-06-28<br />genus_species: Daphnia_pulex","date: 1999-06-29<br />genus_species: Daphnia_pulex","date: 1998-07-13<br />genus_species: Daphnia_pulex","date: 1997-07-14<br />genus_species: Daphnia_pulex","date: 2003-07-15<br />genus_species: Daphnia_pulex","date: 2001-07-17<br />genus_species: Daphnia_pulex","date: 2000-07-18<br />genus_species: Daphnia_pulex","date: 2006-07-18<br />genus_species: Daphnia_pulex","date: 2005-07-19<br />genus_species: Daphnia_pulex","date: 1996-07-22<br />genus_species: Daphnia_pulex","date: 1994-07-27<br />genus_species: Daphnia_pulex","date: 2004-07-06<br />genus_species: Daphnia_pulex","date: 1998-08-10<br />genus_species: Daphnia_pulex","date: 2004-08-11<br />genus_species: Daphnia_pulex","date: 2002-08-13<br />genus_species: Daphnia_pulex","date: 2006-08-15<br />genus_species: Daphnia_pulex","date: 2005-08-16<br />genus_species: Daphnia_pulex","date: 1997-08-18<br />genus_species: Daphnia_pulex","date: 1996-08-19<br />genus_species: Daphnia_pulex","date: 2000-08-21<br />genus_species: Daphnia_pulex","date: 1999-08-23<br />genus_species: Daphnia_pulex","date: 1994-08-31<br />genus_species: Daphnia_pulex","date: 2001-08-07<br />genus_species: Daphnia_pulex","date: 1995-08-09<br />genus_species: Daphnia_pulex","date: 1995-09-12<br />genus_species: Daphnia_pulex","date: 2002-09-24<br />genus_species: Daphnia_pulex","date: 1996-06-17<br />genus_species: Daphnia_catawba","date: 1994-06-28<br />genus_species: Daphnia_catawba","date: 1999-06-29<br />genus_species: Daphnia_catawba","date: 1998-07-13<br />genus_species: Daphnia_catawba","date: 1997-07-14<br />genus_species: Daphnia_catawba","date: 2003-07-15<br />genus_species: Daphnia_catawba","date: 2001-07-17<br />genus_species: Daphnia_catawba","date: 2000-07-18<br />genus_species: Daphnia_catawba","date: 2006-07-18<br />genus_species: Daphnia_catawba","date: 2005-07-19<br />genus_species: Daphnia_catawba","date: 1996-07-22<br />genus_species: Daphnia_catawba","date: 1994-07-27<br />genus_species: Daphnia_catawba","date: 2004-07-06<br />genus_species: Daphnia_catawba","date: 1998-08-10<br />genus_species: Daphnia_catawba","date: 2004-08-11<br />genus_species: Daphnia_catawba","date: 2002-08-13<br />genus_species: Daphnia_catawba","date: 2006-08-15<br />genus_species: Daphnia_catawba","date: 2005-08-16<br />genus_species: Daphnia_catawba","date: 1997-08-18<br />genus_species: Daphnia_catawba","date: 1996-08-19<br />genus_species: Daphnia_catawba","date: 2000-08-21<br />genus_species: Daphnia_catawba","date: 1999-08-23<br />genus_species: Daphnia_catawba","date: 1994-08-31<br />genus_species: Daphnia_catawba","date: 2001-08-07<br />genus_species: Daphnia_catawba","date: 1995-08-09<br />genus_species: Daphnia_catawba","date: 1995-09-12<br />genus_species: Daphnia_catawba","date: 2002-09-24<br />genus_species: Daphnia_catawba","date: 1996-06-17<br />genus_species: Bosmina_longirostris","date: 1994-06-28<br />genus_species: Bosmina_longirostris","date: 1999-06-29<br />genus_species: Bosmina_longirostris","date: 1998-07-13<br />genus_species: Bosmina_longirostris","date: 1997-07-14<br />genus_species: Bosmina_longirostris","date: 2003-07-15<br />genus_species: Bosmina_longirostris","date: 2001-07-17<br />genus_species: Bosmina_longirostris","date: 2000-07-18<br />genus_species: Bosmina_longirostris","date: 2006-07-18<br />genus_species: Bosmina_longirostris","date: 2005-07-19<br />genus_species: Bosmina_longirostris","date: 1996-07-22<br />genus_species: Bosmina_longirostris","date: 1994-07-27<br />genus_species: Bosmina_longirostris","date: 2004-07-06<br />genus_species: Bosmina_longirostris","date: 1998-08-10<br />genus_species: Bosmina_longirostris","date: 2004-08-11<br />genus_species: Bosmina_longirostris","date: 2002-08-13<br />genus_species: Bosmina_longirostris","date: 2006-08-15<br />genus_species: Bosmina_longirostris","date: 2005-08-16<br />genus_species: Bosmina_longirostris","date: 1997-08-18<br />genus_species: Bosmina_longirostris","date: 1996-08-19<br />genus_species: Bosmina_longirostris","date: 2000-08-21<br />genus_species: Bosmina_longirostris","date: 1999-08-23<br />genus_species: Bosmina_longirostris","date: 1994-08-31<br />genus_species: Bosmina_longirostris","date: 2001-08-07<br />genus_species: Bosmina_longirostris","date: 1995-08-09<br />genus_species: Bosmina_longirostris","date: 1995-09-12<br />genus_species: Bosmina_longirostris","date: 2002-09-24<br />genus_species: Bosmina_longirostris"],"type":"scatter","mode":"markers","marker":{"autocolorscale":false,"color":"rgba(248,118,109,1)","opacity":1,"size":5.66929133858268,"symbol":"circle","line":{"width":1.88976377952756,"color":"rgba(248,118,109,1)"}},"hoveron":"points","name":"Cladoceran","legendgroup":"Cladoceran","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null}],"layout":{"margin":{"t":26.2283105022831,"r":7.30593607305936,"b":40.1826484018265,"l":37.2602739726027},"plot_bgcolor":"rgba(235,235,235,1)","paper_bgcolor":"rgba(255,255,255,1)","font":{"color":"rgba(0,0,0,1)","family":"","size":14.6118721461187},"xaxis":{"domain":[0,1],"automargin":true,"type":"linear","autorange":false,"range":[0.4,4.6],"tickmode":"array","ticktext":["Grass","Indian","South","Willis"],"tickvals":[1,2,3,4],"categoryorder":"array","categoryarray":["Grass","Indian","South","Willis"],"nticks":null,"ticks":"outside","tickcolor":"rgba(51,51,51,1)","ticklen":3.65296803652968,"tickwidth":0.66417600664176,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.689497716895},"tickangle":-0,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"gridcolor":"rgba(255,255,255,1)","gridwidth":0.66417600664176,"zeroline":false,"anchor":"y","title":{"text":"lake_name","font":{"color":"rgba(0,0,0,1)","family":"","size":14.6118721461187}},"hoverformat":".2f"},"yaxis":{"domain":[0,1],"automargin":true,"type":"linear","autorange":false,"range":[-2.8101985,59.0141685],"tickmode":"array","ticktext":["0","20","40"],"tickvals":[0,20,40],"categoryorder":"array","categoryarray":["0","20","40"],"nticks":null,"ticks":"outside","tickcolor":"rgba(51,51,51,1)","ticklen":3.65296803652968,"tickwidth":0.66417600664176,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.689497716895},"tickangle":-0,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"gridcolor":"rgba(255,255,255,1)","gridwidth":0.66417600664176,"zeroline":false,"anchor":"x","title":{"text":"org_l","font":{"color":"rgba(0,0,0,1)","family":"","size":14.6118721461187}},"hoverformat":".2f"},"shapes":[{"type":"rect","fillcolor":null,"line":{"color":null,"width":0,"linetype":[]},"yref":"paper","xref":"paper","x0":0,"x1":1,"y0":0,"y1":1}],"showlegend":true,"legend":{"bgcolor":"rgba(255,255,255,1)","bordercolor":"transparent","borderwidth":1.88976377952756,"font":{"color":"rgba(0,0,0,1)","family":"","size":11.689497716895},"y":0.913385826771654},"annotations":[{"text":"group","x":1.02,"y":1,"showarrow":false,"ax":0,"ay":0,"font":{"color":"rgba(0,0,0,1)","family":"","size":14.6118721461187},"xref":"paper","yref":"paper","textangle":-0,"xanchor":"left","yanchor":"bottom","legendTitle":true}],"hovermode":"closest","barmode":"relative"},"config":{"doubleClick":"reset","showSendToCloud":false},"source":"A","attrs":{"2f4678eb07fe":{"x":{},"y":{},"colour":{},"date":{},"lake_name":{},"genus_species":{},"type":"scatter"}},"cur_data":"2f4678eb07fe","visdat":{"2f4678eb07fe":["function (y) ","x"]},"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.2,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
+<pre class="r"><code># We could also do this by looking at the values that are above some threshold
+# Display values greater than a value by group ------
+
+lakes.df %&gt;% group_by(lake_name) %&gt;%
+  filter(org_l &gt; 40)</code></pre>
+<pre><code>## # A tibble: 8 x 7
+## # Groups:   lake_name [4]
+##   permanent_id lake_name date       group    genus_species      org_l  year
+##          &lt;dbl&gt; &lt;chr&gt;     &lt;date&gt;     &lt;chr&gt;    &lt;chr&gt;              &lt;dbl&gt; &lt;dbl&gt;
+## 1     47723283 Willis    1994-07-27 Copepod  Tropocyclops_exte…  57.3  1994
+## 2     47723283 Willis    2004-07-06 Cladoce… Bosmina_longirost…  48.4  2004
+## 3    131845587 Grass     1995-06-13 Copepod  Leptodiaptomus_mi…  46.1  1995
+## 4    131845587 Grass     1996-06-18 Copepod  Leptodiaptomus_mi…  44.4  1996
+## 5    131845587 Grass     2004-07-13 Copepod  Leptodiaptomus_mi…  41.2  2004
+## 6    131845836 Indian    1999-06-29 Cladoce… Bosmina_longirost…  56.2  1999
+## 7    131846593 South     2000-07-18 Cladoce… Bosmina_longirost…  55.6  2000
+## 8    131846593 South     1995-09-13 Copepod  Leptodiaptomus_mi…  56.0  1995</code></pre>
+<pre class="r"><code># Using multiple conditions
+lakes.df %&gt;% group_by(lake_name) %&gt;%
+  filter(org_l &gt; 40 &amp; lake_name == &quot;Willis&quot;)</code></pre>
+<pre><code>## # A tibble: 2 x 7
+## # Groups:   lake_name [1]
+##   permanent_id lake_name date       group     genus_species     org_l  year
+##          &lt;dbl&gt; &lt;chr&gt;     &lt;date&gt;     &lt;chr&gt;     &lt;chr&gt;             &lt;dbl&gt; &lt;dbl&gt;
+## 1     47723283 Willis    1994-07-27 Copepod   Tropocyclops_ext…  57.3  1994
+## 2     47723283 Willis    2004-07-06 Cladocer… Bosmina_longiros…  48.4  2004</code></pre>
+<pre class="r"><code># or yes you can use or as |
+lakes.df %&gt;% group_by(lake_name) %&gt;%
+  filter(org_l &gt; 40 &amp; lake_name == &quot;Willis&quot; |
+         org_l &gt; 40 &amp; lake_name == &quot;South&quot; )</code></pre>
+<pre><code>## # A tibble: 4 x 7
+## # Groups:   lake_name [2]
+##   permanent_id lake_name date       group    genus_species      org_l  year
+##          &lt;dbl&gt; &lt;chr&gt;     &lt;date&gt;     &lt;chr&gt;    &lt;chr&gt;              &lt;dbl&gt; &lt;dbl&gt;
+## 1     47723283 Willis    1994-07-27 Copepod  Tropocyclops_exte…  57.3  1994
+## 2     47723283 Willis    2004-07-06 Cladoce… Bosmina_longirost…  48.4  2004
+## 3    131846593 South     2000-07-18 Cladoce… Bosmina_longirost…  55.6  2000
+## 4    131846593 South     1995-09-13 Copepod  Leptodiaptomus_mi…  56.0  1995</code></pre>
+<pre class="r"><code># Flagging data -----
+# First the ifelse statement
+
+lakes.df &lt;- lakes.df %&gt;%
+  mutate(flag = ifelse(org_l &gt;40, &quot;high&quot;, &quot;in_range&quot;))</code></pre>
+<pre class="r"><code># Look at data...
+lakes.df %&gt;% 
+  filter(group==&#39;Cladoceran&#39;) %&gt;%
+  ggplot(aes(lake_name, org_l, color=flag)) +
+  geom_point(
+    position= position_jitterdodge(jitter.width = 0.1)
+  ) </code></pre>
+<p><img src="10_Flagging_and_ifelse_casewhen_files/figure-html/unnamed-chunk-12-1.png" width="672" /></p>
+<pre class="r"><code># Case_when ------
+# you can nest if_else statements can be a mess
+# this is where case_when comes into play
+# this is the same but you can add more conditions easier
+lakes.df &lt;- lakes.df %&gt;%
+  mutate(flag = case_when(org_l &gt; 40 ~ &quot;high&quot;,
+                          TRUE ~ &quot;in_range&quot;))</code></pre>
+<pre class="r"><code>lakes.df &lt;- lakes.df %&gt;%
+  mutate(flag = case_when(org_l &gt; 40 ~ &quot;high&quot;,
+                          org_l &lt; 40 &amp; org_l &gt;=30 ~ &quot;medium&quot;,
+                          org_l &lt; 30 &amp; org_l &gt;=20 ~ &quot;lower&quot;,
+                          TRUE ~ &quot;in_range&quot;))</code></pre>
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-88373117-6"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-88373117-6');
+</script>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+
+
+
+</body>
+</html>

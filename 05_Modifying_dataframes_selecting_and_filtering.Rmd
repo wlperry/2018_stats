@@ -1,0 +1,175 @@
+---
+title: "05_Modifying_dataframes_selecting_and_filtering"
+author: "Bill Perry"
+date: "10/17/2019"
+output: html_document
+---
+
+# Load libraries
+As usual - load the necessary libraries.
+```{r}
+# Leach et al reduced for GLEON Workshop
+
+# Load Libraries ----
+# this is done each time you run a script
+library("readxl") # read in excel files
+library("tidyverse") # dplyr and piping and ggplot etc
+library("lubridate") # dates and times
+library("scales") # scales on ggplot ases
+library("skimr") # quick summary stats
+library("janitor") # clean up excel imports
+library("patchwork") # multipanel graphs
+
+```
+
+# Read in files    
+Again read in a simplified file
+
+```{r}
+# So now we have seen how to look at the data
+# What if we wanted to modify the data in terms of columns or rows
+
+# lets read in a new file to add some complexity for fun
+lakes.df <- read_csv("data/reduced_lake_long_genus_species.csv")
+head(lakes.df)
+```
+
+# Mutate - Modifying variables
+Mutate allows you to do a lot of the heavy lifting to modify varaibles and will be somethign that is used a lot
+```{r}
+# first lets look at how to modify a variable
+
+lakes_modified.df <- lakes.df %>%
+  mutate(log_org_l = log10(org_l +1))
+
+# we can do essentially any math we want and do it within groups
+# we will go over this more.
+```
+
+
+# Select to remove/reorder columns     
+   
+Boolean operators are really important here     
+ * less than <    
+ * greater than >     
+ * less than or equal to <=    
+ * greater than or equal to >=    
+ * is equal to ==    
+ * is not equal to !=    
+ * inclusive of %in% c("x", "y", "z")    
+    
+ These can be combined with    
+     &  and   
+     | or   
+   
+```{r}
+# We can remove/retain/or reorder columns using select
+# Reorder columns ----
+lakes.df <- lakes.df %>%
+  select(date, lake_name, permanent_id, group, genus_species, org_l)
+```
+
+You can also sort out a single column and use everything() to leave the rest.
+```{r}
+# we can also reorder one column to the front
+lakes.df <- lakes.df %>%
+  select(lake_name, everything())
+
+```
+
+You can remove columns with the -sign in front of the variable 
+```{r}
+# we could remove columns
+lakes.df <- lakes.df %>%
+  select(-permanent_id)
+```
+
+You can also use starts_with() or ends_with() to sort out strings in code. There is a lot more you can do with this but we wont go into that here.
+```{r}
+
+# you can also select columns with pattern matching
+# starts_with or ends_with
+lakes.df <- lakes.df %>%
+  select(starts_with("g"), date, lake_name, everything()  )
+```
+
+## Filtering data
+We just saw how to reorder columns or remove them. Here we will go over how to filter data to remove rows based on different statements.
+```{r}
+# Filtering data and counting data ----
+# there are several boolean operators that are useful for filtering data
+# we can use these to just see the data or we can use to 
+
+# lets say we wanted to look at only one lake
+lakes.df %>% filter(org_l >5) %>%  filter(lake_name == "Willis")
+```
+
+these could also be combined
+
+## Count
+The count statement lets us explore parts of the data and see what the data looks like.
+```{r}
+# lets look at some of the data using some simple methods
+# how many lakes are there and how many 
+lakes.df %>% count(lake_name)
+```
+
+
+
+```{r}
+# lets see how many genus species there are
+lakes.df %>% count(genus_species)
+```
+
+
+```{r}
+# now this is odd all have the same N 
+# lets look at what the data is a bit more
+lakes.df %>% 
+  group_by(genus_species) %>%
+  filter(org_l==0) %>%
+  count(genus_species)
+```
+
+
+```{r}
+# So there are a lot of 0s - what if we removed that.
+lakes.df %>% 
+  filter(org_l != 0) %>%
+  count(genus_species)
+```
+
+## Ifelse and flagging of data 
+You can use the ifelse command to do a lot of basic flagging and modification of data    
+
+```{r}
+# Conditional flagging of outliers
+# if else ----
+# what if we wanted to flag all 0  values
+
+lakes.df <- lakes.df %>%
+  mutate(flag = ifelse(org_l==0, "ZERO", "NOT ZERO"))
+```
+
+## Case_when - if else on steroids
+The case_when statement allows a lot more flexibility
+```{r}
+# case when
+# we can do the same thing with case_when
+lakes.df <- lakes.df %>%
+  mutate(flag = case_when(org_l == 0 ~ "ZERO",
+                          org_l >0 & org_l < 10  ~ "1 to 10",
+                          org_l >=10 & org_l <100 ~ "10 to 100",
+                          TRUE ~ "something else"))
+```
+
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-88373117-6"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-88373117-6');
+</script>
