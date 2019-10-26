@@ -1,5 +1,5 @@
 ---
-title: "Data Modification"
+title: "Correlation and Regression"
 author: "Bill Perry"
 date: "2018/03/14"
 output:

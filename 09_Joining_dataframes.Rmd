@@ -1,8 +1,11 @@
 ---
-title: "08_Forcats_factors"
+title: "Joining dataframes"
 author: "Bill Perry"
-date: "10/17/2019"
-output: html_document
+date: "2019/10/26"
+output:
+  html_document:
+    toc: true
+    toc_float: true
 ---
 
 ```{r}

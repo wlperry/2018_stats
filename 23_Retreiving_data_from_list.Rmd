@@ -1,9 +1,13 @@
 ---
-title: "23_Retreiving_data_from_list.R"
+title: "Retreiving data from one list dataframe in another"
 author: "Bill Perry"
-date: "10/17/2019"
-output: html_document
+date: "2019/10/26"
+output:
+  html_document:
+    toc: true
+    toc_float: true
 ---
+
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)

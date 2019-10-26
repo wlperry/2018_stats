@@ -1,8 +1,11 @@
 ---
-title: "10_Flagging_and_ifelse_casewhen"
+title: "Using ifelse and case_when to categorize and flag data"
 author: "Bill Perry"
-date: "10/17/2019"
-output: html_document
+date: "2019/10/26"
+output:
+  html_document:
+    toc: true
+    toc_float: true
 ---
 
 ```{r}

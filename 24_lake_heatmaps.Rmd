@@ -1,13 +1,14 @@
 ---
-title: "GGPLOT"
+title: "Making isopleths or lake temperature with depth and time"
 author: "Bill Perry"
-date: "2017/12/01"
-output: 
-    html_document:
-     css: limno.css
-     toc: TRUE # table of content true
-
+date: "2019/10/26"
+output:
+  html_document:
+    toc: true
+    toc_float: true
 ---
+
+
 # Lake Heat Maps
 ##This is how to do lake heatmaps in R using GGPLOT
 

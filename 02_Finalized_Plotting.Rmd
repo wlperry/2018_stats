@@ -1,14 +1,13 @@
 ---
-title: "Intermediate GGPlot Stats"
+title: "Plotting for final graphs"
 author: "Bill Perry"
-date: "2018/03/14"
+date: "2019/10/26"
 output:
   html_document:
     toc: true
     toc_float: true
-editor_options: 
-  chunk_output_type: console
 ---
+
 The goal of this slide set is to show you how to make publication ready graphs and expand on what we have done in the basic plotting series. The goal of this is to use GGPlot and later on I will show you how to use patchwork which allows more flexibility in plot layout.    
 
 ## Load libraries

@@ -1,8 +1,11 @@
 ---
-title: "05_Modifying_dataframes_selecting_and_filtering"
+title: "Modifying dataframes using selet and filter"
 author: "Bill Perry"
-date: "10/17/2019"
-output: html_document
+date: "2019/10/26"
+output:
+  html_document:
+    toc: true
+    toc_float: true
 ---
 
 # Load libraries

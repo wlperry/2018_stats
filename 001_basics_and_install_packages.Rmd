@@ -1,15 +1,13 @@
 ---
-title: "Libraries"
+title: "Install packages and load libraries"
 author: "Bill Perry"
-date: "2019/06/10"
+date: "2019/10/26"
 output:
-  # css: stats.css
   html_document:
-   toc: TRUE
-   toc_float: TRUE
-   number_sections:  FALSE
-   
+    toc: true
+    toc_float: true
 ---
+
 # Libraries     
 These add functionality to base R sort of like apps on a new cell phone.     
 
