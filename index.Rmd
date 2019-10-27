@@ -95,6 +95,8 @@ Regression
 ## [33. Ttests](33_ttests.html)  
 Ttests
 
+## [34. One way AOV](34_oneway_anova.html)  
+Ttests
 
 
 
