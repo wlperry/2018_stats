@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="Bill Perry" />
+
+
+<title>Regression</title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 51px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h2 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h3 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h4 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h5 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h6 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #ffffff;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Bill Perry</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="https://wlperry.github.io/index.html">Bill's Homepage</a>
+</li>
+<li>
+  <a href="https://wlperry.github.io/2018_stats/index.html">Stats and R Homepage</a>
+</li>
+<li>
+  <a href="about.html">About Bill</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">Regression</h1>
+<h4 class="author">Bill Perry</h4>
+<h4 class="date">2018/03/14</h4>
+
+</div>
+
+
+<div id="regression" class="section level2">
+<h2>Regression</h2>
+<p>##An excellent description of the stats for AOV and regression is here:<br />
+<a href="https://www.zoology.ubc.ca/~schluter/R/fit-model/" class="uri">https://www.zoology.ubc.ca/~schluter/R/fit-model/</a></p>
+<p>##Load libraries We will read in the main files and load the libraries as we have worked with so far.</p>
+<pre class="r"><code># One new package for summary stats
+# install.packages(&quot;broom&quot;)
+# install.packages(&quot;GGally&quot;)
+# install.packages(&quot;car&quot;)
+# install.packages(&quot;gvlma&quot;)
+# install.packages(&quot;corrplot&quot;)
+# install.packages(&quot;gvlma&quot;)
+
+# load the libraries each time you restart R
+library(tidyverse)
+library(readxl)
+library(lubridate)
+library(scales)
+library(skimr)
+library(janitor)
+library(patchwork)
+# library(reshape2)
+library(broom)
+library(GGally)
+library(corrplot)
+library(car)
+library(gvlma)</code></pre>
+</div>
+<div id="regressions" class="section level1">
+<h1>Regressions</h1>
+<div id="read-in-files" class="section level2">
+<h2>Read in files</h2>
+<pre class="r"><code>stds.df &lt;- read_csv(&quot;data/standards.csv&quot;)</code></pre>
+<pre><code>## Parsed with column specification:
+## cols(
+##   replicate = col_double(),
+##   std = col_double(),
+##   drp = col_double(),
+##   tp = col_double(),
+##   nh4 = col_double()
+## )</code></pre>
+<pre class="r"><code>glimpse(stds.df)</code></pre>
+<pre><code>## Observations: 30
+## Variables: 5
+## $ replicate &lt;dbl&gt; 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, …
+## $ std       &lt;dbl&gt; 0.000, 0.000, 0.005, 0.005, 0.010, 0.010, 0.020, 0.020…
+## $ drp       &lt;dbl&gt; 0.000, 0.000, 0.002, 0.006, 0.004, 0.003, 0.006, 0.006…
+## $ tp        &lt;dbl&gt; -0.002, -0.002, -0.001, -0.001, 0.000, 0.000, 0.002, 0…
+## $ nh4       &lt;dbl&gt; 0.008, 0.008, NA, NA, 0.018, 0.018, 0.020, 0.020, 0.02…</code></pre>
+</div>
+<div id="standards-long-format" class="section level2">
+<h2>Standards long format</h2>
+<pre class="r"><code>sts_long.df &lt;- stds.df %&gt;%
+  gather(analyte, abs, -replicate, - std)</code></pre>
+</div>
+<div id="linear-regression-ggplot" class="section level2">
+<h2>Linear Regression GGPlot</h2>
+<pre class="r"><code>stds.df %&gt;% 
+  ggplot(aes(x=std, y=drp)) +
+  geom_point(size=2) +
+  geom_smooth(method=&quot;lm&quot;)</code></pre>
+<pre><code>## Warning: Removed 8 rows containing non-finite values (stat_smooth).</code></pre>
+<pre><code>## Warning: Removed 8 rows containing missing values (geom_point).</code></pre>
+<p><img src="32_regression_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
+</div>
+<div id="linear-regression" class="section level2">
+<h2>Linear Regression</h2>
+<p>Linear regression models</p>
+<pre class="r"><code># Fit our regression model
+# regression formula and dataframte
+
+drp.model &lt;- lm(drp ~ std, data=stds.df) 
+
+# Summarize and print the results
+summary(drp.model) # show regression coefficients table</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = drp ~ std, data = stds.df)
+## 
+## Residuals:
+##        Min         1Q     Median         3Q        Max 
+## -0.0041414 -0.0008169  0.0000548  0.0001750  0.0036839 
+## 
+## Coefficients:
+##              Estimate Std. Error t value            Pr(&gt;|t|)    
+## (Intercept) 0.0008144  0.0004281   1.902              0.0716 .  
+## std         0.3003270  0.0009545 314.640 &lt;0.0000000000000002 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 0.001534 on 20 degrees of freedom
+##   (8 observations deleted due to missingness)
+## Multiple R-squared:  0.9998, Adjusted R-squared:  0.9998 
+## F-statistic: 9.9e+04 on 1 and 20 DF,  p-value: &lt; 0.00000000000000022</code></pre>
+<p>From this we would look at the values for slope = 0.3003270<br />
+intercept = 0.0008144<br />
+R^2 = 0.9998</p>
+<p>###AOV table of regression</p>
+<pre class="r"><code>anova(drp.model)</code></pre>
+<pre><code>## Analysis of Variance Table
+## 
+## Response: drp
+##           Df   Sum Sq  Mean Sq F value                Pr(&gt;F)    
+## std        1 0.232855 0.232855   98998 &lt; 0.00000000000000022 ***
+## Residuals 20 0.000047 0.000002                                  
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
+</div>
+<div id="confidence-intervals-of-estimates" class="section level2">
+<h2>Confidence intervals of estimates</h2>
+<pre class="r"><code># Confidence intervals for the sepal model
+confint(drp.model)</code></pre>
+<pre><code>##                     2.5 %      97.5 %
+## (Intercept) -0.0000786454 0.001707489
+## std          0.2983358854 0.302318032</code></pre>
+</div>
+<div id="linear-regresson-assumptions" class="section level2">
+<h2>Linear Regresson Assumptions</h2>
+<p>Ordinary least squares regression relies on several assumptions<br />
+1. residuals are normally distributed and homoscedastic<br />
+2. errors are independent<br />
+3. relationships are linear<br />
+Investigate these assumptions visually by plotting your model:</p>
+</div>
+<div id="histogram-of-residuals" class="section level2">
+<h2>Histogram of residuals</h2>
+<pre class="r"><code># histogram of residuals
+hist(residuals(drp.model))</code></pre>
+<p><img src="32_regression_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
+</div>
+<div id="diagnostic-plots" class="section level2">
+<h2>Diagnostic Plots</h2>
+<pre class="r"><code>par(mar = c(4, 4, 2, 2), mfrow = c(1, 2)) 
+plot(drp.model, which = c(1, 2)) # &quot;which&quot; argument optional</code></pre>
+<p><img src="32_regression_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
+</div>
+<div id="simple_regplot" class="section level2">
+<h2>Plot of the Regression</h2>
+<pre class="r"><code>plot(data=stds.df, drp ~ std, main=&quot;Regression Plot&quot;)
+abline(drp.model, col=&quot;red&quot;)</code></pre>
+<p><img src="32_regression_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
+</div>
+<div id="nonconstant-error-variance-or-homoscedasticity" class="section level2">
+<h2>Non‐constant Error Variance or Homoscedasticity</h2>
+<pre class="r"><code># Evaluate homoscedasticity
+# non-constant error variance test
+ncvTest(drp.model)</code></pre>
+<pre><code>## Non-constant Variance Score Test 
+## Variance formula: ~ fitted.values 
+## Chisquare = 5.294216, Df = 1, p = 0.021396</code></pre>
+</div>
+<div id="test-for-normality-of-residuals" class="section level2">
+<h2>Test for normality of residuals</h2>
+<p>to confirm the qqplot</p>
+<pre class="r"><code>#Test for normality of residuals
+shapiro.test(drp.model$res)</code></pre>
+<pre><code>## 
+##  Shapiro-Wilk normality test
+## 
+## data:  drp.model$res
+## W = 0.84232, p-value = 0.00249</code></pre>
+</div>
+<div id="different-code-for-a-qqplot-for-normality" class="section level2">
+<h2>Different code for a QQPlot for normality</h2>
+<pre class="r"><code>qqPlot(drp.model, main=&quot;QQ Plot&quot;) #qq plot for studentized resid</code></pre>
+<p><img src="32_regression_files/figure-html/unnamed-chunk-13-1.png" width="672" /></p>
+<pre><code>## [1]  4 30</code></pre>
+<div id="save-residuals-for-further-analyses" class="section level3">
+<h3>Save residuals for further analyses</h3>
+<pre class="r"><code># # now to put the residuals next to the data and make sure that NAs are included
+# Not sure why it has an error but it works.
+# I am working on a nicer way to do this
+
+stds.df$residuals[!is.na(stds.df$std)]&lt;-residuals(lm(data=stds.df, drp ~ std, na.action=na.omit))</code></pre>
+<pre><code>## Warning: Unknown or uninitialised column: &#39;residuals&#39;.</code></pre>
+<pre><code>## Warning in stds.df$residuals[!is.na(stds.df$std)] &lt;- residuals(lm(data
+## = stds.df, : number of items to replace is not a multiple of replacement
+## length</code></pre>
+<pre class="r"><code>head(stds.df)</code></pre>
+<pre><code>## # A tibble: 6 x 6
+##   replicate   std   drp     tp    nh4 residuals
+##       &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;     &lt;dbl&gt;
+## 1         1 0     0     -0.002  0.008 -0.000814
+## 2         2 0     0     -0.002  0.008 -0.000814
+## 3         1 0.005 0.002 -0.001 NA     -0.000316
+## 4         2 0.005 0.006 -0.001 NA      0.00368 
+## 5         1 0.01  0.004  0      0.018  0.000182
+## 6         2 0.01  0.003  0      0.018 -0.000818</code></pre>
+</div>
+</div>
+<div id="now-to-add-in-the-predicted-values" class="section level2">
+<h2>Now to add in the predicted values</h2>
+</div>
+<div id="store-fitted-values-in-dataframe" class="section level2">
+<h2>Store fitted values in dataframe</h2>
+<p>So this is not working and I need to look into this more but this is in theory the way to do it.</p>
+<pre class="r"><code># now to see a plot of fitted and observed-----
+stds.df$fitted[!is.na(stds.df$std)] &lt;- fitted(lm(data=stds.df, drp ~ std, na.action=na.omit))</code></pre>
+<pre><code>## Warning: Unknown or uninitialised column: &#39;fitted&#39;.</code></pre>
+<pre><code>## Warning in stds.df$fitted[!is.na(stds.df$std)] &lt;- fitted(lm(data =
+## stds.df, : number of items to replace is not a multiple of replacement
+## length</code></pre>
+<pre class="r"><code>head(stds.df)</code></pre>
+<pre><code>## # A tibble: 6 x 7
+##   replicate   std   drp     tp    nh4 residuals   fitted
+##       &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;
+## 1         1 0     0     -0.002  0.008 -0.000814 0.000814
+## 2         2 0     0     -0.002  0.008 -0.000814 0.000814
+## 3         1 0.005 0.002 -0.001 NA     -0.000316 0.00232 
+## 4         2 0.005 0.006 -0.001 NA      0.00368  0.00232 
+## 5         1 0.01  0.004  0      0.018  0.000182 0.00382 
+## 6         2 0.01  0.003  0      0.018 -0.000818 0.00382</code></pre>
+</div>
+<div id="ggplot-of-data-and-fitted-values" class="section level2">
+<h2>GGPlot of data and fitted values</h2>
+<pre class="r"><code>ggplot(stds.df)  +
+    geom_point(aes(x = std, y = drp), color=&quot;blue&quot;)+
+     geom_point(aes(x = std, y = fitted), color=&quot;red&quot;)+
+    geom_line(aes(x = std, y = fitted), color=&quot;red&quot;)</code></pre>
+<pre><code>## Warning: Removed 8 rows containing missing values (geom_point).</code></pre>
+<p><img src="32_regression_files/figure-html/unnamed-chunk-16-1.png" width="672" /></p>
+<p>##Other packages that do similiar things maybe better.</p>
+<p>###The gvlma package can do a lot of this automatically {#gvlma}</p>
+<pre class="r"><code> #install.packages(&quot;gvlma&quot;)
+# library(gvlma)
+
+# Global test of model assumptions
+gvmodel &lt;- gvlma(drp.model)
+summary(gvmodel)</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = drp ~ std, data = stds.df)
+## 
+## Residuals:
+##        Min         1Q     Median         3Q        Max 
+## -0.0041414 -0.0008169  0.0000548  0.0001750  0.0036839 
+## 
+## Coefficients:
+##              Estimate Std. Error t value            Pr(&gt;|t|)    
+## (Intercept) 0.0008144  0.0004281   1.902              0.0716 .  
+## std         0.3003270  0.0009545 314.640 &lt;0.0000000000000002 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 0.001534 on 20 degrees of freedom
+##   (8 observations deleted due to missingness)
+## Multiple R-squared:  0.9998, Adjusted R-squared:  0.9998 
+## F-statistic: 9.9e+04 on 1 and 20 DF,  p-value: &lt; 0.00000000000000022
+## 
+## 
+## ASSESSMENT OF THE LINEAR MODEL ASSUMPTIONS
+## USING THE GLOBAL TEST ON 4 DEGREES-OF-FREEDOM:
+## Level of Significance =  0.05 
+## 
+## Call:
+##  gvlma(x = drp.model) 
+## 
+##                       Value p-value                   Decision
+## Global Stat        11.05709 0.02593 Assumptions NOT satisfied!
+## Skewness            0.01239 0.91138    Assumptions acceptable.
+## Kurtosis            6.20162 0.01276 Assumptions NOT satisfied!
+## Link Function       3.00386 0.08307    Assumptions acceptable.
+## Heteroscedasticity  1.83923 0.17504    Assumptions acceptable.</code></pre>
+<!-- Global Site Tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-88373117-4"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments)};
+  gtag('js', new Date());
+
+  gtag('config', 'UA-88373117-4');
+</script>
+</div>
+</div>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+
+</body>
+</html>

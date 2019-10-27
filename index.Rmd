@@ -83,6 +83,17 @@ This provides a neat trick on how to extract certain datetime chunks from a larg
 This expands on what was presented at GLEON 18 in New Paltz, New York by GLEON graduate students. I have put that code up here for public use.     
 
 
+# Statistics   
+I am trying to add in some of the stats that I have done in the past. This is very much a work in progress and will get it updated in the next few weeks as the field season slows down
+
+## [31. Correlation](31_correlation.html)  
+Correlations      
+
+## [32. Regressions](32_regression.html)  
+Regression     
+
+## [33. Ttests](33_ttests.html)  
+Ttests
 
 
 

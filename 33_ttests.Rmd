@@ -1,0 +1,192 @@
+---
+title: "Ttests"
+author: "Bill Perry"
+date: "2018/03/14"
+output:
+  html_document:
+    toc: true
+    toc_float: true
+---
+## T Tests
+
+##Load libraries
+We will read in the main files and load the libraries as we have worked with so far.  
+```{r, message=FALSE, warning=FALSE}
+# One new package for summary stats
+#install.packages("broom")
+# install.packages("GGally")
+# install.packages("car")
+# install.packages("gvlma")
+
+
+# load the libraries each time you restart R
+library(tidyverse)
+library(lubridate)
+library(scales)
+library(skimr)
+library(janitor)
+library(patchwork)
+# library(reshape2)
+library(broom)
+library(GGally)
+library(corrplot)
+library(car)
+```
+
+## Read in file
+```{r}
+# read in the file
+iris.df <- read_csv("data/iris.csv") %>%
+  clean_names() %>%
+  remove_empty(c("rows", "cols")) 
+
+glimpse(iris.df)
+```
+
+
+###Summary Statistics for the better look
+###So this is a lot different than thinking about data from excel    
+Lets try to do the summary stats on the data now and see how it differs
+```{r}
+# the data you want to look at
+skim(iris.df)
+```
+   
+```{r}
+iris.df %>% group_by(species) %>% skim_to_wide()
+```
+
+## Wide to long format
+```{r}
+# this will add an index to the dataframe so you know what individual is which
+iris_long.df <- iris.df %>% 
+  mutate(individual = row_number()) %>% 
+  gather(trait, measure, -species, - individual)
+
+head(iris_long.df)
+```
+
+
+## Outliers
+```{r}
+# Box Plots of data
+iris_long.df %>% group_by(species, trait) %>% 
+  ggplot( aes(x = trait, y = measure, color = species, fill=species))+
+  geom_boxplot(aes(alpha=0.3)) 
+```
+
+These look good for the most part with only one or two significant. Your choice to transform or not.       
+
+##Factors     
+Make sure the categorical variable is a factor    
+Rearrange the order of groups so that control group is first, followed by treatment groups.     
+you can do this by:
+```{r}
+# Make Factors from the different levels long way
+# iris_long.df$species <- as.factor(iris_long.df$species)  
+# iris_long.df$trait <- as.factor(iris_long.df$trait) 
+
+# Make Factors dplyr
+iris_long.df <- iris_long.df %>%
+  mutate(
+    sex = factor(species, 
+    labels = c("setosa", "versicolor", "virginica")),
+    trait = factor(trait, 
+    labels = c("sepal_length", "sepal_width", "petal_length", "petal_width"))
+  )
+```
+
+## Test for normality of data and using the broom package     
+So I think this is premature but some people like to test the normality of the data but really you should be assessing the normality of the residuals. But here it goes...
+
+```{r}
+# turn off scientific notaton
+options(scipen = 999)
+# to turn back on 
+#options(scipen = 0)
+
+# Test for normality of each group and store in shapirowilktests
+# This uses the broom package to get clean output of the test 
+iris_long.df %>% group_by(species, trait) %>% do(tidy(shapiro.test(.$measure)))
+
+#You can do this on all variables faster with if there was only one grouping
+# tapply(iris_long.df$measure, iris_long.df$species, shapiro.test)
+```  
+
+##Test for homogenetiy of variances       
+
+Best to use the Levenes test compared to the Bartlet test    
+uses the car package      
+
+http://www.cookbook-r.com/Statistical_analysis/Homogeneity_of_variance/   
+
+Note however that this is doing the homogeneity test on all traits and not each one which is what you really should do and is not often done. Need to check on this though.
+
+```{r}
+#Test for homogeneity of variances by groups
+leveneTest(sepal_length ~ species, data=iris.df)
+
+#Compared to the Bartlet test
+bartlett.test(sepal_length ~ species, data=iris.df)
+
+```
+
+Create a subset dataframe    
+```{r}
+sepal_length.df <- iris_long.df %>%
+  filter(trait =="sepal_length") %>%
+  filter(species != "setosa")
+```
+
+If p-value >= 0.05, use var.equal=TRUE below
+```{r}
+t.test(measure ~ species, data=sepal_length.df,
+       var.equal=TRUE,
+       conf.level=0.95)
+```
+
+```{r}
+t.test(measure ~ species, data=sepal_length.df,
+       var.equal=FALSE,
+       conf.level=0.95)
+```
+
+Boxplot of data
+```{r}
+sepal_length.df %>%
+  ggplot(aes(species, measure, fill = species)) +
+  geom_boxplot()
+```
+
+Mean and standard error plot
+```{r}
+sepal_length.df %>% 
+ggplot(aes(species, color=species)) + 
+  stat_summary(aes(y = measure),
+               fun.y = mean, na.rm = TRUE,
+               geom = "point",
+               size = 3) + 
+  stat_summary(aes(y = measure),
+               fun.data = mean_se, na.rm = TRUE,
+               geom = "errorbar",
+               width = 0.2) +
+  labs(x = "Species", y = "Length") +
+  scale_color_manual(name = "Species", 
+                     values = c("blue", "red"),
+                     labels = c("Versicolor", "Virginica"))
+```
+
+
+   
+   
+   
+
+<!-- Global Site Tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-88373117-4"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments)};
+  gtag('js', new Date());
+
+  gtag('config', 'UA-88373117-4');
+</script>

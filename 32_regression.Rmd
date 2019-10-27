@@ -1,0 +1,200 @@
+---
+title: "Regression"
+author: "Bill Perry"
+date: "2018/03/14"
+output:
+  html_document:
+    toc: true
+    toc_float: true
+---
+## Regression
+
+##An excellent description of the stats for AOV and regression is here:  
+https://www.zoology.ubc.ca/~schluter/R/fit-model/      
+
+##Load libraries
+We will read in the main files and load the libraries as we have worked with so far.   
+```{r, message=FALSE, warning=FALSE}
+# One new package for summary stats
+# install.packages("broom")
+# install.packages("GGally")
+# install.packages("car")
+# install.packages("gvlma")
+# install.packages("corrplot")
+# install.packages("gvlma")
+
+# load the libraries each time you restart R
+library(tidyverse)
+library(readxl)
+library(lubridate)
+library(scales)
+library(skimr)
+library(janitor)
+library(patchwork)
+# library(reshape2)
+library(broom)
+library(GGally)
+library(corrplot)
+library(car)
+library(gvlma)
+```
+
+# Regressions        
+## Read in files
+```{r}
+stds.df <- read_csv("data/standards.csv")
+
+glimpse(stds.df)
+```
+
+## Standards long format      
+```{r}
+sts_long.df <- stds.df %>%
+  gather(analyte, abs, -replicate, - std)
+```
+
+## Linear Regression GGPlot     
+```{r}
+stds.df %>% 
+  ggplot(aes(x=std, y=drp)) +
+  geom_point(size=2) +
+  geom_smooth(method="lm")
+```
+
+
+## Linear Regression    
+Linear regression models       
+```{r}
+# Fit our regression model
+# regression formula and dataframte
+
+drp.model <- lm(drp ~ std, data=stds.df) 
+
+# Summarize and print the results
+summary(drp.model) # show regression coefficients table
+
+```
+
+From this we would look at the values for
+slope = 0.3003270    
+intercept = 0.0008144   
+R^2 = 0.9998
+
+
+###AOV table of regression
+```{r}
+anova(drp.model)
+```
+
+
+## Confidence intervals of estimates       
+```{r}
+# Confidence intervals for the sepal model
+confint(drp.model)
+```
+
+## Linear Regresson Assumptions  
+Ordinary least squares regression relies on several assumptions   
+1. residuals are normally distributed and homoscedastic   
+2. errors are independent    
+3. relationships are linear     
+Investigate these assumptions visually by plotting your model:  
+
+## Histogram of residuals
+```{r}
+# histogram of residuals
+hist(residuals(drp.model))
+```
+
+## Diagnostic Plots
+```{r}
+par(mar = c(4, 4, 2, 2), mfrow = c(1, 2)) 
+plot(drp.model, which = c(1, 2)) # "which" argument optional
+```
+
+## Plot of the Regression {#simple_regplot}
+```{r}
+plot(data=stds.df, drp ~ std, main="Regression Plot")
+abline(drp.model, col="red")
+```
+
+## Non‐constant Error Variance or Homoscedasticity 
+```{r}
+# Evaluate homoscedasticity
+# non-constant error variance test
+ncvTest(drp.model)
+```
+
+## Test for normality of residuals      
+to confirm the qqplot  
+```{r}
+#Test for normality of residuals
+shapiro.test(drp.model$res)
+```  
+   
+## Different code for a QQPlot for normality
+```{r}
+qqPlot(drp.model, main="QQ Plot") #qq plot for studentized resid
+```
+   
+### Save residuals for further analyses 
+```{r}
+# # now to put the residuals next to the data and make sure that NAs are included
+# Not sure why it has an error but it works.
+# I am working on a nicer way to do this
+
+stds.df$residuals[!is.na(stds.df$std)]<-residuals(lm(data=stds.df, drp ~ std, na.action=na.omit))
+
+head(stds.df)
+```
+  
+
+## Now to add in the predicted values    
+## Store fitted values in dataframe 
+So this is not working and I need to look into this more but this is in theory the way to do it.   
+```{r}
+# now to see a plot of fitted and observed-----
+stds.df$fitted[!is.na(stds.df$std)] <- fitted(lm(data=stds.df, drp ~ std, na.action=na.omit))
+
+head(stds.df)
+```
+    
+## GGPlot of data and fitted values
+```{r}
+ggplot(stds.df)  +
+    geom_point(aes(x = std, y = drp), color="blue")+
+     geom_point(aes(x = std, y = fitted), color="red")+
+    geom_line(aes(x = std, y = fitted), color="red")
+```
+
+    
+    
+##Other packages that do similiar things maybe better.       
+    
+###The gvlma package can do a lot of this automatically {#gvlma}
+```{r}
+ #install.packages("gvlma")
+# library(gvlma)
+
+# Global test of model assumptions
+gvmodel <- gvlma(drp.model)
+summary(gvmodel)
+```    
+
+
+
+
+
+   
+   
+   
+
+<!-- Global Site Tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-88373117-4"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments)};
+  gtag('js', new Date());
+
+  gtag('config', 'UA-88373117-4');
+</script>
