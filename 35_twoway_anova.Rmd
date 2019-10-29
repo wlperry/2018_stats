@@ -1,0 +1,210 @@
+---
+title: "One Way ANOVA"
+author: "Bill Perry"
+date: "2018/04/30"
+output:
+  html_document:
+    toc: true
+    toc_float: true
+---
+##Load libraries
+We will read in the main files and load the libraries as we have worked with so far.   
+
+```{r, message=FALSE, warning=FALSE}
+# #Install Packages ----
+# install.packages("tidyverse")
+# install.packages("lubridate")
+# install.packages("scales")
+# install.packages("readxl")
+# install.packages("survminer")
+# install.packages("survival")
+# install.packages("patchwork")
+# install.packages("broom")
+# ANOVA specific
+# install.packages("car")
+# install.packages("emmeans")
+# install.packages("multcompView")
+
+
+#Load libraries ----
+library(tidyverse)
+library(lubridate)
+library(scales)
+library(readxl)
+library(skimr)
+library(broom)
+library(janitor)
+# library(zoo)
+library(patchwork)
+library(car)
+library(emmeans)
+library(multcompView)
+
+```
+
+The data for this project was downloaded from 
+http://stat.pugetsound.edu/hoard/datasetDetails.aspx?id=1
+
+This is a super fun data set in my opinion on m&m's
+
+```{r}
+# read file----
+mm.df <- read_csv("data/mms.csv")
+```
+
+
+
+```{r}
+mm.df %>% 
+  ggplot(aes(center, color=color)) +
+  stat_summary(aes(y = mass ),
+               fun.y = mean,
+               geom = "point",
+               size = 4,
+               position = position_dodge(0.3),
+               na.rm = TRUE) +
+  stat_summary(aes(y = mass),
+               fun.data = mean_se,
+               geom = "errorbar",
+               width = 0.2,
+               position = position_dodge(0.3),
+               na.rm = TRUE) 
+```
+
+
+
+
+```{r}
+mm.df <- mm.df %>%
+  mutate(
+    center = as.factor(center),
+    color = as.factor(color)
+  )
+```
+
+
+
+
+
+```{r}
+mm.df <- mm.df %>%
+  mutate(
+    center = fct_relevel(center, 
+                         "plain", "peanut butter", "peanut"),
+    color = fct_relevel(color, 
+                        "red", "blue", "brown", "green", "orange", "yellow" )
+  )
+```
+
+
+
+
+```{r}
+# Set it up for Type III SS ANOVA
+options(contrasts = c("contr.sum", "contr.poly"))
+```
+
+
+
+
+
+```{r}
+# Fit the linear model and conduct ANOVA
+model = lm(mass ~ center*color, data=mm.df)
+Anova(model, type="III")       # Use type="III" ALWAYS!!!!
+```
+
+
+
+
+
+```{r}
+# Post F test of interactions -----
+model.emm <- emmeans(model, ~ center * color)
+```
+
+
+
+
+
+```{r}
+# plot of comparisons
+# blue are confidence intervals, red arrows overlap mean no significant diff
+plot(model.emm, comparisons = TRUE)
+```
+
+
+
+
+
+```{r}
+# pairwise
+emminteraction = emmeans(model, 
+                         pairwise ~ center:color,
+                         adjust="bonferroni")
+
+emminteraction$contrasts
+```
+
+
+
+
+```{r}
+# # CLD 
+multcomp::cld(model.emm,
+    Letters = letters,
+    adjust="bonferroni") # can be bonferroni- as well
+```
+
+
+
+
+
+```{r}
+# assumptions ----
+# Homogeneity of variance----
+# 1. Homogeneity of variances-----
+plot(model, 1)
+# Levene test homogeneity of variance ----
+leveneTest(mass ~ center*color, data=mm.df)
+```
+
+
+
+
+```{r}
+#Normality of residuals------
+plot(model, 2)
+```
+
+
+
+
+
+```{r}
+# Normality of resituals qqnorm-----
+qqnorm(model$res)
+```
+
+
+
+
+
+```{r}
+# Shapiro test ----
+shapiro.test(model$res)
+```
+
+
+
+
+
+<!-- Global Site Tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-88373117-4"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments)};
+  gtag('js', new Date());
+
+  gtag('config', 'UA-88373117-4');
+</script>
