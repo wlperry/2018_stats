@@ -1,11 +1,10 @@
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
 
 <head>
 
 <meta charset="utf-8" />
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="pandoc" />
 <meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
@@ -236,6 +235,7 @@ $(document).ready(function () {
   border: none;
   display: inline-block;
   border-radius: 4px;
+  background-color: transparent;
 }
 
 .tabset-dropdown > .nav-tabs.nav-tabs-open > li {
@@ -264,6 +264,12 @@ $(document).ready(function () {
 }
 }
 
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
 
 .toc-content {
   padding-left: 30px;
@@ -473,30 +479,185 @@ lakes_summary.df &lt;- lakes.df %&gt;%
 <div id="the-other-way-to-do-this-is-using-skimr-to-look-at-summary-data" class="section level1">
 <h1>the other way to do this is using skimr to look at summary data</h1>
 <pre class="r"><code>lakes.df %&gt;% group_by(lake_name, group) %&gt;% skim(org_l)</code></pre>
-<pre><code>## Skim summary statistics
-##  n obs: 1368 
-##  n variables: 7 
-##  group variables: lake_name, group 
-## 
-## ── Variable type:numeric ─────────────────────────────────────
-##  lake_name      group variable missing complete   n mean   sd p0 p25   p50
-##      Grass Cladoceran    org_l       0      174 174 1.5  3.12  0   0 0.079
-##      Grass    Copepod    org_l       0      174 174 4.88 9.47  0   0 0    
-##     Indian Cladoceran    org_l       0      174 174 2.58 7.19  0   0 0    
-##     Indian    Copepod    org_l       0      174 174 3.21 6.72  0   0 0.073
-##      South Cladoceran    org_l       0      174 174 1.44 5     0   0 0    
-##      South    Copepod    org_l       0      174 174 3.27 7.76  0   0 0    
-##     Willis Cladoceran    org_l       0      162 162 1.87 5.91  0   0 0    
-##     Willis    Copepod    org_l       0      162 162 2.35 7     0   0 0    
-##   p75  p100     hist
-##  1.63 19.48 ▇▁▁▁▁▁▁▁
-##  4.51 46.06 ▇▁▁▁▁▁▁▁
-##  0.8  56.2  ▇▁▁▁▁▁▁▁
-##  1.96 34.22 ▇▁▁▁▁▁▁▁
-##  0.62 55.6  ▇▁▁▁▁▁▁▁
-##  2.04 56.03 ▇▁▁▁▁▁▁▁
-##  1.06 48.35 ▇▁▁▁▁▁▁▁
-##  0.73 57.34 ▇▁▁▁▁▁▁▁</code></pre>
+<table>
+<caption>Data summary</caption>
+<tbody>
+<tr class="odd">
+<td align="left">Name</td>
+<td align="left">Piped data</td>
+</tr>
+<tr class="even">
+<td align="left">Number of rows</td>
+<td align="left">1368</td>
+</tr>
+<tr class="odd">
+<td align="left">Number of columns</td>
+<td align="left">7</td>
+</tr>
+<tr class="even">
+<td align="left">_______________________</td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">Column type frequency:</td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">numeric</td>
+<td align="left">1</td>
+</tr>
+<tr class="odd">
+<td align="left">________________________</td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">Group variables</td>
+<td align="left">lake_name, group</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Variable type: numeric</strong></p>
+<table>
+<thead>
+<tr class="header">
+<th align="left">skim_variable</th>
+<th align="left">lake_name</th>
+<th align="left">group</th>
+<th align="right">n_missing</th>
+<th align="right">complete_rate</th>
+<th align="right">mean</th>
+<th align="right">sd</th>
+<th align="right">p0</th>
+<th align="right">p25</th>
+<th align="right">p50</th>
+<th align="right">p75</th>
+<th align="right">p100</th>
+<th align="left">hist</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">org_l</td>
+<td align="left">Grass</td>
+<td align="left">Cladoceran</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">1.50</td>
+<td align="right">3.12</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0.08</td>
+<td align="right">1.63</td>
+<td align="right">19.48</td>
+<td align="left">▇▁▁▁▁</td>
+</tr>
+<tr class="even">
+<td align="left">org_l</td>
+<td align="left">Grass</td>
+<td align="left">Copepod</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">4.88</td>
+<td align="right">9.47</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0.00</td>
+<td align="right">4.51</td>
+<td align="right">46.06</td>
+<td align="left">▇▁▁▁▁</td>
+</tr>
+<tr class="odd">
+<td align="left">org_l</td>
+<td align="left">Indian</td>
+<td align="left">Cladoceran</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">2.58</td>
+<td align="right">7.19</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0.00</td>
+<td align="right">0.80</td>
+<td align="right">56.20</td>
+<td align="left">▇▁▁▁▁</td>
+</tr>
+<tr class="even">
+<td align="left">org_l</td>
+<td align="left">Indian</td>
+<td align="left">Copepod</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">3.21</td>
+<td align="right">6.72</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0.07</td>
+<td align="right">1.96</td>
+<td align="right">34.22</td>
+<td align="left">▇▁▁▁▁</td>
+</tr>
+<tr class="odd">
+<td align="left">org_l</td>
+<td align="left">South</td>
+<td align="left">Cladoceran</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">1.44</td>
+<td align="right">5.00</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0.00</td>
+<td align="right">0.62</td>
+<td align="right">55.60</td>
+<td align="left">▇▁▁▁▁</td>
+</tr>
+<tr class="even">
+<td align="left">org_l</td>
+<td align="left">South</td>
+<td align="left">Copepod</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">3.27</td>
+<td align="right">7.76</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0.00</td>
+<td align="right">2.04</td>
+<td align="right">56.03</td>
+<td align="left">▇▁▁▁▁</td>
+</tr>
+<tr class="odd">
+<td align="left">org_l</td>
+<td align="left">Willis</td>
+<td align="left">Cladoceran</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">1.87</td>
+<td align="right">5.91</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0.00</td>
+<td align="right">1.06</td>
+<td align="right">48.35</td>
+<td align="left">▇▁▁▁▁</td>
+</tr>
+<tr class="even">
+<td align="left">org_l</td>
+<td align="left">Willis</td>
+<td align="left">Copepod</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">2.35</td>
+<td align="right">7.00</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0.00</td>
+<td align="right">0.73</td>
+<td align="right">57.34</td>
+<td align="left">▇▁▁▁▁</td>
+</tr>
+</tbody>
+</table>
 <pre class="r"><code># this can be saved to a dataframe as well
 skim.df &lt;- lakes.df %&gt;% dplyr::group_by(group) %&gt;% skim(org_l)</code></pre>
 </div>

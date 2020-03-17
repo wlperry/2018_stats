@@ -1,11 +1,10 @@
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
 
 <head>
 
 <meta charset="utf-8" />
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="pandoc" />
 <meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
@@ -236,6 +235,7 @@ $(document).ready(function () {
   border: none;
   display: inline-block;
   border-radius: 4px;
+  background-color: transparent;
 }
 
 .tabset-dropdown > .nav-tabs.nav-tabs-open > li {
@@ -264,6 +264,12 @@ $(document).ready(function () {
 }
 }
 
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
 
 .toc-content {
   padding-left: 30px;
@@ -422,9 +428,8 @@ lakes.df &lt;- read_csv(&quot;data/reduced_lake_long_genus_species_wide.csv&quot
 ## # … with 10 more variables: Cladoceran_Daphnia_pulex &lt;dbl&gt;,
 ## #   Cladoceran_Diaphanosoma_birgei &lt;dbl&gt;,
 ## #   Cladoceran_Diaphanosoma_brachyurum &lt;dbl&gt;,
-## #   Cladoceran_Holopedium_giberum &lt;dbl&gt;,
-## #   Copepod_Aglaodiaptomus_leptpus &lt;dbl&gt;, Copepod_Cyclops_scutifer &lt;dbl&gt;,
-## #   Copepod_Epischura_lacustris &lt;dbl&gt;,
+## #   Cladoceran_Holopedium_giberum &lt;dbl&gt;, Copepod_Aglaodiaptomus_leptpus &lt;dbl&gt;,
+## #   Copepod_Cyclops_scutifer &lt;dbl&gt;, Copepod_Epischura_lacustris &lt;dbl&gt;,
 ## #   Copepod_Leptodiaptomus_minutus &lt;dbl&gt;, Copepod_Mesocyclops_edax &lt;dbl&gt;,
 ## #   Copepod_Tropocyclops_extensus &lt;dbl&gt;</code></pre>
 </div>

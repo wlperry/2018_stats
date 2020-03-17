@@ -9,7 +9,7 @@ output: html_document
 I am in the process of putting them in Github CSV files to download in R directly
 
 [south_lake.csv](https://wlperry.github.io/2018_stats/data/south_lake.csv)     
-[south_lake_long.csv](https://wlperry.github.io/2018_stats/data/south_lake_long.csv) [reduced_lake_long_genus_species.csv](https://wlperry.github.io/2018_stats/data/south_lake_long.csv)    
+[south_lake_long.csv](https://wlperry.github.io/2018_stats/data/reduced_lake_long_genus_species.csv) [reduced_lake_long_genus_species.csv](https://wlperry.github.io/2018_stats/data/south_lake_long.csv)    
 [mendota_temp.csv](https://wlperry.github.io/2018_stats/data/mendota_temp.csv)     
 
 ## Excel Files

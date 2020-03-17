@@ -1,11 +1,10 @@
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
 
 <head>
 
 <meta charset="utf-8" />
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="pandoc" />
 <meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
@@ -236,6 +235,7 @@ $(document).ready(function () {
   border: none;
   display: inline-block;
   border-radius: 4px;
+  background-color: transparent;
 }
 
 .tabset-dropdown > .nav-tabs.nav-tabs-open > li {
@@ -264,6 +264,12 @@ $(document).ready(function () {
 }
 }
 
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
 
 .toc-content {
   padding-left: 30px;
@@ -427,11 +433,11 @@ str(south.df)</code></pre>
 glimpse(south.df)</code></pre>
 <pre><code>## Observations: 29
 ## Variables: 5
-## $ permanent_id &lt;dbl&gt; 131846593, 131846593, 131846593, 131846593, 1318465…
-## $ lake_name    &lt;chr&gt; &quot;South&quot;, &quot;South&quot;, &quot;South&quot;, &quot;South&quot;, &quot;South&quot;, &quot;South…
-## $ date         &lt;date&gt; 1994-06-30, 1994-07-27, 1994-08-31, 1995-06-19, 19…
-## $ cladoceran   &lt;dbl&gt; 3.88800, 6.11278, 5.43744, 1.26099, 4.10000, 2.8181…
-## $ copepod      &lt;dbl&gt; 23.45200, 26.55989, 24.71466, 22.88185, 23.05000, 6…</code></pre>
+## $ permanent_id &lt;dbl&gt; 131846593, 131846593, 131846593, 131846593, 131846593, 1…
+## $ lake_name    &lt;chr&gt; &quot;South&quot;, &quot;South&quot;, &quot;South&quot;, &quot;South&quot;, &quot;South&quot;, &quot;South&quot;, &quot;S…
+## $ date         &lt;date&gt; 1994-06-30, 1994-07-27, 1994-08-31, 1995-06-19, 1995-08…
+## $ cladoceran   &lt;dbl&gt; 3.88800, 6.11278, 5.43744, 1.26099, 4.10000, 2.81810, 8.…
+## $ copepod      &lt;dbl&gt; 23.45200, 26.55989, 24.71466, 22.88185, 23.05000, 64.153…</code></pre>
 </div>
 <div id="saving-files" class="section level2">
 <h2>Saving files</h2>
@@ -462,7 +468,7 @@ ggplot(south.df, aes(x=date, y=cladoceran)) +
 </div>
 <div id="adding-axes-labels" class="section level2">
 <h2>Adding axes labels</h2>
-<p>You can add in simple axes labels that are not fromatted. Using the labs(x= &quot; “, y =” &quot;) statement. You can add in line breaks by putting in a <code>\n</code> in the statement that you have below.</p>
+<p>You can add in simple axes labels that are not fromatted. Using the labs(x= " “, y =” ") statement. You can add in line breaks by putting in a <code>\n</code> in the statement that you have below.</p>
 <pre class="r"><code># Adding axes labels ----
 ggplot(south.df, aes(x=date, y=cladoceran)) +
   geom_line() +

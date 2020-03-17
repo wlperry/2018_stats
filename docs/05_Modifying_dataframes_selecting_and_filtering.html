@@ -1,11 +1,10 @@
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
 
 <head>
 
 <meta charset="utf-8" />
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="pandoc" />
 <meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
@@ -236,6 +235,7 @@ $(document).ready(function () {
   border: none;
   display: inline-block;
   border-radius: 4px;
+  background-color: transparent;
 }
 
 .tabset-dropdown > .nav-tabs.nav-tabs-open > li {
@@ -264,6 +264,12 @@ $(document).ready(function () {
 }
 }
 
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
 
 .toc-content {
   padding-left: 30px;
@@ -405,14 +411,14 @@ lakes.df &lt;- read_csv(&quot;data/reduced_lake_long_genus_species.csv&quot;)</c
 ## )</code></pre>
 <pre class="r"><code>head(lakes.df)</code></pre>
 <pre><code>## # A tibble: 6 x 7
-##   permanent_id lake_name date       group    genus_species      org_l  year
-##          &lt;dbl&gt; &lt;chr&gt;     &lt;date&gt;     &lt;chr&gt;    &lt;chr&gt;              &lt;dbl&gt; &lt;dbl&gt;
-## 1     47723283 Willis    1996-06-17 Cladoce… Bosmina_longiros…  0      1996
-## 2     47723283 Willis    1996-06-17 Cladoce… Daphnia_catawba    0      1996
-## 3     47723283 Willis    1996-06-17 Cladoce… Daphnia_pulex      0      1996
-## 4     47723283 Willis    1996-06-17 Cladoce… Diaphanosoma_bir…  0      1996
-## 5     47723283 Willis    1996-06-17 Cladoce… Diaphanosoma_bra…  0.881  1996
-## 6     47723283 Willis    1996-06-17 Cladoce… Holopedium_giber… 31.6    1996</code></pre>
+##   permanent_id lake_name date       group     genus_species          org_l  year
+##          &lt;dbl&gt; &lt;chr&gt;     &lt;date&gt;     &lt;chr&gt;     &lt;chr&gt;                  &lt;dbl&gt; &lt;dbl&gt;
+## 1     47723283 Willis    1996-06-17 Cladocer… Bosmina_longirostris   0      1996
+## 2     47723283 Willis    1996-06-17 Cladocer… Daphnia_catawba        0      1996
+## 3     47723283 Willis    1996-06-17 Cladocer… Daphnia_pulex          0      1996
+## 4     47723283 Willis    1996-06-17 Cladocer… Diaphanosoma_birgei    0      1996
+## 5     47723283 Willis    1996-06-17 Cladocer… Diaphanosoma_brachyu…  0.881  1996
+## 6     47723283 Willis    1996-06-17 Cladocer… Holopedium_giberum    31.6    1996</code></pre>
 </div>
 <div id="mutate---modifying-variables" class="section level1">
 <h1>Mutate - Modifying variables</h1>

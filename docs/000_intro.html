@@ -1,11 +1,10 @@
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
 
 <head>
 
 <meta charset="utf-8" />
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="pandoc" />
 <meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
@@ -236,6 +235,7 @@ $(document).ready(function () {
   border: none;
   display: inline-block;
   border-radius: 4px;
+  background-color: transparent;
 }
 
 .tabset-dropdown > .nav-tabs.nav-tabs-open > li {
@@ -264,6 +264,12 @@ $(document).ready(function () {
 }
 }
 
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
 
 .toc-content {
   padding-left: 30px;
@@ -558,7 +564,7 @@ Now we can create a new script<br />
 The key to R in my opinion is to install libraries. We will practice with one and your homework is to install the others.</p>
 <p>You will type:<br />
 <code>#install libraires ----</code><br />
-<code>install.packages(&quot;tidyverse&quot;)</code></p>
+<code>install.packages("tidyverse")</code></p>
 <p><code>#load libraries----</code><br />
 <code>library(tidyverse)</code></p>
 <p>Then after each you will hit command or control return and it will run the command or you can click run.</p>
@@ -572,11 +578,11 @@ The key to R in my opinion is to install libraries. We will practice with one an
 <code>janitor</code><br />
 <code>skimr</code></p>
 <p>A different type of installation for the USGS data retreival which is great….<br />
-<code>install_github(&quot;USGS-R/dataRetrieval&quot;)</code><br />
-<code>install.packages(&quot;dataRetrieval&quot;)</code><br />
-<code>install.packages(&quot;dataRetrieval&quot;,</code><br />
-<code>repos=c(&quot;http://owi.usgs.gov/R&quot;,</code><br />
-<code>getOption(&quot;repos&quot;)))</code></p>
+<code>install_github("USGS-R/dataRetrieval")</code><br />
+<code>install.packages("dataRetrieval")</code><br />
+<code>install.packages("dataRetrieval",</code><br />
+<code>repos=c("http://owi.usgs.gov/R",</code><br />
+<code>getOption("repos")))</code></p>
 <!-- Global site tag (gtag.js) - Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=UA-88373117-6"></script>
 <script>

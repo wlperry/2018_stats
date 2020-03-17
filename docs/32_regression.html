@@ -1,11 +1,10 @@
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
 
 <head>
 
 <meta charset="utf-8" />
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="pandoc" />
 <meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
@@ -236,6 +235,7 @@ $(document).ready(function () {
   border: none;
   display: inline-block;
   border-radius: 4px;
+  background-color: transparent;
 }
 
 .tabset-dropdown > .nav-tabs.nav-tabs-open > li {
@@ -264,6 +264,12 @@ $(document).ready(function () {
 }
 }
 
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
 
 .toc-content {
   padding-left: 30px;
@@ -414,11 +420,11 @@ library(gvlma)</code></pre>
 <pre class="r"><code>glimpse(stds.df)</code></pre>
 <pre><code>## Observations: 30
 ## Variables: 5
-## $ replicate &lt;dbl&gt; 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, …
-## $ std       &lt;dbl&gt; 0.000, 0.000, 0.005, 0.005, 0.010, 0.010, 0.020, 0.020…
-## $ drp       &lt;dbl&gt; 0.000, 0.000, 0.002, 0.006, 0.004, 0.003, 0.006, 0.006…
-## $ tp        &lt;dbl&gt; -0.002, -0.002, -0.001, -0.001, 0.000, 0.000, 0.002, 0…
-## $ nh4       &lt;dbl&gt; 0.008, 0.008, NA, NA, 0.018, 0.018, 0.020, 0.020, 0.02…</code></pre>
+## $ replicate &lt;dbl&gt; 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2,…
+## $ std       &lt;dbl&gt; 0.000, 0.000, 0.005, 0.005, 0.010, 0.010, 0.020, 0.020, 0.0…
+## $ drp       &lt;dbl&gt; 0.000, 0.000, 0.002, 0.006, 0.004, 0.003, 0.006, 0.006, NA,…
+## $ tp        &lt;dbl&gt; -0.002, -0.002, -0.001, -0.001, 0.000, 0.000, 0.002, 0.003,…
+## $ nh4       &lt;dbl&gt; 0.008, 0.008, NA, NA, 0.018, 0.018, 0.020, 0.020, 0.026, 0.…</code></pre>
 </div>
 <div id="standards-long-format" class="section level2">
 <h2>Standards long format</h2>
@@ -431,6 +437,7 @@ library(gvlma)</code></pre>
   ggplot(aes(x=std, y=drp)) +
   geom_point(size=2) +
   geom_smooth(method=&quot;lm&quot;)</code></pre>
+<pre><code>## `geom_smooth()` using formula &#39;y ~ x&#39;</code></pre>
 <pre><code>## Warning: Removed 8 rows containing non-finite values (stat_smooth).</code></pre>
 <pre><code>## Warning: Removed 8 rows containing missing values (geom_point).</code></pre>
 <p><img src="32_regression_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
@@ -545,9 +552,8 @@ shapiro.test(drp.model$res)</code></pre>
 
 stds.df$residuals[!is.na(stds.df$std)]&lt;-residuals(lm(data=stds.df, drp ~ std, na.action=na.omit))</code></pre>
 <pre><code>## Warning: Unknown or uninitialised column: &#39;residuals&#39;.</code></pre>
-<pre><code>## Warning in stds.df$residuals[!is.na(stds.df$std)] &lt;- residuals(lm(data
-## = stds.df, : number of items to replace is not a multiple of replacement
-## length</code></pre>
+<pre><code>## Warning in stds.df$residuals[!is.na(stds.df$std)] &lt;- residuals(lm(data =
+## stds.df, : number of items to replace is not a multiple of replacement length</code></pre>
 <pre class="r"><code>head(stds.df)</code></pre>
 <pre><code>## # A tibble: 6 x 6
 ##   replicate   std   drp     tp    nh4 residuals
@@ -569,9 +575,8 @@ stds.df$residuals[!is.na(stds.df$std)]&lt;-residuals(lm(data=stds.df, drp ~ std,
 <pre class="r"><code># now to see a plot of fitted and observed-----
 stds.df$fitted[!is.na(stds.df$std)] &lt;- fitted(lm(data=stds.df, drp ~ std, na.action=na.omit))</code></pre>
 <pre><code>## Warning: Unknown or uninitialised column: &#39;fitted&#39;.</code></pre>
-<pre><code>## Warning in stds.df$fitted[!is.na(stds.df$std)] &lt;- fitted(lm(data =
-## stds.df, : number of items to replace is not a multiple of replacement
-## length</code></pre>
+<pre><code>## Warning in stds.df$fitted[!is.na(stds.df$std)] &lt;- fitted(lm(data = stds.df, :
+## number of items to replace is not a multiple of replacement length</code></pre>
 <pre class="r"><code>head(stds.df)</code></pre>
 <pre><code>## # A tibble: 6 x 7
 ##   replicate   std   drp     tp    nh4 residuals   fitted
