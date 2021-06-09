@@ -1,0 +1,232 @@
+---
+title: "Data analysis introduction"
+author: "Bill Perry"
+date: "2019/09/30"
+output:
+  html_document:
+    toc: true
+    toc_float: true
+---
+
+# Designing a project from the ground up.      
+## Steps to consider    
+So the first thing to think about in my opinion is the workflow or dataflow:   
+  1. What is the source and format of your data? 
+      + what are the variables and units and how will you name them
+      + controlled vocabulary list
+      + data structure in columns
+  2. What is the final objective and use of your data and what output?     
+      + what is the most flexible output     
+      + graphs     
+      + summary statistics     
+      + statistical analyses      
+  3. What is the flow of data      
+      + source and update frequency     
+      + QA/QC and flagging of data     
+      + Transformations or calculations to be made     
+      + Final data output for use - note never write to original dataframe     
+      + Summary statistics     
+      + Graphs     
+      + Statistical Analyses     
+      + Reports with markdown     
+      + Annotate scripts and metadata     
+  4. Set up directory structure 
+      + R Project Directory
+        - scripts/code
+        - documents
+        - data
+        - figures / output
+        - final_ized_data
+      
+## Data Source Format
+### Controlled vocabulary and units   
+<br>
+Thinking about your data source first is important. Using a controlled vocabulary to reference the variables is critical and will save huge amounts of time when modifying the code later on. I find it helpful to have a metadata document with the vocabulary and the units for each term so that future users can figure out what your code means.      
+<br>
+### Variable names    
+As part of controlled voabulary, the way you type the variable names is also important and also important to be consistent. I have found snake case to be the best for me and using the package Janitor works well
+to fix messy filenames.  The main problem is variable names with spaces requires back
+ticks (`variable name`) to use them and special characters (`!@#$%^&* and u(micro) etc) 
+are coded differently on different operating systems and create virtual chaos. The different styles
+are below:      
+1. snake case - looks_like_this - separated by _ and all lower case and often most popular      
+2. period separated - looks.like.this - separated by periods - may get confused with other commands   
+3. lower camel case - looksLikeThis - ever word is capitilized after the first - often harder to type with all the shift caps      
+4. upper camel case - LooksLikeThis - all words capitilized      
+3. all lower case - lookslikethis - I find it messy and hard to read        
+<br>       
+
+the key is that you should have no spaces or special characters. If you do have spaces you use the back tick **` ` **on either side of the variable to call it.     
+<br>
+Special characters are often coded differently in mac and pc computers and will cause more headaches than you have after St. Patricks Day.   
+<br>
+
+### Transformations    
+Keeping a list of transformations and conversions can be helpful in coding and if it is in the meta data file, you can copy the transformations out of the document and if there are mistakes people can track it down fast. 
+
+### Data structure and format
+R uses a column format and all the data in a column has to be of the same type. You can, however, reference data by row and column as in excel.      
+<br>
+The most common data formats you will run into are:        
+  + Numeric - can be double or integer but that is not as important      
+  + Character - text fields      
+  + Factors - displayed often as text but is as levels behind the scenes      
+  + Date - date format or PosixLt      
+      - note this is in days since 1970-01-01 I believe      
+  + Date time - date and time format together or PosixCt       
+      - this is in seconds since 1970-01-01 00:00:00      
+      - this will be critical for many of you           
+      
+     
+     **Note that if you mix formats within a column some of the variables will be converted to NA if say you have a column that is a character column which has mixed numbers and text and is then converted to numeric**     
+  
+  
+### Wide format original data    
+Typically when we enter data it is in **wide format** where an identifier is in the first column and the various variables are in separate columns. This is what is often easiest to enter into excel or wherever it is entered originally.    
+
+This format is often more difficult to work with in R and GGPlot so it is converted to **long format** where there is a column of identifiers, a column of variable names, and a column of values. The switch between these formats is often rather easy so it does not matter what format it is in.          
+<br>    
+wide format:    
+This is how you would likely enter it in excel    
+Columns would be:      
+* lake    
+* datetime      
+* depth      
+* group   
+* genus
+* species      
+* number_liter       
+* biomass_liter         
+<br>   
+
+long format:   
+This would condense this format to fewer columns:      
+
+* lake    
+* datetime      
+* depth      
+* group   
+* genus
+* species       
+* variable_measured ( number_liter and biomass_liter)        
+* value (the values of each of the respective varaibles)          
+
+### Output     
+I find it useful to maintain a read only file of the original data and never write to this file other than the original QA/QC flagging of the data if even then. I usually read from this file and save it to the finalized data folder where the data has been cleaned formatted and basic calculations done on it.
+
+## Data Flow    
+It is often very helpful prior to doing any code work to think about what the final output will look like and what the original data looks like and the steps between these two points. 
+
+## Project directory structure    
+Having a consistent project directory structure where code, data, and text is stored makes it easy to look at different directories and find what you are looking for. That is why I use the following structure. Choose what works for you and stick with it... please   
+
+>     + r_projects            
+>        - scripts      
+>        - documents      
+>        - data      
+>        - figures or output      
+>        - final_data          
+
+
+Using projects in R is super useful and you don't have to worry about setting directories (setwd(*C:\XXXX*)) between a mac and windows machine and all the paths are relative in there when you reference data or output directories and is the same on windows and mac.
+
+## File names
+From the site [File organization and best practices](https://andrewbtran.github.io/NICAR/2018/workflow/docs/01-workflow_intro.html?utm_content=buffer858fd&utm_medium=social&utm_source=twitter.com&utm_campaign=buffer) and [Prime Hints](https://kkulma.github.io/2018-03-18-Prime-Hints-for-Running-a-data-project-in-R/)  naming files has many good practices. Of these the main theme is:    
+
+1. Use a consistent naming theme      
+  a. use date_term1_term2.xxx      
+  b. no spaces or other fancy characters      
+  c. make the names human understandable      
+2. Use natural ordering of files      
+  a. use date at front or somewhere so you know the version      
+  b. use logical ordering like 01_ 02_ 03_      
+3. Avoid things like      
+  a. final thesis proposal.docx - I deal with many students and this is not helpful      
+  
+## Annotations and metadata files    
+**For the love of all that is good** - be sure to annotate you code using the `#` and whatever text helps describe the process you are doing - it will make the code easier to read and evaluate later when you are trying to figure out something really fast. You can also use it to search for code snippets as you are going along.
+
+Metadata files that document what you are doing and why and what the various conversions and statistical transformations are can be of great use later on as well. It is often challenging to figure out what the units are in for various variables or what they actually mean.
+
+## RStudio Specifics     
+### Outline your code to navigate    
+You can write a comment `#` and then follow it with `text` and then 4 dashes `----` or `####` and it will create a note in the outline view
+
+### Comment your code     
+You should use comments `#` with text behind it to annotate the purpose of what your are doing and what is happening in the code chunk below.
+
+## Installing R
+So lets start installing R and R studio    
+R is its own program and can be retrieved from [R Cran](https://cran.r-project.org/)   
+<br>   
+R Studio is a program that makes the interface and usability of R easier in my opinion and can be retrieved here [R Studio](https://www.rstudio.com/products/rstudio/download/)    
+
+<br>
+When you get these installed we can load up R studio and look at the interface.   
+
+### R interface 
+Start R studio and you should see:
+![r interface](images/setup_1.png)
+
+### Project Setup
+Now to set up a new project - this is if the directory does not exist
+Click:
+1. File 
+2. New Project
+![Project set up](images/setup_2.png)
+   
+   You can select `New Directory` or you can select existing directory - lets say you choose new directory
+   ![File New Project New Directory](images/setup_3.png)   
+   
+ For now you are doing a `New Project `.  We will talk about Github at a later date    
+ 
+ ![Direcotry Name for Porject](images/setup_4.png)      
+  Interface changes only slightly - look in the upper right    
+   ![What has changed](images/setup_5.png)    
+### Scripts       
+Now we can create a new script      
+1. File 
+2. New file
+3. R Script
+ ![New Script](images/setup_6.png)
+ Now the interface looks like
+  ![Scriptst](images/setup_7.png)
+### Install Libraries       
+The key to R in my opinion is to install libraries. We will practice with one and your homework is to install the others.        
+
+You will type:     
+`#install libraires ----`      
+`install.packages("tidyverse")`     
+
+`#load libraries----`     
+`library(tidyverse)`     
+       
+Then after each you will hit command or control return and it will run the command or you can click run.
+
+Here is a list of packages I have found useful     
+`devtools`    
+`tidyverse`    
+`lubridate`    
+`readxl`   
+`scales`    
+`patchwork`    
+`janitor`     
+`skimr`        
+
+A different type of installation for the USGS data retreival which is great....           
+`install_github("USGS-R/dataRetrieval")`        
+`install.packages("dataRetrieval")`      
+`install.packages("dataRetrieval",`       
+`repos=c("http://owi.usgs.gov/R",`       
+`getOption("repos")))`   
+                
+ 
+<!-- Global Site Tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-88373117-4"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments)};
+  gtag('js', new Date());
+
+  gtag('config', 'UA-88373117-4');
+</script>

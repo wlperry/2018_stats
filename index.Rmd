@@ -1,27 +1,36 @@
 ---
 title: "R Graphs, Data and Stats"
 author: "Bill Perry"
-date: "2019/09/30"
+date: "2021-06-09"
+# navbar:
+#   title: "Stats 2021"
+#   left:
+#     - text: "Home"
+#       href: index.html
+#   right: 
+#     - icon: fa-envelope fa-lg
+#       href: mailto:<wlperry@ilstu.edu>
+#     - icon: fa-github fa-lg
+#       href: http://github.com/wlperry/
 output:
   html_document:
     theme: yeti
     toc: TRUE
     toc_float: TRUE
 ---
-# R and Tidyverse      
-I am in the process of developing a website and course for cleaning and analysis of data. Many of the examples here will be focussed on aquatic sciences or environmental monitoring data. I have found graphing the data first and then working to clean the data along the lines of "[R for Data Science](HTTP://r4ds.had.co.nz/)" by Garrett Grolemund and Hadley Wickham to be one of the greatest approaches and will follow it in spirit here wiht a focus on aquatic sciences.  
-     
-This is also a selfish way to organize my code and snippets in a central place that I can find them and make is available to others that are struggling with R and dataframes.
 
-This will also contain much of the material presented at GLEON 21 in Canada 2019.   
-   
-       
+
+# R and Tidyverse      
+This web site should help you get up and runing on R and RStudio using tidyverse. I am focused on aquatic sciences and environmental monitoring data, but this should be felxible in its uses. We will follow the approach of of "[R for Data Science](HTTP://r4ds.had.co.nz/)" by Garrett Grolemund and Hadley Wickham where we import data and focus on graphing. Statistics will be secondary but we will cover some of the basics.   
+     
+This is also a selfish way to organize my code and snippets in a central place that I can find them and make it available to others that are struggling with R and dataframes.
+
 Links to many of the example dataframes that I will use.      
 [Example data](example_data.html)     
 
 
-## [Basics of projects](000_intro.html)     
-Before working on a project, I have found it is useful to ponder what the data will look like, what you want the final dataframe to look like and what you want to do with it. So, first we will go over basics of organization.  
+## [1. Project basics](01_intro_project_design.html)     
+Before working on a project, its useful to ponder what the data will look like, the names of variables, and what the final graph and analysis will be in a sketch. The basics of organization are:
      - folders and structure    
      - file formats    
      - file structure     
@@ -31,71 +40,84 @@ Before working on a project, I have found it is useful to ponder what the data w
      - R projects
      - installing libraries       
       
-## [Packages/Loading Libraries](001_basics_and_install_packages.html)         
-This page contains many of the packages I use with the installation codes and how to load the libraries.      
+## [2. Packages and Libraries](02_basics_and_install_packages.html)         
+The first step after installing R and RStudio is to install packages and learn how to load them. Here I cover many of the packages I use a lot and show you how to install them, what they do briefly and then how to load the libraries in each session.       
      
-## [1. Reading files and plotting](01_reading_in_data_and_graphing.html)      
-The intial steps to using tidyverse is to use readr to load the dataframes. Then the next step is to begin graphing the data. This page does over most of the basics of plotting.   
+## [3. Reading files and plotting](03_reading_in_data_and_graphing.html)      
+How do you load files that are CSV (comma separated values) or excel files or other formats. Later on I will cover how to import many files and manipulate them as they are being loaded but that is beyond what we need to do when starting. 
 
-## [2. Advanced Plotting](02_Finalized_Plotting.html)       
-This page goes over some of the more advanced plotting command and tricks for GGPlot. This should allow you to make graphs formatted for publication.     
-   
-## [2.5 Plot layout and Patchworkd](02_5_Patchwork_plotting.html)     
-This page covers how to do advanced plotting with different using the awesome package Patchwork.     
+## [4. Graphing data](04_Plotting.html)       
+This page will cover the basics of graphing with GGPlot and how it works. 
+
+## [5.Statistical Plots for GGPlot](05_Means_and_standarderror_plotting.html)       
+How to make simple statistical graphs and mean and standard error plots.   
+
+## [6. Advanced Graphing data](06_Advanced_Plotting.html)       
+This page will cover the basics of graphing with GGPlot and how it works. 
+
+## [7 Plot layout and Patchwork](07_Patchwork_plotting.html)     
+This page covers how to do advanced plotting and layouts using Patchwork.     
+ 
+ 
     
-## [3.Statistical Plots for GGPlot](03_Means_and_standarderror_plotting.html)       
-How to make simple statistical graphs and mean and standard error plots.     
+  
       
-## [4. Data mutate/summary](04_Modifying_variables_mutating_summarizing.html)         
+## [8. Data mutate/summary](08_Modifying_variables_mutating_summarizing.html)         
 This page covers some of the basics for doing math and summarizing data
     
-## [5. Selecting and filtering data](05_Modifying_dataframes_selecting_filtering.html)  
+## [9. Selecting and filtering data](09_Modifying_dataframes_selecting_filtering.html)  
 Removing and reording columns and then filtering data.    
 
-## [6. Datetimes with lubridate](06_Modifying_variables_datetimes.html)    
+## [10. Datetimes with lubridate](10_Modifying_variables_datetimes.html)    
 Working with dates is never fun unless you use Lubridate.         
 
-## [7. Long/wide dataframes](07_Modifying_dataframe_structure_long_wid.html)  
+## [11. Long/wide dataframes](11_Modifying_dataframe_structure_long_wide.html)  
 This will show you how to modify the dataframe from wide to long and back. Also it has how to spread and unite values...        
 
-## [8. Factors](08_Forcates_factors.html)  
+## [12. Factors](12_Forcats_factors.html)  
 Modifying factor order is necessary for specialized graphing and also for statistics.        
 
-## [9. Joining two dataframes](09_Joining_dataframes.html)  
+## [13. Joining two dataframes](13_Joining_dataframes.html)  
 Bringing two dataframes together is often necessary and this covers some of the bascis of how to do this. 
 
-## [10. IfElse and case_when ](10_Falgging_andifelse_casewhen.html)  
+## [14. IfElse and case_when ](14_Falgging_and_ifelse_casewhen.html)  
 How to flag data usign ifelse and case_when. This is useful to flag data or to categorize data.
 
-## [21.  rLakeAnalyzer preparation](21_Lake_analyzer_data_prep.html)  
-This will cover some of the tricks for preparing data to be analyzed in rLakeAnalyzer.     
-## [22. Working with sonde data](22_Exosonde_processing.html)  
-THis will cover how to work with sonde data and then graph that data. This data is from Lake Tanganyika and is not to be published or used without permission.    
 
-## [23. Retreiving data from a list](23_Retreiving_data_from_list.html)  
-This provides a neat trick on how to extract certain datetime chunks from a larger dataframe.     
-
-## [24. Heat plots for lake temp](24_lake_heatmaps.html)  
-This expands on what was presented at GLEON 18 in New Paltz, New York by GLEON graduate students. I have put that code up here for public use.     
 
 # Statistics   
 I am trying to add in some of the stats that I have done in the past. This is very much a work in progress and will get it updated in the next few weeks as the field season slows down
 
-## [31. Correlation](31_correlation.html)  
+## [21. Correlation](21_correlation.html)  
 Correlations      
 
-## [32. Regressions](32_regression.html)  
+## [22. Regressions](22_regression.html)  
 Regression     
 
-## [33. Ttests](33_ttests.html)  
-Ttests
+## [23. T-tests](23_t_tests.html)  
+T-tests
 
-## [34. One way AOV](34_oneway_anova.html)  
+## [24. One way AOV](24_oneway_anova.html)  
 One way Anovas
 
-## [35. Two way AOV with post F tests](35_twoway_anova.html)  
+## [25. Two way AOV with post F tests](25_twoway_anova.html)  
 Two way Anovas
 
+
+
+
+
+# Special types of data and graphs
+## [31.  rLakeAnalyzer preparation](31_Lake_analyzer_data_prep.html)  
+This will cover some of the tricks for preparing data to be analyzed in rLakeAnalyzer.     
+## [32. Working with sonde data](32_Exosonde_processing.html)  
+THis will cover how to work with sonde data and then graph that data. This data is from Lake Tanganyika and is not to be published or used without permission.    
+
+## [33. Retreiving data from a list](33_Retreiving_data_from_list.html)  
+This provides a neat trick on how to extract certain datetime chunks from a larger dataframe.     
+
+## [34. Heat plots for lake temp](34_lake_heatmaps.html)  
+This expands on what was presented at GLEON 18 in New Paltz, New York by GLEON graduate students. I have put that code up here for public use.     
 
 
    

@@ -1,0 +1,109 @@
+---
+title: "Install packages and load libraries"
+author: "Bill Perry"
+date: "2019/10/26"
+output:
+  html_document:
+    theme: yeti
+    toc: TRUE
+    toc_float: TRUE
+---
+
+# Libraries     
+These add functionality to base R sort of like apps on a new cell phone.     
+
+## These are in my mind the essential libraries for R
+```{r Essential_Libraries, eval=FALSE}
+# # Libraries I use on a regular basis-----
+install.packages("devtools") # install new things
+install.packages("tidyverse") # dplyr and piping and ggplot etc
+install.packages("lubridate") # dates and times
+install.packages("scales") # scales on ggplot ases
+install.packages("readxl") # read in excel files
+install.packages("skimr") # quick summary stats
+install.packages("janitor") # clean up excel imports
+
+
+# Libraries that I use a lot that require special installation
+devtools::install_github("thomasp85/patchwork") # multiple plots
+devtools::install_github("calligross/ggthemeassist") # ggplot adjust
+install.packages("styler") # helps reformat code
+
+# Other pacakage that are used for special work like heat maps
+install.packages("hms") # useful for time series
+install.packages("plotly") # cool ggplot things
+install.packages("colorRamps") # adds cool color templates
+install.packages("akima") # imputing new values
+```
+
+## These libraries are useful for general statistics and used quite often    
+```{r General_Statistics, eval=FALSE}
+install.packages("car") # stats and ANOVA - essential
+install.packages("emmeans") # estimated marginal means for unbalanced designs
+install.packages("multcomView") # paired comparisons
+install.packages("Rmisc") # stats
+install.packages("Hmisc") # stats
+
+install.packages("broom") # output models cleanly
+install.packages("GGally") # special ggplot graphs
+install.packages("corrplot") # correlation plot matricies
+```
+
+## These are specialized libraries that I often use    
+```{r special_packages, eval=FALSE}
+install.packages("survminer") # survival analysis
+install.packages("survival") # survival analysis
+
+install.packages("pwr") # power analysis
+
+install.packages("vegan") # PCA and other sorts of multidimensional
+install.packages("factoextra") # more PCA
+
+# mixed models
+install.packages("lmerTest") # mixed model Anovas
+install.packages("blme")  # Baysian mixed model Anovas
+```
+
+
+## Finally here are some lesser used pacakges that I do not use a lot but you might find useful     
+```{r infrequent_packages, eval=FALSE}
+# these are special that you likely will not use 
+# devtools::install_github("seasmith/AlignAssign")
+# install.packages("data.table")
+# install.packages("RMySQL") # access MySQLserver
+# install.packages("xts")  # not used
+# install.packages("rLakeAnalyzer") # used for the lake analyzer scripts
+# install.packages("LakeMetabolizer")
+# install.packages("zoo")
+```
+
+## To get the libraires running - some need to only be run one time
+### These will appear in your Addins dropdown toolbar icon
+```{r libraries_once, eval=FALSE}
+# Run Once and in Addins ----
+library(styler)
+library(ggThemeAssist)
+```
+
+## Other libraries I use each and ever time     
+I use these in almost every script I run so you will see these over and over    
+```{r typical_libraries}
+# Load in all scripts ---
+library(tidyverse)	
+library(lubridate)	
+library(scales)	
+library(readxl)
+library(skimr)
+library(janitor)
+library(patchwork)
+```
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-88373117-6"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-88373117-6');
+</script>

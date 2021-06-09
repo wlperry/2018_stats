@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="Bill Perry" />
+
+
+<title>Converting between logn and wide and back again</title>
+
+<script src="site_libs/header-attrs-2.8/header-attrs.js"></script>
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+      .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+  </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.tab('show');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Bill Perry</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="https://wlperry.github.io/index.html">Bill's Homepage</a>
+</li>
+<li>
+  <a href="https://wlperry.github.io/2018_stats/index.html">Stats and R Homepage</a>
+</li>
+<li>
+  <a href="about.html">About Bill</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+
+
+<h1 class="title toc-ignore">Converting between logn and wide and back again</h1>
+<h4 class="author">Bill Perry</h4>
+<h4 class="date">2019/10/26</h4>
+
+</div>
+
+
+<div id="load-libraries" class="section level1">
+<h1>Load libraries</h1>
+<pre class="r"><code># Load Libraries ----
+# this is done each time you run a script
+library(&quot;readxl&quot;) # read in excel files
+library(&quot;tidyverse&quot;) # dplyr and piping and ggplot etc
+library(&quot;lubridate&quot;) # dates and times
+library(&quot;scales&quot;) # scales on ggplot ases
+library(&quot;skimr&quot;) # quick summary stats
+library(&quot;janitor&quot;) # clean up excel imports
+library(&quot;patchwork&quot;) # multipanel graphs</code></pre>
+</div>
+<div id="read-in-files" class="section level1">
+<h1>Read in files</h1>
+<pre class="r"><code># So now we have seen how to look at the data
+# What if we wanted to modify the data in terms of overall structure
+
+# If you were typing in data this might be how it looks
+# Read in wide dataframe ----
+lakes.df &lt;- read_csv(&quot;data/reduced_lake_long_genus_species_wide.csv&quot;)</code></pre>
+<pre><code>## 
+## ── Column specification ────────────────────────────────────────────────────────
+## cols(
+##   permanent_id = col_double(),
+##   lake_name = col_character(),
+##   date = col_date(format = &quot;&quot;),
+##   year = col_double(),
+##   Cladoceran_Bosmina_longirostris = col_double(),
+##   Cladoceran_Daphnia_catawba = col_double(),
+##   Cladoceran_Daphnia_pulex = col_double(),
+##   Cladoceran_Diaphanosoma_birgei = col_double(),
+##   Cladoceran_Diaphanosoma_brachyurum = col_double(),
+##   Cladoceran_Holopedium_giberum = col_double(),
+##   Copepod_Aglaodiaptomus_leptpus = col_double(),
+##   Copepod_Cyclops_scutifer = col_double(),
+##   Copepod_Epischura_lacustris = col_double(),
+##   Copepod_Leptodiaptomus_minutus = col_double(),
+##   Copepod_Mesocyclops_edax = col_double(),
+##   Copepod_Tropocyclops_extensus = col_double()
+## )</code></pre>
+<pre class="r"><code>head(lakes.df)</code></pre>
+<pre><code>## # A tibble: 6 x 16
+##   permanent_id lake_name date        year Cladoceran_Bosmina… Cladoceran_Daphni…
+##          &lt;dbl&gt; &lt;chr&gt;     &lt;date&gt;     &lt;dbl&gt;               &lt;dbl&gt;              &lt;dbl&gt;
+## 1     47723283 Willis    1994-06-28  1994                   0            0.00403
+## 2     47723283 Willis    1994-07-27  1994                   0            0      
+## 3     47723283 Willis    1994-08-31  1994                   0            0.0356 
+## 4     47723283 Willis    1995-08-09  1995                   0            0      
+## 5     47723283 Willis    1995-09-12  1995                   0            0      
+## 6     47723283 Willis    1996-06-17  1996                   0            0      
+## # … with 10 more variables: Cladoceran_Daphnia_pulex &lt;dbl&gt;,
+## #   Cladoceran_Diaphanosoma_birgei &lt;dbl&gt;,
+## #   Cladoceran_Diaphanosoma_brachyurum &lt;dbl&gt;,
+## #   Cladoceran_Holopedium_giberum &lt;dbl&gt;, Copepod_Aglaodiaptomus_leptpus &lt;dbl&gt;,
+## #   Copepod_Cyclops_scutifer &lt;dbl&gt;, Copepod_Epischura_lacustris &lt;dbl&gt;,
+## #   Copepod_Leptodiaptomus_minutus &lt;dbl&gt;, Copepod_Mesocyclops_edax &lt;dbl&gt;,
+## #   Copepod_Tropocyclops_extensus &lt;dbl&gt;</code></pre>
+</div>
+<div id="gather-to-long-format" class="section level1">
+<h1>Gather to long format</h1>
+<p>How to convert a wide dataframe to a long data frame. This is the older approach which has since been replaced by pivot_longer. Gather is still something I use a lot.</p>
+<pre class="r"><code># Convert wide to long format ----
+# this is an older method that is simple
+lakes_long.df &lt;- lakes.df %&gt;% 
+  gather(genus_species, # this will make a new column group with the column names 
+         org_l,  # this will make a column of data for the counts per liter
+         -lake_name, -date, -permanent_id, -year # &quot;-&quot; means leave alone
+  )</code></pre>
+</div>
+<div id="pivot_longer-to-long-format" class="section level1">
+<h1>Pivot_longer to long format</h1>
+<p>This is the same as above and does the same thing.</p>
+<pre class="r"><code># this is the newer way that might be better
+lakes_long.df &lt;- lakes.df %&gt;%
+  pivot_longer(
+    -c(lake_name, date, permanent_id, year),
+    names_to = &quot;genus_species&quot;, 
+    values_to = &quot;org_l&quot;)</code></pre>
+</div>
+<div id="spread" class="section level1">
+<h1>Spread</h1>
+<p>This spreads a long dataframe into a wide fomat dataframe.</p>
+<pre class="r"><code># Long to Wide format ----
+# the older method 
+lakes_wide.df &lt;- lakes_long.df %&gt;%
+  spread(
+    genus_species, org_l
+  )</code></pre>
+</div>
+<div id="pivot_wider" class="section level1">
+<h1>Pivot_wider</h1>
+<p>This is the same as spread using a slightly newer terminology</p>
+<pre class="r"><code># now the newer method
+lakes_wide.df &lt;- lakes_long.df %&gt;%
+  pivot_wider(
+    id_cols = c( &quot;lake_name&quot;, &quot;date&quot; ),
+    names_from = genus_species,
+    values_from = org_l)</code></pre>
+</div>
+<div id="read-in-long-format-file" class="section level1">
+<h1>Read in long format file</h1>
+<p>Lets read in a new version of the file and do some more work</p>
+<pre class="r"><code># now the new version of modification can also do cool stuff like 
+# summarizing data 
+# lets read in a new file to add some complexity for fun
+lakes.df &lt;- read_csv(&quot;data/reduced_lake_long_genus_species.csv&quot;)</code></pre>
+<pre><code>## 
+## ── Column specification ────────────────────────────────────────────────────────
+## cols(
+##   permanent_id = col_double(),
+##   lake_name = col_character(),
+##   date = col_date(format = &quot;&quot;),
+##   group = col_character(),
+##   genus_species = col_character(),
+##   org_l = col_double(),
+##   year = col_double()
+## )</code></pre>
+<p>Here we remove the genus species column in preparation to summarize the data</p>
+<pre class="r"><code># lets simplify the data
+lakes.df &lt;- lakes.df %&gt;% select(-genus_species)</code></pre>
+</div>
+<div id="pivot-to-summarize-data" class="section level1">
+<h1>Pivot to summarize data</h1>
+<p>We can also use the pivot_wider or pivot_longer to summarize data</p>
+<pre class="r"><code># make wide with column headers of group and summarize by lake and date
+group_wide.df &lt;- lakes.df %&gt;%
+  pivot_wider(names_from = group, 
+              values_from = org_l,
+              values_fn = list(org_l = mean, na.rm=TRUE))</code></pre>
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-88373117-6"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-88373117-6');
+</script>
+</div>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+
+</body>
+</html>

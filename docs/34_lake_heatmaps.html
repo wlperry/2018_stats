@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="Bill Perry" />
+
+
+<title>Making isopleths or lake temperature with depth and time</title>
+
+<script src="site_libs/header-attrs-2.8/header-attrs.js"></script>
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+      .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+  </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.tab('show');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Bill Perry</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="https://wlperry.github.io/index.html">Bill's Homepage</a>
+</li>
+<li>
+  <a href="https://wlperry.github.io/2018_stats/index.html">Stats and R Homepage</a>
+</li>
+<li>
+  <a href="about.html">About Bill</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+
+
+<h1 class="title toc-ignore">Making isopleths or lake temperature with depth and time</h1>
+<h4 class="author">Bill Perry</h4>
+<h4 class="date">2019/10/26</h4>
+
+</div>
+
+
+<div id="lake-heat-maps" class="section level1">
+<h1>Lake Heat Maps</h1>
+<p>##This is how to do lake heatmaps in R using GGPLOT</p>
+<p>#Install packages</p>
+<pre class="r"><code># This code is an adaptation of the R work group at GLEON 19
+
+# install libraries
+# install.packages(&quot;tidyverse&quot;)
+# install.packages(&quot;scales&quot;)
+# install.packages(&quot;ggplot2&quot;)
+# install.packages(&quot;akima&quot;)
+# install.packages(&quot;lubridate&quot;)
+# install.packages(&quot;colorRamps&quot;)</code></pre>
+</div>
+<div id="load-packages" class="section level1">
+<h1>Load Packages</h1>
+<pre class="r"><code># load the libraries each time you restart R
+#load packages
+library(tidyverse)
+library(lubridate)
+library(ggplot2)
+library(scales)
+library(colorRamps)
+library(akima)</code></pre>
+<p>#Load Data</p>
+<pre class="r"><code>#use readr package to load mendoata data
+mendota.df &lt;- read_csv(&quot;./data/mendota_temp.csv&quot;)</code></pre>
+<p>#Clean Data</p>
+<pre class="r"><code>#clean up bad data and out of range data
+mendota_clean.df &lt;- mendota.df %&gt;% # use this df for rest of commands
+  filter(wtemp&gt;=0) %&gt;% # select data that is greater or equal to 0
+  filter(!is.na(wtemp)) %&gt;% # remove all NA values
+  select(sampledate, depth, wtemp) # this uses only the variables that are needed</code></pre>
+<p>#Interpolate Data</p>
+<pre class="r"><code># interolated watertemp with depth
+# mendota_interp.df &lt;- mendota_clean.df %&gt;% rename(x=sampledate, y=depth, z=wtemp)
+# jsut a note here that the x interpretation step of 1 works with day data as it is using the 
+# number of days. The issue comes up when you want to use time. The thing to remember here is 
+# time in R is the number of seconds since 1970-01-01 00:00:00 so if you do hours you would use
+# 3600 seconds rather than 1
+mendota_interp.df &lt;- interp(x = mendota_clean.df$sampledate, 
+                            y = mendota_clean.df$depth,
+                            z = mendota_clean.df$wtemp,
+                            xo = seq(min(mendota_clean.df$sampledate), max(mendota_clean.df$sampledate), by = 1),
+                            yo = seq(min(mendota_clean.df$depth), max(mendota_clean.df$depth), by = 0.2),
+                            extrap=FALSE,
+                            linear=TRUE)</code></pre>
+<p>#Convert interpolated data to dataframe</p>
+<pre class="r"><code># this converts the interpolated data into a dataframe
+mendota_interp.df &lt;- interp2xyz(mendota_interp.df, data.frame = TRUE)</code></pre>
+<p>#Clean up the interpolated dataframe</p>
+<pre class="r"><code># clean up dates using dplyr
+mendota_interp.df &lt;- mendota_interp.df %&gt;%
+  filter(x %in% as.numeric(mendota.df$sampledate)) %&gt;% # this matches the interpolated data with what is in the main dataframe to remove dates we dont have
+  mutate(date = as_date(x)) %&gt;% # interp turned dates into integers and this converts back
+  mutate(day = day(date)) %&gt;% # create day varaible for plotting
+  mutate(year = year(date)) %&gt;% # create a four digit year column
+  select(-x) %&gt;% #remove x column
+  rename(depth=y, wtemp=z) #rename variables</code></pre>
+<p>#Filter out one year</p>
+<pre class="r"><code># lets look at one date 2013
+mendota_2013.df &lt;- mendota_interp.df %&gt;%
+  filter(year==2013)</code></pre>
+<p>#Plot one year of data</p>
+<pre class="r"><code># plot our interpolated data
+ggplot(mendota_2013.df, aes(x = date, y = depth, z = wtemp, fill = wtemp)) +
+  geom_raster() +
+  scale_y_reverse(expand=c(0,0)) +
+  scale_fill_gradientn(colours=matlab.like(10), na.value = &#39;gray&#39;, name=&quot;Water\nTemp \nºC&quot;) + 
+  scale_x_date(date_breaks = &quot;1 week&quot;, 
+                   # limits = as_date(c(&#39;2016-12-06&#39;,&#39;2017-02-25&#39;)),
+                   labels=date_format(&quot;%b-%d&quot;), expand=c(0,0)) + 
+  ylab(&quot;Depth (m)&quot;) +
+  xlab(&quot;&quot;) </code></pre>
+<p><img src="34_lake_heatmaps_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
+<p>#Different way to plot single year</p>
+<pre class="r"><code># a different way to do the plot
+# the cool thing about tidyverse is it works together so you can make graphs without 
+# creating a lot of dataframes
+
+mendota_interp.df %&gt;%
+  filter(year==2013) %&gt;%
+  ggplot(aes(x = date, y = depth, z = wtemp, fill = wtemp)) +
+  geom_raster() +
+  scale_y_reverse(expand=c(0,0)) +
+  scale_fill_gradientn(colours=matlab.like(10), na.value = &#39;gray&#39;, name=&quot;Water\nTemp \nºC&quot;) + 
+  scale_x_date(date_breaks = &quot;1 week&quot;, 
+               # limits = as_date(c(&#39;2016-12-06&#39;,&#39;2017-02-25&#39;)),
+               labels=date_format(&quot;%b-%d&quot;), expand=c(0,0)) + 
+  ylab(&quot;Depth (m)&quot;) +
+  xlab(&quot;&quot;) </code></pre>
+<p><img src="34_lake_heatmaps_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
+<p>#Publication ready plot</p>
+<pre class="r"><code># Clean up plots and make it look nice ----
+temp_heatmap.plot &lt;- ggplot(mendota_2013.df, aes(x = date, y = depth, z = wtemp, fill = wtemp)) +
+  geom_raster() +
+  scale_y_reverse(expand=c(0,0)) +
+  scale_fill_gradientn(colours=matlab.like(10), na.value = &#39;gray&#39;, name=&quot;Water\nTemp \nºC&quot;) + 
+  scale_x_date(date_breaks = &quot;3 week&quot;, 
+               # limits = as_date(c(&#39;2016-12-06&#39;,&#39;2017-02-25&#39;)),
+               labels=date_format(&quot;%b-%d&quot;), expand=c(0,0)) + 
+  ylab(&quot;Depth (m)&quot;) +
+  xlab(&quot;&quot;) +
+  guides(fill = guide_colorbar(ticks = FALSE)) +
+  theme(
+    # LABLES APPEARANCE
+    axis.title.x=element_text(size=14, face=&quot;bold&quot;),
+    axis.title.y=element_text(size=14, face=&quot;bold&quot;),
+    axis.text.x = element_text(size=12, face=&quot;bold&quot;, angle=45, hjust=1),
+    axis.text.y = element_text(size=12, face=&quot;bold&quot;),
+    # plot.title = element_text(hjust = 0.5, colour=&quot;black&quot;, size=22, face=&quot;bold&quot;),
+    # LEGEND
+    # LEGEND TEXT
+    legend.text = element_text(colour=&quot;black&quot;, size = 11, face = &quot;bold&quot;),
+    # LEGEND TITLE
+    legend.title = element_text(colour=&quot;black&quot;, size=11, face=&quot;bold&quot;),
+    # LEGEND POSITION AND JUSTIFICATION 
+    # legend.justification=c(0.1,1),
+    legend.position= &quot;right&quot;, #c(0.02,.99)
+    # PLOT COLORS
+    # REMOVE BOX BEHIND LEGEND SYMBOLS
+    # REMOVE LEGEND BOX
+    # legend.key = element_rect(fill = &quot;transparent&quot;, colour = &quot;transparent&quot;), 
+    # REMOVE LEGEND BOX
+    # legend.background = element_rect(fill = &quot;transparent&quot;, colour = &quot;transparent&quot;), 
+    # #REMOVE PLOT FILL AND GRIDS
+    # panel.background=element_rect(fill = &quot;transparent&quot;, colour = &quot;transparent&quot;), 
+    # # removes the window background
+    # plot.background=element_rect(fill=&quot;transparent&quot;,colour=NA),
+    # # removes the grid lines
+    # panel.grid.major = element_blank(), 
+    # panel.grid.minor = element_blank(),
+    # ADD AXES LINES AND SIZE
+    axis.line.x = element_line(color=&quot;black&quot;, size = 0.3),
+    axis.line.y = element_line(color=&quot;black&quot;, size = 0.3),
+    # ADD PLOT BOX
+    panel.border = element_rect(colour = &quot;black&quot;, fill=NA, size=0.3))
+temp_heatmap.plot</code></pre>
+<p><img src="34_lake_heatmaps_files/figure-html/unnamed-chunk-11-1.png" width="672" /></p>
+<p>#Save plot as pdf</p>
+<pre class="r"><code># saves graph to file that is of a set size
+ggsave(temp_heatmap.plot, file=&quot;.//output//2017 11 21 temp heat maps.pdf&quot;,width=6, height=6 )</code></pre>
+<p>#Facetting grpahs by years</p>
+<pre class="r"><code>#lets look at graphs that are facetted
+mendota_2012_2013.df &lt;- mendota_interp.df %&gt;%
+  filter(year %in% 2012:2013)
+ggplot(mendota_2012_2013.df, aes(x = date, y = depth, z = wtemp, fill = wtemp)) +
+  geom_raster() +
+  scale_y_reverse(expand=c(0,0)) +
+  scale_fill_gradientn(colours=matlab.like(10), na.value = &#39;gray&#39;, name=&quot;Water\nTemp \nºC&quot;) + 
+  scale_x_date(date_breaks = &quot;3 week&quot;,
+               # limits = as_date(c(&#39;2016-12-06&#39;,&#39;2017-02-25&#39;)),
+               labels=date_format(&quot;%b-%d&quot;), expand=c(0,0)) +
+  ylab(&quot;Depth (m)&quot;) +
+  xlab(&quot;&quot;) +
+  facet_wrap(&quot;year&quot;, scale=&quot;free_x&quot;) </code></pre>
+<p><img src="34_lake_heatmaps_files/figure-html/unnamed-chunk-13-1.png" width="672" /></p>
+<pre class="r"><code># the trick to get multiple years here is to have the free_x other wise the graphs all have
+# the full range of dates on the x axis</code></pre>
+<p>#Facetted pretty graphs</p>
+<pre class="r"><code>ggplot(mendota_2012_2013.df, aes(x = date, y = depth, z = wtemp, fill = wtemp)) +
+  geom_raster() +
+  scale_y_reverse(expand=c(0,0)) +
+  scale_fill_gradientn(colours=matlab.like(10), na.value = &#39;gray&#39;, name=&quot;Water\nTemp \nºC&quot;) + 
+  scale_x_date(date_breaks = &quot;3 week&quot;,
+               # limits = as_date(c(&#39;2016-12-06&#39;,&#39;2017-02-25&#39;)),
+               labels=date_format(&quot;%b-%d&quot;), expand=c(0,0)) +
+  ylab(&quot;Depth (m)&quot;) +
+  xlab(&quot;&quot;) +
+  facet_wrap(&quot;year&quot;, scale=&quot;free_x&quot;) +
+  theme(
+    # LABLES APPEARANCE
+    axis.title.x=element_text(size=14, face=&quot;bold&quot;),
+    axis.title.y=element_text(size=14, face=&quot;bold&quot;),
+    axis.text.x = element_text(size=12, face=&quot;bold&quot;, angle=45, hjust=1),
+    axis.text.y = element_text(size=12, face=&quot;bold&quot;),
+    # plot.title = element_text(hjust = 0.5, colour=&quot;black&quot;, size=22, face=&quot;bold&quot;),
+    # LEGEND
+    # LEGEND TEXT
+    legend.text = element_text(colour=&quot;black&quot;, size = 11, face = &quot;bold&quot;),
+    # LEGEND TITLE
+    legend.title = element_text(colour=&quot;black&quot;, size=11, face=&quot;bold&quot;),
+    # LEGEND POSITION AND JUSTIFICATION 
+    # legend.justification=c(0.1,1),
+    legend.position= &quot;right&quot;, #c(0.02,.99)
+    # PLOT COLORS
+    # REMOVE BOX BEHIND LEGEND SYMBOLS
+    # REMOVE LEGEND BOX
+    # legend.key = element_rect(fill = &quot;transparent&quot;, colour = &quot;transparent&quot;), 
+    # REMOVE LEGEND BOX
+    # legend.background = element_rect(fill = &quot;transparent&quot;, colour = &quot;transparent&quot;), 
+    # #REMOVE PLOT FILL AND GRIDS
+    # panel.background=element_rect(fill = &quot;transparent&quot;, colour = &quot;transparent&quot;), 
+    # # removes the window background
+    # plot.background=element_rect(fill=&quot;transparent&quot;,colour=NA),
+    # # removes the grid lines
+    # panel.grid.major = element_blank(), 
+    # panel.grid.minor = element_blank(),
+    # ADD AXES LINES AND SIZE
+    axis.line.x = element_line(color=&quot;black&quot;, size = 0.3),
+    axis.line.y = element_line(color=&quot;black&quot;, size = 0.3),
+    # ADD PLOT BOX
+    panel.border = element_rect(colour = &quot;black&quot;, fill=NA, size=0.3))</code></pre>
+<p><img src="34_lake_heatmaps_files/figure-html/unnamed-chunk-14-1.png" width="672" /></p>
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-88373117-6"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-88373117-6');
+</script>
+</div>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+
+</body>
+</html>

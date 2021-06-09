@@ -11,13 +11,14 @@
 
 <meta name="author" content="Bill Perry" />
 
+<meta name="date" content="2021-06-09" />
 
 <title>R Graphs, Data and Stats</title>
 
 <script src="site_libs/header-attrs-2.8/header-attrs.js"></script>
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<link href="site_libs/bootstrap-3.3.5/css/journal.min.css" rel="stylesheet" />
+<link href="site_libs/bootstrap-3.3.5/css/yeti.min.css" rel="stylesheet" />
 <script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
@@ -342,112 +343,117 @@ div.tocify {
 
 <h1 class="title toc-ignore">R Graphs, Data and Stats</h1>
 <h4 class="author">Bill Perry</h4>
-<h4 class="date">2019/09/30</h4>
+<h4 class="date">2021-06-09</h4>
 
 </div>
 
 
 <div id="r-and-tidyverse" class="section level1">
 <h1>R and Tidyverse</h1>
-<p>I am in the process of developing a website and course for cleaning and analysis of data. Many of the examples here will be focussed on aquatic sciences or environmental monitoring data. I have found graphing the data first and then working to clean the data along the lines of “<a href="HTTP://r4ds.had.co.nz/">R for Data Science</a>” by Garrett Grolemund and Hadley Wickham to be one of the greatest approaches and will follow it in spirit here wiht a focus on aquatic sciences.</p>
-<p>This is also a selfish way to organize my code and snippets in a central place that I can find them and make is available to others that are struggling with R and dataframes.</p>
-<p>This will also contain much of the material presented at GLEON 21 in Canada 2019.</p>
+<p>This web site should help you get up and runing on R and RStudio using tidyverse. I am focused on aquatic sciences and environmental monitoring data, but this should be felxible in its uses. We will follow the approach of of “<a href="HTTP://r4ds.had.co.nz/">R for Data Science</a>” by Garrett Grolemund and Hadley Wickham where we import data and focus on graphing. Statistics will be secondary but we will cover some of the basics.</p>
+<p>This is also a selfish way to organize my code and snippets in a central place that I can find them and make it available to others that are struggling with R and dataframes.</p>
 <p>Links to many of the example dataframes that I will use.<br />
 <a href="example_data.html">Example data</a></p>
-<div id="basics-of-projects" class="section level2">
-<h2><a href="000_intro.html">Basics of projects</a></h2>
-<p>Before working on a project, I have found it is useful to ponder what the data will look like, what you want the final dataframe to look like and what you want to do with it. So, first we will go over basics of organization.<br />
-- folders and structure<br />
+<div id="project-basics" class="section level2">
+<h2><a href="01_intro_project_design.html">1. Project basics</a></h2>
+<p>Before working on a project, its useful to ponder what the data will look like, the names of variables, and what the final graph and analysis will be in a sketch. The basics of organization are: - folders and structure<br />
 - file formats<br />
 - file structure<br />
 - output formats<br />
 - installing R and R studio - basics of the R interface - R projects - installing libraries</p>
 </div>
-<div id="packagesloading-libraries" class="section level2">
-<h2><a href="001_basics_and_install_packages.html">Packages/Loading Libraries</a></h2>
-<p>This page contains many of the packages I use with the installation codes and how to load the libraries.</p>
+<div id="packages-and-libraries" class="section level2">
+<h2><a href="02_basics_and_install_packages.html">2. Packages and Libraries</a></h2>
+<p>The first step after installing R and RStudio is to install packages and learn how to load them. Here I cover many of the packages I use a lot and show you how to install them, what they do briefly and then how to load the libraries in each session.</p>
 </div>
 <div id="reading-files-and-plotting" class="section level2">
-<h2><a href="01_reading_in_data_and_graphing.html">1. Reading files and plotting</a></h2>
-<p>The intial steps to using tidyverse is to use readr to load the dataframes. Then the next step is to begin graphing the data. This page does over most of the basics of plotting.</p>
+<h2><a href="03_reading_in_data_and_graphing.html">3. Reading files and plotting</a></h2>
+<p>How do you load files that are CSV (comma separated values) or excel files or other formats. Later on I will cover how to import many files and manipulate them as they are being loaded but that is beyond what we need to do when starting.</p>
 </div>
-<div id="advanced-plotting" class="section level2">
-<h2><a href="02_Finalized_Plotting.html">2. Advanced Plotting</a></h2>
-<p>This page goes over some of the more advanced plotting command and tricks for GGPlot. This should allow you to make graphs formatted for publication.</p>
-</div>
-<div id="plot-layout-and-patchworkd" class="section level2">
-<h2><a href="02_5_Patchwork_plotting.html">2.5 Plot layout and Patchworkd</a></h2>
-<p>This page covers how to do advanced plotting with different using the awesome package Patchwork.</p>
+<div id="graphing-data" class="section level2">
+<h2><a href="04_Plotting.html">4. Graphing data</a></h2>
+<p>This page will cover the basics of graphing with GGPlot and how it works.</p>
 </div>
 <div id="statistical-plots-for-ggplot" class="section level2">
-<h2><a href="03_Means_and_standarderror_plotting.html">3.Statistical Plots for GGPlot</a></h2>
+<h2><a href="05_Means_and_standarderror_plotting.html">5.Statistical Plots for GGPlot</a></h2>
 <p>How to make simple statistical graphs and mean and standard error plots.</p>
 </div>
+<div id="advanced-graphing-data" class="section level2">
+<h2><a href="06_Advanced_Plotting.html">6. Advanced Graphing data</a></h2>
+<p>This page will cover the basics of graphing with GGPlot and how it works.</p>
+</div>
+<div id="plot-layout-and-patchwork" class="section level2">
+<h2><a href="07_Patchwork_plotting.html">7 Plot layout and Patchwork</a></h2>
+<p>This page covers how to do advanced plotting and layouts using Patchwork.</p>
+</div>
 <div id="data-mutatesummary" class="section level2">
-<h2><a href="04_Modifying_variables_mutating_summarizing.html">4. Data mutate/summary</a></h2>
+<h2><a href="08_Modifying_variables_mutating_summarizing.html">8. Data mutate/summary</a></h2>
 <p>This page covers some of the basics for doing math and summarizing data</p>
 </div>
 <div id="selecting-and-filtering-data" class="section level2">
-<h2><a href="05_Modifying_dataframes_selecting_filtering.html">5. Selecting and filtering data</a></h2>
+<h2><a href="09_Modifying_dataframes_selecting_filtering.html">9. Selecting and filtering data</a></h2>
 <p>Removing and reording columns and then filtering data.</p>
 </div>
 <div id="datetimes-with-lubridate" class="section level2">
-<h2><a href="06_Modifying_variables_datetimes.html">6. Datetimes with lubridate</a></h2>
+<h2><a href="10_Modifying_variables_datetimes.html">10. Datetimes with lubridate</a></h2>
 <p>Working with dates is never fun unless you use Lubridate.</p>
 </div>
 <div id="longwide-dataframes" class="section level2">
-<h2><a href="07_Modifying_dataframe_structure_long_wid.html">7. Long/wide dataframes</a></h2>
+<h2><a href="11_Modifying_dataframe_structure_long_wide.html">11. Long/wide dataframes</a></h2>
 <p>This will show you how to modify the dataframe from wide to long and back. Also it has how to spread and unite values…</p>
 </div>
 <div id="factors" class="section level2">
-<h2><a href="08_Forcates_factors.html">8. Factors</a></h2>
+<h2><a href="12_Forcats_factors.html">12. Factors</a></h2>
 <p>Modifying factor order is necessary for specialized graphing and also for statistics.</p>
 </div>
 <div id="joining-two-dataframes" class="section level2">
-<h2><a href="09_Joining_dataframes.html">9. Joining two dataframes</a></h2>
+<h2><a href="13_Joining_dataframes.html">13. Joining two dataframes</a></h2>
 <p>Bringing two dataframes together is often necessary and this covers some of the bascis of how to do this.</p>
 </div>
 <div id="ifelse-and-case_when" class="section level2">
-<h2><a href="10_Falgging_andifelse_casewhen.html">10. IfElse and case_when</a></h2>
+<h2><a href="14_Falgging_and_ifelse_casewhen.html">14. IfElse and case_when</a></h2>
 <p>How to flag data usign ifelse and case_when. This is useful to flag data or to categorize data.</p>
-</div>
-<div id="rlakeanalyzer-preparation" class="section level2">
-<h2><a href="21_Lake_analyzer_data_prep.html">21. rLakeAnalyzer preparation</a></h2>
-<p>This will cover some of the tricks for preparing data to be analyzed in rLakeAnalyzer.<br />
-## <a href="22_Exosonde_processing.html">22. Working with sonde data</a><br />
-THis will cover how to work with sonde data and then graph that data. This data is from Lake Tanganyika and is not to be published or used without permission.</p>
-</div>
-<div id="retreiving-data-from-a-list" class="section level2">
-<h2><a href="23_Retreiving_data_from_list.html">23. Retreiving data from a list</a></h2>
-<p>This provides a neat trick on how to extract certain datetime chunks from a larger dataframe.</p>
-</div>
-<div id="heat-plots-for-lake-temp" class="section level2">
-<h2><a href="24_lake_heatmaps.html">24. Heat plots for lake temp</a></h2>
-<p>This expands on what was presented at GLEON 18 in New Paltz, New York by GLEON graduate students. I have put that code up here for public use.</p>
 </div>
 </div>
 <div id="statistics" class="section level1">
 <h1>Statistics</h1>
 <p>I am trying to add in some of the stats that I have done in the past. This is very much a work in progress and will get it updated in the next few weeks as the field season slows down</p>
 <div id="correlation" class="section level2">
-<h2><a href="31_correlation.html">31. Correlation</a></h2>
+<h2><a href="21_correlation.html">21. Correlation</a></h2>
 <p>Correlations</p>
 </div>
 <div id="regressions" class="section level2">
-<h2><a href="32_regression.html">32. Regressions</a></h2>
+<h2><a href="22_regression.html">22. Regressions</a></h2>
 <p>Regression</p>
 </div>
-<div id="ttests" class="section level2">
-<h2><a href="33_ttests.html">33. Ttests</a></h2>
-<p>Ttests</p>
+<div id="t-tests" class="section level2">
+<h2><a href="23_t_tests.html">23. T-tests</a></h2>
+<p>T-tests</p>
 </div>
 <div id="one-way-aov" class="section level2">
-<h2><a href="34_oneway_anova.html">34. One way AOV</a></h2>
+<h2><a href="24_oneway_anova.html">24. One way AOV</a></h2>
 <p>One way Anovas</p>
 </div>
 <div id="two-way-aov-with-post-f-tests" class="section level2">
-<h2><a href="35_twoway_anova.html">35. Two way AOV with post F tests</a></h2>
+<h2><a href="25_twoway_anova.html">25. Two way AOV with post F tests</a></h2>
 <p>Two way Anovas</p>
+</div>
+</div>
+<div id="special-types-of-data-and-graphs" class="section level1">
+<h1>Special types of data and graphs</h1>
+<div id="rlakeanalyzer-preparation" class="section level2">
+<h2><a href="31_Lake_analyzer_data_prep.html">31. rLakeAnalyzer preparation</a></h2>
+<p>This will cover some of the tricks for preparing data to be analyzed in rLakeAnalyzer.<br />
+## <a href="32_Exosonde_processing.html">32. Working with sonde data</a><br />
+THis will cover how to work with sonde data and then graph that data. This data is from Lake Tanganyika and is not to be published or used without permission.</p>
+</div>
+<div id="retreiving-data-from-a-list" class="section level2">
+<h2><a href="33_Retreiving_data_from_list.html">33. Retreiving data from a list</a></h2>
+<p>This provides a neat trick on how to extract certain datetime chunks from a larger dataframe.</p>
+</div>
+<div id="heat-plots-for-lake-temp" class="section level2">
+<h2><a href="34_lake_heatmaps.html">34. Heat plots for lake temp</a></h2>
+<p>This expands on what was presented at GLEON 18 in New Paltz, New York by GLEON graduate students. I have put that code up here for public use.</p>
 <!-- Global site tag (gtag.js) - Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=UA-88373117-6"></script>
 <script>

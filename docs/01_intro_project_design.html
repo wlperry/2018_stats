@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="Bill Perry" />
+
+
+<title>Data analysis introduction</title>
+
+<script src="site_libs/header-attrs-2.8/header-attrs.js"></script>
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/yeti.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+      .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+  </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.tab('show');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Bill Perry</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="https://wlperry.github.io/index.html">Bill's Homepage</a>
+</li>
+<li>
+  <a href="https://wlperry.github.io/2018_stats/index.html">Stats and R Homepage</a>
+</li>
+<li>
+  <a href="about.html">About Bill</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+
+
+<h1 class="title toc-ignore">Data analysis introduction</h1>
+<h4 class="author">Bill Perry</h4>
+<h4 class="date">2019/10/26</h4>
+
+</div>
+
+
+<div id="designing-a-project-from-the-ground-up." class="section level1">
+<h1>Designing a project from the ground up.</h1>
+<div id="steps-to-consider" class="section level2">
+<h2>Steps to consider</h2>
+<p>So the first thing to think about in my opinion is the workflow or dataflow:<br />
+1. What is the source and format of your data? + what are the variables and units and how will you name them + controlled vocabulary list + data structure in columns 2. What is the final objective and use of your data and what output?<br />
++ what is the most flexible output<br />
++ graphs<br />
++ summary statistics<br />
++ statistical analyses<br />
+3. What is the flow of data<br />
++ source and update frequency<br />
++ QA/QC and flagging of data<br />
++ Transformations or calculations to be made<br />
++ Final data output for use - note never write to original dataframe<br />
++ Summary statistics<br />
++ Graphs<br />
++ Statistical Analyses<br />
++ Reports with markdown<br />
++ Annotate scripts and metadata<br />
+4. Set up directory structure + R Project Directory - scripts/code - documents - data - figures / output - final_ized_data</p>
+</div>
+<div id="data-source-format" class="section level2">
+<h2>Data Source Format</h2>
+<div id="controlled-vocabulary-and-units" class="section level3">
+<h3>Controlled vocabulary and units</h3>
+<p><br> Thinking about your data source first is important. Using a controlled vocabulary to reference the variables is critical and will save huge amounts of time when modifying the code later on. I find it helpful to have a metadata document with the vocabulary and the units for each term so that future users can figure out what your code means.<br />
+<br> ### Variable names<br />
+As part of controlled voabulary, the way you type the variable names is also important and also important to be consistent. I have found snake case to be the best for me and using the package Janitor works well to fix messy filenames. The main problem is variable names with spaces requires back ticks (<code>variable name</code>) to use them and special characters (`!@#$%^&amp;* and u(micro) etc) are coded differently on different operating systems and create virtual chaos. The different styles are below:<br />
+1. snake case - looks_like_this - separated by _ and all lower case and often most popular<br />
+2. period separated - looks.like.this - separated by periods - may get confused with other commands<br />
+3. lower camel case - looksLikeThis - ever word is capitilized after the first - often harder to type with all the shift caps<br />
+4. upper camel case - LooksLikeThis - all words capitilized<br />
+3. all lower case - lookslikethis - I find it messy and hard to read<br />
+<br></p>
+<p>the key is that you should have no spaces or special characters. If you do have spaces you use the back tick <strong><code></code> </strong>on either side of the variable to call it.<br />
+<br> Special characters are often coded differently in mac and pc computers and will cause more headaches than you have after St. Patricks Day.<br />
+<br></p>
+</div>
+<div id="transformations" class="section level3">
+<h3>Transformations</h3>
+<p>Keeping a list of transformations and conversions can be helpful in coding and if it is in the meta data file, you can copy the transformations out of the document and if there are mistakes people can track it down fast.</p>
+</div>
+<div id="data-structure-and-format" class="section level3">
+<h3>Data structure and format</h3>
+<p>R uses a column format and all the data in a column has to be of the same type. You can, however, reference data by row and column as in excel.<br />
+<br> The most common data formats you will run into are:<br />
++ Numeric - can be double or integer but that is not as important<br />
++ Character - text fields<br />
++ Factors - displayed often as text but is as levels behind the scenes<br />
++ Date - date format or PosixLt<br />
+- note this is in days since 1970-01-01 I believe<br />
++ Date time - date and time format together or PosixCt<br />
+- this is in seconds since 1970-01-01 00:00:00<br />
+- this will be critical for many of you</p>
+<pre><code> **Note that if you mix formats within a column some of the variables will be converted to NA if say you have a column that is a character column which has mixed numbers and text and is then converted to numeric**     </code></pre>
+</div>
+<div id="wide-format-original-data" class="section level3">
+<h3>Wide format original data</h3>
+<p>Typically when we enter data it is in <strong>wide format</strong> where an identifier is in the first column and the various variables are in separate columns. This is what is often easiest to enter into excel or wherever it is entered originally.</p>
+<p>This format is often more difficult to work with in R and GGPlot so it is converted to <strong>long format</strong> where there is a column of identifiers, a column of variable names, and a column of values. The switch between these formats is often rather easy so it does not matter what format it is in.<br />
+<br><br />
+wide format:<br />
+This is how you would likely enter it in excel<br />
+Columns would be:<br />
+* lake<br />
+* datetime<br />
+* depth<br />
+* group<br />
+* genus * species<br />
+* number_liter<br />
+* biomass_liter<br />
+<br></p>
+<p>long format:<br />
+This would condense this format to fewer columns:</p>
+<ul>
+<li>lake<br />
+</li>
+<li>datetime<br />
+</li>
+<li>depth<br />
+</li>
+<li>group<br />
+</li>
+<li>genus</li>
+<li>species<br />
+</li>
+<li>variable_measured ( number_liter and biomass_liter)<br />
+</li>
+<li>value (the values of each of the respective varaibles)</li>
+</ul>
+</div>
+<div id="output" class="section level3">
+<h3>Output</h3>
+<p>I find it useful to maintain a read only file of the original data and never write to this file other than the original QA/QC flagging of the data if even then. I usually read from this file and save it to the finalized data folder where the data has been cleaned formatted and basic calculations done on it.</p>
+</div>
+</div>
+<div id="data-flow" class="section level2">
+<h2>Data Flow</h2>
+<p>It is often very helpful prior to doing any code work to think about what the final output will look like and what the original data looks like and the steps between these two points.</p>
+</div>
+<div id="project-directory-structure" class="section level2">
+<h2>Project directory structure</h2>
+<p>Having a consistent project directory structure where code, data, and text is stored makes it easy to look at different directories and find what you are looking for. That is why I use the following structure. Choose what works for you and stick with it… please</p>
+<blockquote>
+<pre><code>+ r_projects            
+   - scripts      
+   - documents      
+   - data      
+   - figures or output      
+   - final_data          </code></pre>
+</blockquote>
+<p>Using projects in R is super useful and you don’t have to worry about setting directories (setwd(*C:)) between a mac and windows machine and all the paths are relative in there when you reference data or output directories and is the same on windows and mac.</p>
+</div>
+<div id="file-names" class="section level2">
+<h2>File names</h2>
+<p>From the site <a href="https://andrewbtran.github.io/NICAR/2018/workflow/docs/01-workflow_intro.html?utm_content=buffer858fd&amp;utm_medium=social&amp;utm_source=twitter.com&amp;utm_campaign=buffer">File organization and best practices</a> and <a href="https://kkulma.github.io/2018-03-18-Prime-Hints-for-Running-a-data-project-in-R/">Prime Hints</a> naming files has many good practices. Of these the main theme is:</p>
+<ol style="list-style-type: decimal">
+<li>Use a consistent naming theme<br />
+</li>
+</ol>
+<ol style="list-style-type: lower-alpha">
+<li>use date_term1_term2.xxx<br />
+</li>
+<li>no spaces or other fancy characters<br />
+</li>
+<li>make the names human understandable<br />
+</li>
+</ol>
+<ol start="2" style="list-style-type: decimal">
+<li>Use natural ordering of files<br />
+</li>
+</ol>
+<ol style="list-style-type: lower-alpha">
+<li>use date at front or somewhere so you know the version<br />
+</li>
+<li>use logical ordering like 01_ 02_ 03_<br />
+</li>
+</ol>
+<ol start="3" style="list-style-type: decimal">
+<li>Avoid things like<br />
+</li>
+</ol>
+<ol style="list-style-type: lower-alpha">
+<li>final thesis proposal.docx - I deal with many students and this is not helpful</li>
+</ol>
+</div>
+<div id="annotations-and-metadata-files" class="section level2">
+<h2>Annotations and metadata files</h2>
+<p><strong>For the love of all that is good</strong> - be sure to annotate you code using the <code>#</code> and whatever text helps describe the process you are doing - it will make the code easier to read and evaluate later when you are trying to figure out something really fast. You can also use it to search for code snippets as you are going along.</p>
+<p>Metadata files that document what you are doing and why and what the various conversions and statistical transformations are can be of great use later on as well. It is often challenging to figure out what the units are in for various variables or what they actually mean.</p>
+</div>
+<div id="rstudio-specifics" class="section level2">
+<h2>RStudio Specifics</h2>
+<div id="outline-your-code-to-navigate" class="section level3">
+<h3>Outline your code to navigate</h3>
+<p>You can write a comment <code>#</code> and then follow it with <code>text</code> and then 4 dashes <code>----</code> or <code>####</code> and it will create a note in the outline view</p>
+</div>
+<div id="comment-your-code" class="section level3">
+<h3>Comment your code</h3>
+<p>You should use comments <code>#</code> with text behind it to annotate the purpose of what your are doing and what is happening in the code chunk below.</p>
+</div>
+</div>
+<div id="installing-r" class="section level2">
+<h2>Installing R</h2>
+<p>So lets start installing R and R studio<br />
+R is its own program and can be retrieved from <a href="https://cran.r-project.org/">R Cran</a><br />
+<br><br />
+R Studio is a program that makes the interface and usability of R easier in my opinion and can be retrieved here <a href="https://www.rstudio.com/products/rstudio/download/">R Studio</a></p>
+<p><br> When you get these installed we can load up R studio and look at the interface.</p>
+<div id="r-interface" class="section level3">
+<h3>R interface</h3>
+<p>Start R studio and you should see: <img src="images/setup_1.png" alt="r interface" /></p>
+</div>
+<div id="project-setup" class="section level3">
+<h3>Project Setup</h3>
+<p>Now to set up a new project - this is if the directory does not exist Click: 1. File 2. New Project <img src="images/setup_2.png" alt="Project set up" /></p>
+<p>You can select <code>New Directory</code> or you can select existing directory - lets say you choose new directory <img src="images/setup_3.png" alt="File New Project New Directory" /></p>
+<p>For now you are doing a <code>New Project</code>. We will talk about Github at a later date</p>
+<p><img src="images/setup_4.png" alt="Direcotry Name for Porject" /><br />
+Interface changes only slightly - look in the upper right<br />
+<img src="images/setup_5.png" alt="What has changed" /><br />
+### Scripts<br />
+Now we can create a new script<br />
+1. File 2. New file 3. R Script <img src="images/setup_6.png" alt="New Script" /> Now the interface looks like <img src="images/setup_7.png" alt="Scriptst" /> ### Install Libraries<br />
+The key to R in my opinion is to install libraries. We will practice with one and your homework is to install the others.</p>
+<p>You will type:<br />
+<code>#install libraires ----</code><br />
+<code>install.packages("tidyverse")</code></p>
+<p><code>#load libraries----</code><br />
+<code>library(tidyverse)</code></p>
+<p>Then after each you will hit command or control return and it will run the command or you can click run.</p>
+<p>Here is a list of packages I have found useful<br />
+<code>devtools</code><br />
+<code>tidyverse</code><br />
+<code>lubridate</code><br />
+<code>readxl</code><br />
+<code>scales</code><br />
+<code>patchwork</code><br />
+<code>janitor</code><br />
+<code>skimr</code></p>
+<p>A different type of installation for the USGS data retreival which is great….<br />
+<code>install_github("USGS-R/dataRetrieval")</code><br />
+<code>install.packages("dataRetrieval")</code><br />
+<code>install.packages("dataRetrieval",</code><br />
+<code>repos=c("http://owi.usgs.gov/R",</code><br />
+<code>getOption("repos")))</code></p>
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-88373117-6"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-88373117-6');
+</script>
+</div>
+</div>
+</div>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+
+</body>
+</html>
