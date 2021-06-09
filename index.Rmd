@@ -5,7 +5,7 @@ date: "2019/09/30"
 output:
   html_document:
     toc: true
-    toc_float: true
+    toc_float: FALSE
 ---
 # R and Tidyverse      
 I am in the process of developing a website and course for cleaning and analysis of data. Many of the examples here will be focussed on aquatic sciences or environmental monitoring data. I have found graphing the data first and then working to clean the data along the lines of "[R for Data Science](HTTP://r4ds.had.co.nz/)" by Garrett Grolemund and Hadley Wickham to be one of the greatest approaches and will follow it in spirit here wiht a focus on aquatic sciences.  
