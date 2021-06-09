@@ -28,7 +28,6 @@ This is also a selfish way to organize my code and snippets in a central place t
 Links to many of the example dataframes that I will use.      
 [Example data](example_data.html)     
 
-
 ## [1. Project basics](01_intro_project_design.html)     
 Before working on a project, its useful to ponder what the data will look like, the names of variables, and what the final graph and analysis will be in a sketch. The basics of organization are:
      - folders and structure    
@@ -58,11 +57,7 @@ This page will cover the basics of graphing with GGPlot and how it works.
 ## [7 Plot layout and Patchwork](07_Patchwork_plotting.html)     
 This page covers how to do advanced plotting and layouts using Patchwork.     
  
- 
-    
-  
-      
-## [8. Data mutate/summary](08_Modifying_variables_mutating_summarizing.html)         
+## [8. Data mutate/summary](08_Modifying_variables_mutating_summarizing.html)    
 This page covers some of the basics for doing math and summarizing data
     
 ## [9. Selecting and filtering data](09_Modifying_dataframes_selecting_filtering.html)  
@@ -75,15 +70,12 @@ Working with dates is never fun unless you use Lubridate.
 This will show you how to modify the dataframe from wide to long and back. Also it has how to spread and unite values...        
 
 ## [12. Factors](12_Forcats_factors.html)  
-Modifying factor order is necessary for specialized graphing and also for statistics.        
-
+Modifying factor order is necessary for specialized graphing and also for statistics.    
 ## [13. Joining two dataframes](13_Joining_dataframes.html)  
 Bringing two dataframes together is often necessary and this covers some of the bascis of how to do this. 
 
 ## [14. IfElse and case_when ](14_Falgging_and_ifelse_casewhen.html)  
 How to flag data usign ifelse and case_when. This is useful to flag data or to categorize data.
-
-
 
 # Statistics   
 I am trying to add in some of the stats that I have done in the past. This is very much a work in progress and will get it updated in the next few weeks as the field season slows down
@@ -98,13 +90,10 @@ Regression
 T-tests
 
 ## [24. One way AOV](24_oneway_anova.html)  
-One way Anovas
+One-way Anovas
 
 ## [25. Two way AOV with post F tests](25_twoway_anova.html)  
-Two way Anovas
-
-
-
+Two-way Anovas
 
 
 # Special types of data and graphs
