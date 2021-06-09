@@ -5,25 +5,29 @@ date: "6/10/2019"
 output: html_document
 ---
 
-## These are a collection of datasets that we will use:     
+## These are a collection of datasets that we will use:
+
 I am in the process of putting them in Github CSV files to download in R directly
 
-[south_lake.csv](https://wlperry.github.io/2018_stats/data/south_lake.csv)     
-[south_lake_long.csv](https://wlperry.github.io/2018_stats/data/reduced_lake_long_genus_species.csv) [reduced_lake_long_genus_species.csv](https://wlperry.github.io/2018_stats/data/south_lake_long.csv)    
-[mendota_temp.csv](https://wlperry.github.io/2018_stats/data/mendota_temp.csv)     
+The M&M data was from a site at teh Univeristy of Puget Sound but I can't find the link now    
+[mms.csv](https://wlperry.github.io/2018_stats/data/mms.csv)    
+
+These lake data are from Univeristy of Wisconsin - Madison and the Trout Lake LTER site    
+[south_lake.csv](https://wlperry.github.io/2018_stats/data/south_lake.csv)   
+[south_lake_long.csv](https://wlperry.github.io/2018_stats/data/reduced_lake_long_genus_species.csv) [reduced_lake_long_genus_species.csv](https://wlperry.github.io/2018_stats/data/south_lake_long.csv)  
+[mendota_temp.csv](https://wlperry.github.io/2018_stats/data/mendota_temp.csv)
 
 ## Excel Files
-[south_lake.xlsx](https://wlperry.github.io/2018_stats/data/south_lake.xlsx)      
 
-
-
-
-
-
-
+[south_lake.xlsx](https://wlperry.github.io/2018_stats/data/south_lake.xlsx)
+[mms.excel](https://wlperry.github.io/2018_stats/data/mms.xlsx)
 
 <!-- Global site tag (gtag.js) - Google Analytics -->
+
+```{=html}
 <script async src="https://www.googletagmanager.com/gtag/js?id=UA-88373117-6"></script>
+```
+```{=html}
 <script>
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
@@ -31,5 +35,4 @@ I am in the process of putting them in Github CSV files to download in R directl
 
   gtag('config', 'UA-88373117-6');
 </script>
-
-
+```

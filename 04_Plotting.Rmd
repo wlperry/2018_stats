@@ -1,10 +1,10 @@
 ---
-title: "GGPlot introduction"
+title: "GGPlot advanced"
 author: "Bill Perry"
 date: "2018/03/14"
 output:
   html_document:
-    theme: yeti
+    theme: cosmo
     toc: TRUE
     toc_float: TRUE
    
@@ -41,30 +41,6 @@ south_excel.df <- read_excel("data/south_lake.xlsx", sheet = "south_lake")
 ```
 
 
-## Look at datafram structure    
-One way is to click the blue trianlge in the environment tab in the upper right     
-You can also use code to inspect the structure of the dataset
-```{r}
-# data Structure
-str(south.df)
-# or
-glimpse(south.df)
-```
-
-
-## Saving files     
-Before we go too far it is often important to save the modified data    
-We can use the read_r pacakage to do this with write_csv
-```{r}
-# Saving files -----
-# We can save the file we just read in using 
-# Saving dataframes -----
-# lets say you have made a lot of changes and its now time to save the dataframe
-write_csv(south.df, "finalized_data/output_file.csv")
-```
-
-
-
 
 ## Graphing data 
 I feel that graphing is the key to all data analysis. If you can look at your data you can begin to see patterns that you may have predicted and want to test statistically. You will also be able to see outliers that exist that might affect resutls faster than looking at summary statistics.     
@@ -76,16 +52,7 @@ I have found that these are not necessary most of the time unless you put y= in 
 # GGplot uses layers to build a graph
 ggplot(data=south.df, aes(x=date, y=cladoceran)) + # this sets up data 
   geom_line() # this adds a geometry to present the data from above
-```
-
-
-Because GGPlot buidls things in layers you can add other geoms to the plot. Below you should try this code and see what happens when you put in a + after geom_line() and then add `gome_point()`.    
-```{r}
-# Add geom_point() -----
-# Add points to the graph below using geom_point()
-ggplot(south.df, aes(x=date, y=cladoceran)) +
-  geom_line() 	
-
+ geom_point() 
 ```
 
  
@@ -133,25 +100,25 @@ ggplot(south.df, aes(x=date, y=cladoceran)) +
 
 The key for formatting axes with dates and times using the following abbreviations
 CODE	  MEANING
-  %y	    year, without century (00-99)        
-  %Y	    year, with century (0000-9999)        
-        
-  %m	    month, numeric (01-12)        
-  %b	    month, abbreviated (Jan-Dec)        
-  %B	    month, full (January-December)        
-        
-  %a	    day of the week, abbreviated (Mon-Sun)        
-  %A	    day of the week, full (Monday-Sunday)        
-  %e	    day of the month (1-31)        
-  %d	    day of the month (01-31)        
+  -  %y	    year, without century (00-99)        
+  -  %Y	    year, with century (0000-9999)        
+      
+  -  %m	    month, numeric (01-12)        
+  -  %b	    month, abbreviated (Jan-Dec)        
+  -  %B	    month, full (January-December)        
+         
+  -  %a	    day of the week, abbreviated (Mon-Sun)        
+  -  %A	    day of the week, full (Monday-Sunday)        
+  -  %e	    day of the month (1-31)        
+  -  %d	    day of the month (01-31)        
   
-  %l	    hour, in 12-hour clock (1-12)        
-  %I	    hour, in 12-hour clock (01-12)        
-  %H	    hour, in 24-hour clock (01-24        
-        
-  %M	    minute (00-59)        
-          
-  %S	    second (00-59)        
+  -  %l	    hour, in 12-hour clock (1-12)        
+  -  %I	    hour, in 12-hour clock (01-12)        
+  -  %H	    hour, in 24-hour clock (01-24        
+    
+  -  %M	    minute (00-59)        
+   
+  -  %S	    second (00-59)        
 
 
 
@@ -174,15 +141,16 @@ ggplot(south.df, aes(x=date, y=cladoceran)) +
 
 
 you can try a lot of other themes    
-theme_gray      
-theme_bw      
-theme_linedraw    
-theme_light     
-theme_dark     
-theme_minimal    
-theme_classic      
-theme_void     
-theme_test      
+
+  - theme_gray      
+  - theme_bw      
+  - theme_linedraw    
+  - theme_light     
+  - theme_dark     
+  - theme_minimal    
+  - theme_classic      
+  - theme_void     
+  - theme_test      
      
 ```{r}
 # NOW - try a few different themes

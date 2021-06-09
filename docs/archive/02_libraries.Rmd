@@ -1,15 +1,16 @@
 ---
-title: "Install packages and load libraries"
+title: "Libraries"
 author: "Bill Perry"
-date: "2019/10/26"
+date: "2019/06/10"
 output:
+  # css: stats.css
   html_document:
-    theme: cosmo
-    toc: TRUE
-    toc_float: TRUE
+   toc: TRUE
+   toc_float: TRUE
+   number_sections:  FALSE
+   
 ---
-
-# Libraries       
+# Libraries     
 These add functionality to base R sort of like apps on a new cell phone.     
 
 ## These are in my mind the essential libraries for R
@@ -22,13 +23,17 @@ install.packages("scales") # scales on ggplot ases
 install.packages("readxl") # read in excel files
 install.packages("skimr") # quick summary stats
 install.packages("janitor") # clean up excel imports
-install.packages("patchwork") # arrange multiple plots per page
-install.packages("ggThemeAssist") # helps reformat code - only run library one time
+
+
+# Libraries that I use a lot that require special installation
+devtools::install_github("thomasp85/patchwork") # multiple plots
+devtools::install_github("calligross/ggthemeassist") # ggplot adjust
+install.packages("styler") # helps reformat code
+
+# Other pacakage that are used for special work like heat maps
+install.packages("hms") # useful for time series
 install.packages("plotly") # cool ggplot things
 install.packages("colorRamps") # adds cool color templates
-
-# Other packages that are used for special work like heat maps
-install.packages("hms") # useful for time series
 install.packages("akima") # imputing new values
 ```
 
@@ -57,31 +62,31 @@ install.packages("factoextra") # more PCA
 
 # mixed models
 install.packages("lmerTest") # mixed model Anovas
-install.packages("blme")  # Bayesian mixed model Anovas
+install.packages("blme")  # Baysian mixed model Anovas
 ```
 
 
 ## Finally here are some lesser used pacakges that I do not use a lot but you might find useful     
-```{r infrequent_packages, eval=FALSE}
-# these are special that you likely will not use    
 
+```{r infrequent_packages, eval=FALSE}
+# these are special that you likely will not use 
+# devtools::install_github("seasmith/AlignAssign")
+# install.packages("data.table")
 # install.packages("RMySQL") # access MySQLserver
 # install.packages("xts")  # not used
 # install.packages("rLakeAnalyzer") # used for the lake analyzer scripts
 # install.packages("LakeMetabolizer")
-# install.packages("zoo") # helps with time series
+# install.packages("zoo")
 ```
 
 ## To get the libraires running - some need to only be run one time
-### These will appear in your Addins dropdown toolbar icon
 ```{r libraries_once, eval=FALSE}
 # Run Once and in Addins ----
 library(styler)
 library(ggThemeAssist)
 ```
 
-## Other libraries I use each and ever time     
-I use these in almost every script I run so you will see these over and over    
+## Other libraries I use each and ever time
 ```{r typical_libraries}
 # Load in all scripts ---
 library(tidyverse)	
@@ -93,12 +98,12 @@ library(janitor)
 library(patchwork)
 ```
 
-<!-- Global site tag (gtag.js) - Google Analytics -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=UA-88373117-6"></script>
+<!-- Global Site Tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-88373117-4"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
+  function gtag(){dataLayer.push(arguments)};
   gtag('js', new Date());
 
-  gtag('config', 'UA-88373117-6');
+  gtag('config', 'UA-88373117-4');
 </script>

@@ -12,12 +12,12 @@
 <meta name="author" content="Bill Perry" />
 
 
-<title>GGPlot introduction</title>
+<title>GGPlot advanced</title>
 
 <script src="site_libs/header-attrs-2.8/header-attrs.js"></script>
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<link href="site_libs/bootstrap-3.3.5/css/yeti.min.css" rel="stylesheet" />
+<link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
 <script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
@@ -340,7 +340,7 @@ div.tocify {
 
 
 
-<h1 class="title toc-ignore">GGPlot introduction</h1>
+<h1 class="title toc-ignore">GGPlot advanced</h1>
 <h4 class="author">Bill Perry</h4>
 <h4 class="date">2018/03/14</h4>
 
@@ -381,46 +381,6 @@ south.df &lt;- read_csv(&quot;data/South_Lake.csv&quot;, guess_max = 1000)</code
 south_excel.df &lt;- read_excel(&quot;data/south_lake.xlsx&quot;, sheet = &quot;south_lake&quot;)</code></pre>
 </div>
 </div>
-<div id="look-at-datafram-structure" class="section level2">
-<h2>Look at datafram structure</h2>
-<p>One way is to click the blue trianlge in the environment tab in the upper right<br />
-You can also use code to inspect the structure of the dataset</p>
-<pre class="r"><code># data Structure
-str(south.df)</code></pre>
-<pre><code>## spec_tbl_df [29 × 5] (S3: spec_tbl_df/tbl_df/tbl/data.frame)
-##  $ permanent_id: num [1:29] 1.32e+08 1.32e+08 1.32e+08 1.32e+08 1.32e+08 ...
-##  $ lake_name   : chr [1:29] &quot;South&quot; &quot;South&quot; &quot;South&quot; &quot;South&quot; ...
-##  $ date        : Date[1:29], format: &quot;1994-06-30&quot; &quot;1994-07-27&quot; ...
-##  $ cladoceran  : num [1:29] 3.89 6.11 5.44 1.26 4.1 ...
-##  $ copepod     : num [1:29] 23.5 26.6 24.7 22.9 23.1 ...
-##  - attr(*, &quot;spec&quot;)=
-##   .. cols(
-##   ..   permanent_id = col_double(),
-##   ..   lake_name = col_character(),
-##   ..   date = col_date(format = &quot;&quot;),
-##   ..   cladoceran = col_double(),
-##   ..   copepod = col_double()
-##   .. )</code></pre>
-<pre class="r"><code># or
-glimpse(south.df)</code></pre>
-<pre><code>## Rows: 29
-## Columns: 5
-## $ permanent_id &lt;dbl&gt; 131846593, 131846593, 131846593, 131846593, 131846593, 13…
-## $ lake_name    &lt;chr&gt; &quot;South&quot;, &quot;South&quot;, &quot;South&quot;, &quot;South&quot;, &quot;South&quot;, &quot;South&quot;, &quot;So…
-## $ date         &lt;date&gt; 1994-06-30, 1994-07-27, 1994-08-31, 1995-06-19, 1995-08-…
-## $ cladoceran   &lt;dbl&gt; 3.88800, 6.11278, 5.43744, 1.26099, 4.10000, 2.81810, 8.0…
-## $ copepod      &lt;dbl&gt; 23.45200, 26.55989, 24.71466, 22.88185, 23.05000, 64.1532…</code></pre>
-</div>
-<div id="saving-files" class="section level2">
-<h2>Saving files</h2>
-<p>Before we go too far it is often important to save the modified data<br />
-We can use the read_r pacakage to do this with write_csv</p>
-<pre class="r"><code># Saving files -----
-# We can save the file we just read in using 
-# Saving dataframes -----
-# lets say you have made a lot of changes and its now time to save the dataframe
-write_csv(south.df, &quot;finalized_data/output_file.csv&quot;)</code></pre>
-</div>
 <div id="graphing-data" class="section level2">
 <h2>Graphing data</h2>
 <p>I feel that graphing is the key to all data analysis. If you can look at your data you can begin to see patterns that you may have predicted and want to test statistically. You will also be able to see outliers that exist that might affect resutls faster than looking at summary statistics.</p>
@@ -430,13 +390,11 @@ I have found that these are not necessary most of the time unless you put y= in 
 # GGplot uses layers to build a graph
 ggplot(data=south.df, aes(x=date, y=cladoceran)) + # this sets up data 
   geom_line() # this adds a geometry to present the data from above</code></pre>
-<p><img src="04_Plotting_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
-<p>Because GGPlot buidls things in layers you can add other geoms to the plot. Below you should try this code and see what happens when you put in a + after geom_line() and then add <code>gome_point()</code>.</p>
-<pre class="r"><code># Add geom_point() -----
-# Add points to the graph below using geom_point()
-ggplot(south.df, aes(x=date, y=cladoceran)) +
-  geom_line()   </code></pre>
-<p><img src="04_Plotting_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
+<p><img src="04_Plotting_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
+<pre class="r"><code> geom_point() </code></pre>
+<pre><code>## geom_point: na.rm = FALSE
+## stat_identity: na.rm = FALSE
+## position_identity</code></pre>
 </div>
 <div id="adding-axes-labels" class="section level2">
 <h2>Adding axes labels</h2>
@@ -446,7 +404,7 @@ ggplot(south.df, aes(x=date, y=cladoceran)) +
   geom_line() +
   geom_point() +
   labs(x = &quot;Date&quot;, y = &quot;Animals (Number per Liter)&quot;)</code></pre>
-<p><img src="04_Plotting_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
+<p><img src="04_Plotting_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
 </div>
 <div id="formatted-axes-labels" class="section level2">
 <h2>Formatted axes labels</h2>
@@ -457,7 +415,7 @@ ggplot(south.df, aes(x=date, y=cladoceran)) +
   geom_line() +
   geom_point() +
   labs(x = &quot;Date&quot;, y = expression(bold(&quot;Animals (No. L&quot;^-1*&quot;)&quot;)))</code></pre>
-<p><img src="04_Plotting_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
+<p><img src="04_Plotting_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
 </div>
 <div id="dates-as-the-x-axis" class="section level2">
 <h2>Dates as the X Axis</h2>
@@ -472,21 +430,30 @@ ggplot(south.df, aes(x=date, y=cladoceran)) +
   scale_x_date(date_breaks = &quot;6 month&quot;,
            # limits = as_datetime(c(&#39;2017-06-01 00:00:00&#39;,&#39;2017-08-01 00:00:00&#39;)),
         labels=date_format(&quot;%Y-%m-%d&quot;), expand=c(0,0))</code></pre>
-<p><img src="04_Plotting_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
-<p>The key for formatting axes with dates and times using the following abbreviations CODE MEANING %y year, without century (00-99)<br />
-%Y year, with century (0000-9999)</p>
-<p>%m month, numeric (01-12)<br />
-%b month, abbreviated (Jan-Dec)<br />
-%B month, full (January-December)</p>
-<p>%a day of the week, abbreviated (Mon-Sun)<br />
-%A day of the week, full (Monday-Sunday)<br />
-%e day of the month (1-31)<br />
-%d day of the month (01-31)</p>
-<p>%l hour, in 12-hour clock (1-12)<br />
-%I hour, in 12-hour clock (01-12)<br />
-%H hour, in 24-hour clock (01-24</p>
-<p>%M minute (00-59)</p>
-<p>%S second (00-59)</p>
+<p><img src="04_Plotting_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
+<p>The key for formatting axes with dates and times using the following abbreviations CODE MEANING - %y year, without century (00-99)<br />
+- %Y year, with century (0000-9999)</p>
+<ul>
+<li><p>%m month, numeric (01-12)<br />
+</p></li>
+<li><p>%b month, abbreviated (Jan-Dec)<br />
+</p></li>
+<li><p>%B month, full (January-December)</p></li>
+<li><p>%a day of the week, abbreviated (Mon-Sun)<br />
+</p></li>
+<li><p>%A day of the week, full (Monday-Sunday)<br />
+</p></li>
+<li><p>%e day of the month (1-31)<br />
+</p></li>
+<li><p>%d day of the month (01-31)</p></li>
+<li><p>%l hour, in 12-hour clock (1-12)<br />
+</p></li>
+<li><p>%I hour, in 12-hour clock (01-12)<br />
+</p></li>
+<li><p>%H hour, in 24-hour clock (01-24</p></li>
+<li><p>%M minute (00-59)</p></li>
+<li><p>%S second (00-59)</p></li>
+</ul>
 </div>
 <div id="modifying-themes" class="section level2">
 <h2>Modifying themes</h2>
@@ -502,17 +469,27 @@ ggplot(south.df, aes(x=date, y=cladoceran)) +
           # limits = as_datetime(c(&#39;2017-06-01 00:00:00&#39;,&#39;2017-08-01 00:00:00&#39;)),
          labels=date_format(&quot;%Y-%m-%d&quot;), expand=c(0,0)) +
   theme_light()</code></pre>
-<p><img src="04_Plotting_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
-<p>you can try a lot of other themes<br />
-theme_gray<br />
-theme_bw<br />
-theme_linedraw<br />
-theme_light<br />
-theme_dark<br />
-theme_minimal<br />
-theme_classic<br />
-theme_void<br />
-theme_test</p>
+<p><img src="04_Plotting_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
+<p>you can try a lot of other themes</p>
+<ul>
+<li>theme_gray<br />
+</li>
+<li>theme_bw<br />
+</li>
+<li>theme_linedraw<br />
+</li>
+<li>theme_light<br />
+</li>
+<li>theme_dark<br />
+</li>
+<li>theme_minimal<br />
+</li>
+<li>theme_classic<br />
+</li>
+<li>theme_void<br />
+</li>
+<li>theme_test</li>
+</ul>
 <pre class="r"><code># NOW - try a few different themes
 ggplot(south.df, aes(x=date, y=cladoceran)) +
   geom_line() +
@@ -521,7 +498,7 @@ ggplot(south.df, aes(x=date, y=cladoceran)) +
   scale_x_date(date_breaks = &quot;6 month&quot;,
        # limits = as_datetime(c(&#39;2017-06-01 00:00:00&#39;,&#39;2017-08-01 00:00:00&#39;)),
         labels=date_format(&quot;%Y-%m-%d&quot;), expand=c(0,0))</code></pre>
-<p><img src="04_Plotting_files/figure-html/unnamed-chunk-11-1.png" width="672" /></p>
+<p><img src="04_Plotting_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
 </div>
 <div id="adusting-themes" class="section level2">
 <h2>Adusting themes</h2>
@@ -538,7 +515,7 @@ ggplot(south.df, aes(x=date, y=cladoceran)) +
   theme(
     axis.text.x = element_text(size=12, face=&quot;bold&quot;, angle=45, hjust=1)
     )</code></pre>
-<p><img src="04_Plotting_files/figure-html/unnamed-chunk-12-1.png" width="672" /></p>
+<p><img src="04_Plotting_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
 </div>
 <div id="ggthemeassistant" class="section level2">
 <h2>GGThemeAssistant</h2>
@@ -553,7 +530,7 @@ It may not work in the markdown format though… only script files</p>
   scale_x_date(date_breaks = &quot;6 month&quot;,
                limits = as_date(c(&#39;1994-06-01&#39;, &#39;2006-12-31&#39;)),
                labels=date_format(&quot;%Y-%m-%d&quot;), expand=c(0,0))</code></pre>
-<p><img src="04_Plotting_files/figure-html/unnamed-chunk-13-1.png" width="672" /></p>
+<p><img src="04_Plotting_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
 </div>
 <div id="common-theme-statments" class="section level2">
 <h2>Common Theme Statments</h2>
@@ -600,7 +577,7 @@ ggplot(south.df, aes(x=date, y=cladoceran)) +
     axis.line.y = element_line(color=&quot;black&quot;, size = 0.3),
     # ADD PLOT BOX
     panel.border = element_rect(colour = &quot;black&quot;, fill=NA, size=0.3))</code></pre>
-<p><img src="04_Plotting_files/figure-html/unnamed-chunk-14-1.png" width="672" /></p>
+<p><img src="04_Plotting_files/figure-html/unnamed-chunk-11-1.png" width="672" /></p>
 </div>
 <div id="creating-custom-theme" class="section level2">
 <h2>Creating custom theme</h2>
@@ -654,7 +631,7 @@ ggplot(south.df, aes(x=date, y=cladoceran)) +
                limits = as_date(c(&#39;1994-06-01&#39;, &#39;2006-12-31&#39;)),
                labels=date_format(&quot;%Y-%m-%d&quot;), expand=c(0,0)) +
   theme_gleon()</code></pre>
-<p><img src="04_Plotting_files/figure-html/unnamed-chunk-16-1.png" width="672" /></p>
+<p><img src="04_Plotting_files/figure-html/unnamed-chunk-13-1.png" width="672" /></p>
 </div>
 </div>
 <div id="saving-last-plot" class="section level1">
@@ -677,7 +654,7 @@ plot1.plot &lt;-  ggplot(south.df, aes(x=date, y=cladoceran)) +
   geom_line() +
   geom_point() 
 plot1.plot</code></pre>
-<p><img src="04_Plotting_files/figure-html/unnamed-chunk-18-1.png" width="672" /></p>
+<p><img src="04_Plotting_files/figure-html/unnamed-chunk-15-1.png" width="672" /></p>
 <pre class="r"><code>ggsave(plot1.plot, 
        file=&quot;figures/plot1.pdf&quot;,
        width = 10, height = 8, 
@@ -692,13 +669,13 @@ plot1.plot</code></pre>
 <p>We could also map the type of point shape to the species</p>
 <pre class="r"><code>ggplot(south.df, aes(x=date, y=cladoceran)) +
   geom_point(size=4, shape=6)</code></pre>
-<p><img src="04_Plotting_files/figure-html/unnamed-chunk-19-1.png" width="672" /></p>
+<p><img src="04_Plotting_files/figure-html/unnamed-chunk-16-1.png" width="672" /></p>
 <p>The shapes of the various options are:<br />
 <img src="images/point_shapes.png" alt="Shapes of various points." /></p>
 <pre class="r"><code>ggplot(south.df, aes(x=date, y=cladoceran)) +
   geom_point(size=4, shape=6) +
   geom_line( linetype =&quot;longdash&quot;)</code></pre>
-<p><img src="04_Plotting_files/figure-html/unnamed-chunk-20-1.png" width="672" /></p>
+<p><img src="04_Plotting_files/figure-html/unnamed-chunk-17-1.png" width="672" /></p>
 <p>The types of lines you can have are:<br />
 <img src="images/line_types.png" alt="Types of lines." /></p>
 <!-- Global Site Tag (gtag.js) - Google Analytics -->

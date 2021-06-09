@@ -17,7 +17,7 @@
 <script src="site_libs/header-attrs-2.8/header-attrs.js"></script>
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<link href="site_libs/bootstrap-3.3.5/css/yeti.min.css" rel="stylesheet" />
+<link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
 <script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
@@ -360,17 +360,13 @@ install.packages(&quot;scales&quot;) # scales on ggplot ases
 install.packages(&quot;readxl&quot;) # read in excel files
 install.packages(&quot;skimr&quot;) # quick summary stats
 install.packages(&quot;janitor&quot;) # clean up excel imports
-
-
-# Libraries that I use a lot that require special installation
-devtools::install_github(&quot;thomasp85/patchwork&quot;) # multiple plots
-devtools::install_github(&quot;calligross/ggthemeassist&quot;) # ggplot adjust
-install.packages(&quot;styler&quot;) # helps reformat code
-
-# Other pacakage that are used for special work like heat maps
-install.packages(&quot;hms&quot;) # useful for time series
+install.packages(&quot;patchwork&quot;) # arrange multiple plots per page
+install.packages(&quot;ggThemeAssist&quot;) # helps reformat code - only run library one time
 install.packages(&quot;plotly&quot;) # cool ggplot things
 install.packages(&quot;colorRamps&quot;) # adds cool color templates
+
+# Other packages that are used for special work like heat maps
+install.packages(&quot;hms&quot;) # useful for time series
 install.packages(&quot;akima&quot;) # imputing new values</code></pre>
 </div>
 <div id="these-libraries-are-useful-for-general-statistics-and-used-quite-often" class="section level2">
@@ -397,18 +393,17 @@ install.packages(&quot;factoextra&quot;) # more PCA
 
 # mixed models
 install.packages(&quot;lmerTest&quot;) # mixed model Anovas
-install.packages(&quot;blme&quot;)  # Baysian mixed model Anovas</code></pre>
+install.packages(&quot;blme&quot;)  # Bayesian mixed model Anovas</code></pre>
 </div>
 <div id="finally-here-are-some-lesser-used-pacakges-that-i-do-not-use-a-lot-but-you-might-find-useful" class="section level2">
 <h2>Finally here are some lesser used pacakges that I do not use a lot but you might find useful</h2>
-<pre class="r"><code># these are special that you likely will not use 
-# devtools::install_github(&quot;seasmith/AlignAssign&quot;)
-# install.packages(&quot;data.table&quot;)
+<pre class="r"><code># these are special that you likely will not use    
+
 # install.packages(&quot;RMySQL&quot;) # access MySQLserver
 # install.packages(&quot;xts&quot;)  # not used
 # install.packages(&quot;rLakeAnalyzer&quot;) # used for the lake analyzer scripts
 # install.packages(&quot;LakeMetabolizer&quot;)
-# install.packages(&quot;zoo&quot;)</code></pre>
+# install.packages(&quot;zoo&quot;) # helps with time series</code></pre>
 </div>
 <div id="to-get-the-libraires-running---some-need-to-only-be-run-one-time" class="section level2">
 <h2>To get the libraires running - some need to only be run one time</h2>

@@ -4,6 +4,7 @@ author: "Bill Perry"
 date: "2019/10/26"
 output:
   html_document:
+    theme: cosmo
     toc: true
     toc_float: true
 ---
