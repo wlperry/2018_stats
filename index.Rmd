@@ -4,6 +4,7 @@ author: "Bill Perry"
 date: "2019/09/30"
 output:
   html_document:
+    theme: yeti
     toc: TRUE
     toc_float: TRUE
 ---

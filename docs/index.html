@@ -17,7 +17,7 @@
 <script src="site_libs/header-attrs-2.8/header-attrs.js"></script>
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<link href="site_libs/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
+<link href="site_libs/bootstrap-3.3.5/css/journal.min.css" rel="stylesheet" />
 <script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
@@ -30,6 +30,9 @@
        h6 {font-size: 12px;}
        code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
        pre:not([class]) { background-color: white }</style>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
 <link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
 <script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
@@ -220,6 +223,69 @@ $(document).ready(function () {
 
 
 
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
 
 </head>
 
@@ -227,6 +293,16 @@ $(document).ready(function () {
 
 
 <div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
 
 
 
@@ -270,37 +346,6 @@ $(document).ready(function () {
 
 </div>
 
-<div id="TOC">
-<ul>
-<li><a href="#r-and-tidyverse">R and Tidyverse</a>
-<ul>
-<li><a href="#basics-of-projects"><span>Basics of projects</span></a></li>
-<li><a href="#packagesloading-libraries"><span>Packages/Loading Libraries</span></a></li>
-<li><a href="#reading-files-and-plotting"><span>1. Reading files and plotting</span></a></li>
-<li><a href="#advanced-plotting"><span>2. Advanced Plotting</span></a></li>
-<li><a href="#plot-layout-and-patchworkd"><span>2.5 Plot layout and Patchworkd</span></a></li>
-<li><a href="#statistical-plots-for-ggplot"><span>3.Statistical Plots for GGPlot</span></a></li>
-<li><a href="#data-mutatesummary"><span>4. Data mutate/summary</span></a></li>
-<li><a href="#selecting-and-filtering-data"><span>5. Selecting and filtering data</span></a></li>
-<li><a href="#datetimes-with-lubridate"><span>6. Datetimes with lubridate</span></a></li>
-<li><a href="#longwide-dataframes"><span>7. Long/wide dataframes</span></a></li>
-<li><a href="#factors"><span>8. Factors</span></a></li>
-<li><a href="#joining-two-dataframes"><span>9. Joining two dataframes</span></a></li>
-<li><a href="#ifelse-and-case_when"><span>10. IfElse and case_when</span></a></li>
-<li><a href="#rlakeanalyzer-preparation"><span>21. rLakeAnalyzer preparation</span></a></li>
-<li><a href="#retreiving-data-from-a-list"><span>23. Retreiving data from a list</span></a></li>
-<li><a href="#heat-plots-for-lake-temp"><span>24. Heat plots for lake temp</span></a></li>
-</ul></li>
-<li><a href="#statistics">Statistics</a>
-<ul>
-<li><a href="#correlation"><span>31. Correlation</span></a></li>
-<li><a href="#regressions"><span>32. Regressions</span></a></li>
-<li><a href="#ttests"><span>33. Ttests</span></a></li>
-<li><a href="#one-way-aov"><span>34. One way AOV</span></a></li>
-<li><a href="#two-way-aov-with-post-f-tests"><span>35. Two way AOV with post F tests</span></a></li>
-</ul></li>
-</ul>
-</div>
 
 <div id="r-and-tidyverse" class="section level1">
 <h1>R and Tidyverse</h1>
@@ -417,6 +462,8 @@ THis will cover how to work with sonde data and then graph that data. This data 
 
 
 
+</div>
+</div>
 
 </div>
 
@@ -449,6 +496,32 @@ $(document).ready(function () {
 
 <!-- code folding -->
 
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
 
 
 </body>
