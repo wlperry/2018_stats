@@ -464,41 +464,23 @@ div.tocify {
 <p>Typically when we enter data it is in <strong>wide format</strong> where an identifier is in the first column and the various variables are in separate columns. This is what is often easiest to enter into excel or wherever it is entered originally.</p>
 <p>This format is often more difficult to work with in R and GGPlot so it is converted to <strong>long format</strong> where there is a column of identifiers, a column of variable names, and a column of values. The switch between these formats is often rather easy so it does not matter what format it is in.</p>
 <p>wide format:<br />
-This is how you would likely enter it in excel<br />
-Columns would be:</p>
+For the M&amp;M data set this would look like:<br />
+Columns across the top would be:</p>
 <ul>
-<li>lake<br />
-</li>
-<li>datetime<br />
-</li>
-<li>depth<br />
-</li>
-<li>group<br />
-</li>
-<li>genus</li>
-<li>species<br />
-</li>
-<li>number_liter<br />
-</li>
-<li>biomass_liter</li>
+<li>center - type of center - peanut or chocolate etc</li>
+<li>color - the outter shell color</li>
+<li>diameter - the size</li>
+<li>mass - the weight</li>
 </ul>
 <p>long format:<br />
-This would condense this format to fewer columns:</p>
+This would condense this format to fewer columns repeating center and color and have a column called dimension and one called values. The dimension would be diameter or mass and the value woudl be the value. This is not that effective in this small data set but it invalualbe in larger data sets. It also makes summary stats and graphing easier:</p>
 <ul>
-<li>lake<br />
+<li>center - type of center - peanut or chocolate etc</li>
+<li>color - the outter shell color<br />
 </li>
-<li>datetime<br />
+<li>dimension - diameter or mass<br />
 </li>
-<li>depth<br />
-</li>
-<li>group<br />
-</li>
-<li>genus</li>
-<li>species<br />
-</li>
-<li>variable_measured ( number_liter and biomass_liter)<br />
-</li>
-<li>value (the values of each of the respective varaibles)</li>
+<li>value - either the diameter or weight</li>
 </ul>
 </div>
 <div id="output" class="section level3">

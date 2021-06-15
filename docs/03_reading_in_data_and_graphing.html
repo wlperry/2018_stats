@@ -360,21 +360,20 @@ library(patchwork)</code></pre>
 <div id="read-in-the-file" class="section level2">
 <h2>Read in the file</h2>
 <pre class="r"><code># Read in file using tidyverse code-----
-south.df &lt;- read_csv(&quot;data/South_Lake.csv&quot;, guess_max = 1000)</code></pre>
+mm.df &lt;- read_csv(&quot;data/mms.csv&quot;)</code></pre>
 <pre><code>## 
 ## ── Column specification ────────────────────────────────────────────────────────
 ## cols(
-##   permanent_id = col_double(),
-##   lake_name = col_character(),
-##   date = col_date(format = &quot;&quot;),
-##   cladoceran = col_double(),
-##   copepod = col_double()
+##   center = col_character(),
+##   color = col_character(),
+##   diameter = col_double(),
+##   mass = col_double()
 ## )</code></pre>
 <div id="read-in-excel-files" class="section level4">
 <h4>Read in excel files</h4>
 <p>Note that you can read in excel files in the same way.</p>
 <pre class="r"><code># Note you can read in excel files just as easy
-south_excel.df &lt;- read_excel(&quot;data/south_lake.xlsx&quot;, sheet = &quot;south_lake&quot;)</code></pre>
+  mm_excel.df &lt;- read_excel(&quot;data/mms.xlsx&quot;)</code></pre>
 </div>
 </div>
 <div id="look-at-dataframe-structure" class="section level2">
@@ -382,30 +381,27 @@ south_excel.df &lt;- read_excel(&quot;data/south_lake.xlsx&quot;, sheet = &quot;
 <p>One way is to click the blue trianlge in the environment tab in the upper right<br />
 You can also use code to inspect the structure of the dataset</p>
 <pre class="r"><code># data Structure
-str(south.df)</code></pre>
-<pre><code>## spec_tbl_df [29 × 5] (S3: spec_tbl_df/tbl_df/tbl/data.frame)
-##  $ permanent_id: num [1:29] 1.32e+08 1.32e+08 1.32e+08 1.32e+08 1.32e+08 ...
-##  $ lake_name   : chr [1:29] &quot;South&quot; &quot;South&quot; &quot;South&quot; &quot;South&quot; ...
-##  $ date        : Date[1:29], format: &quot;1994-06-30&quot; &quot;1994-07-27&quot; ...
-##  $ cladoceran  : num [1:29] 3.89 6.11 5.44 1.26 4.1 ...
-##  $ copepod     : num [1:29] 23.5 26.6 24.7 22.9 23.1 ...
+str(mm.df)</code></pre>
+<pre><code>## spec_tbl_df [816 × 4] (S3: spec_tbl_df/tbl_df/tbl/data.frame)
+##  $ center  : chr [1:816] &quot;peanut butter&quot; &quot;peanut butter&quot; &quot;peanut butter&quot; &quot;peanut butter&quot; ...
+##  $ color   : chr [1:816] &quot;blue&quot; &quot;brown&quot; &quot;orange&quot; &quot;brown&quot; ...
+##  $ diameter: num [1:816] 16.2 16.5 15.5 16.3 15.6 ...
+##  $ mass    : num [1:816] 2.18 2.01 1.78 1.98 1.62 2.59 1.9 2.55 2.07 2.26 ...
 ##  - attr(*, &quot;spec&quot;)=
 ##   .. cols(
-##   ..   permanent_id = col_double(),
-##   ..   lake_name = col_character(),
-##   ..   date = col_date(format = &quot;&quot;),
-##   ..   cladoceran = col_double(),
-##   ..   copepod = col_double()
+##   ..   center = col_character(),
+##   ..   color = col_character(),
+##   ..   diameter = col_double(),
+##   ..   mass = col_double()
 ##   .. )</code></pre>
 <pre class="r"><code># or
-glimpse(south.df)</code></pre>
-<pre><code>## Rows: 29
-## Columns: 5
-## $ permanent_id &lt;dbl&gt; 131846593, 131846593, 131846593, 131846593, 131846593, 13…
-## $ lake_name    &lt;chr&gt; &quot;South&quot;, &quot;South&quot;, &quot;South&quot;, &quot;South&quot;, &quot;South&quot;, &quot;South&quot;, &quot;So…
-## $ date         &lt;date&gt; 1994-06-30, 1994-07-27, 1994-08-31, 1995-06-19, 1995-08-…
-## $ cladoceran   &lt;dbl&gt; 3.88800, 6.11278, 5.43744, 1.26099, 4.10000, 2.81810, 8.0…
-## $ copepod      &lt;dbl&gt; 23.45200, 26.55989, 24.71466, 22.88185, 23.05000, 64.1532…</code></pre>
+glimpse(mm.df)</code></pre>
+<pre><code>## Rows: 816
+## Columns: 4
+## $ center   &lt;chr&gt; &quot;peanut butter&quot;, &quot;peanut butter&quot;, &quot;peanut butter&quot;, &quot;peanut bu…
+## $ color    &lt;chr&gt; &quot;blue&quot;, &quot;brown&quot;, &quot;orange&quot;, &quot;brown&quot;, &quot;yellow&quot;, &quot;brown&quot;, &quot;yello…
+## $ diameter &lt;dbl&gt; 16.20, 16.50, 15.48, 16.32, 15.59, 17.43, 15.45, 17.30, 16.37…
+## $ mass     &lt;dbl&gt; 2.18, 2.01, 1.78, 1.98, 1.62, 2.59, 1.90, 2.55, 2.07, 2.26, 1…</code></pre>
 </div>
 <div id="saving-files" class="section level2">
 <h2>Saving files</h2>
@@ -415,7 +411,7 @@ We can use the read_r package to do this with write_csv</p>
 # We can save the file we just read in using 
 # Saving dataframes -----
 # lets say you have made a lot of changes and its now time to save the dataframe
-write_csv(south.df, &quot;finalized_data/output_file.csv&quot;)</code></pre>
+write_csv(mm.df, &quot;finalized_data/mm_output.csv&quot;)</code></pre>
 </div>
 </div>
 <div id="ggplot" class="section level1">
@@ -428,24 +424,24 @@ write_csv(south.df, &quot;finalized_data/output_file.csv&quot;)</code></pre>
 I have found that these are not necessary <em>most of the time</em> and we can talk about this later.</p>
 <pre class="r"><code># GGplot uses layers to build a graph
 
-ggplot(data=south.df, aes(x=date, y=cladoceran)) + # this sets up data 
-  geom_line() # this adds a geometry to present the data from above</code></pre>
+ggplot(data=mm.df, aes(x=color, y=diameter)) + # this sets up data 
+  geom_point() # this adds a geometry to present the data from above</code></pre>
 <p><img src="03_reading_in_data_and_graphing_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
-<p>Because GGPlot builds things in layers you can add other geoms to the plot. Below you should try this code and see what happens when you put in <strong><code>+</code></strong> after geom_line() and then add <strong><code>gome_point()</code></strong>.</p>
+<p>Because GGPlot builds things in layers you can add other geoms to the plot. Below you should try this code and see what happens when you put in <strong><code>+</code></strong> after geom_line() and then add <strong><code>geom_boxplot()</code></strong>.</p>
 <pre class="r"><code># Add geom_point() -----
 # Add points to the graph below using geom_point()
-ggplot(south.df, aes(x=date, y=cladoceran)) +
-  geom_line()   </code></pre>
+ggplot(mm.df, aes(x=color, y=diameter)) +
+  geom_point()  </code></pre>
 <p><img src="03_reading_in_data_and_graphing_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
 </div>
 <div id="adding-axes-labels" class="section level2">
 <h2>Adding axes labels</h2>
 <p>You can add in simple axes labels that are not formatted. Using the labs(x= " “, y =” ") statement. You can add in line breaks by putting in a <code>\n</code> in the statement that you have below.</p>
 <pre class="r"><code># Adding axes labels ----
-ggplot(south.df, aes(x=date, y=cladoceran)) +
-  geom_line() +
+ggplot(mm.df, aes(x=color, y=diameter)) +
+  geom_boxplot() +
   geom_point() +
-  labs(x = &quot;Date&quot;, y = &quot;Animals (Number per Liter)&quot;)</code></pre>
+  labs(x = &quot;Color&quot;, y = &quot;Diameter&quot;)</code></pre>
 <p><img src="03_reading_in_data_and_graphing_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
 </div>
 <div id="formatted-axes-labels" class="section level2">
@@ -453,10 +449,10 @@ ggplot(south.df, aes(x=date, y=cladoceran)) +
 <p>What I find really nice is being able to create formatted axes labels. You can do this a few ways but I have found the that the expression statement works the best for my needs. You can add in a <code>~</code> to add a space between symbols and a <code>*</code> will connect things without a space.</p>
 <pre class="r"><code># Label expressions -----
 # Adding special formatting to labels
-ggplot(south.df, aes(x=date, y=cladoceran)) +
-  geom_line() +
+ggplot(mm.df, aes(x=color, y=diameter)) +
+  geom_boxplot() +
   geom_point() +
-  labs(x = &quot;Date&quot;, y = expression(bold(&quot;Animals (No. L&quot;^-1*&quot;)&quot;)))</code></pre>
+  labs(x = &quot;color&quot;, y = expression(bold(&quot;Diameter (&quot;*mu*&quot;*1000)&quot;)))</code></pre>
 <p><img src="03_reading_in_data_and_graphing_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
 <!-- Global Site Tag (gtag.js) - Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=UA-88373117-4"></script>

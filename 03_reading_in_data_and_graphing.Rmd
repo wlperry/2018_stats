@@ -26,7 +26,7 @@ library(patchwork)
 ## Read in the file
 ```{r 03_read_data}
 # Read in file using tidyverse code-----
-south.df <- read_csv("data/South_Lake.csv", guess_max = 1000)
+mm.df <- read_csv("data/mms.csv")
 ```
 
 
@@ -34,7 +34,7 @@ south.df <- read_csv("data/South_Lake.csv", guess_max = 1000)
 Note that you can read in excel files in the same way.
 ```{r}
 # Note you can read in excel files just as easy
-south_excel.df <- read_excel("data/south_lake.xlsx", sheet = "south_lake")
+  mm_excel.df <- read_excel("data/mms.xlsx")
 ```
 
 
@@ -43,9 +43,9 @@ One way is to click the blue trianlge in the environment tab in the upper right
 You can also use code to inspect the structure of the dataset
 ```{r}
 # data Structure
-str(south.df)
+str(mm.df)
 # or
-glimpse(south.df)
+glimpse(mm.df)
 ```
 
 
@@ -57,7 +57,7 @@ We can use the read_r package to do this with write_csv
 # We can save the file we just read in using 
 # Saving dataframes -----
 # lets say you have made a lot of changes and its now time to save the dataframe
-write_csv(south.df, "finalized_data/output_file.csv")
+write_csv(mm.df, "finalized_data/mm_output.csv")
 ```
 
 
@@ -74,17 +74,17 @@ I have found that these are not necessary *most of the time* and we can talk abo
 ```{r}
 # GGplot uses layers to build a graph
 
-ggplot(data=south.df, aes(x=date, y=cladoceran)) + # this sets up data 
-  geom_line() # this adds a geometry to present the data from above
+ggplot(data=mm.df, aes(x=color, y=diameter)) + # this sets up data 
+  geom_point() # this adds a geometry to present the data from above
 ```
 
 
-Because GGPlot builds things in layers you can add other geoms to the plot. Below you should try this code and see what happens when you put in  **`+ `** after geom_line() and then add **`gome_point()`**.    
+Because GGPlot builds things in layers you can add other geoms to the plot. Below you should try this code and see what happens when you put in  **`+ `** after geom_line() and then add **`geom_boxplot()`**.    
 ```{r}
 # Add geom_point() -----
 # Add points to the graph below using geom_point()
-ggplot(south.df, aes(x=date, y=cladoceran)) +
-  geom_line() 	
+ggplot(mm.df, aes(x=color, y=diameter)) +
+  geom_point() 	
 
 ```
 
@@ -94,10 +94,10 @@ You can add in simple axes labels that are not formatted. Using the labs(x= " ",
 
 ```{r}
 # Adding axes labels ----
-ggplot(south.df, aes(x=date, y=cladoceran)) +
-  geom_line() +
+ggplot(mm.df, aes(x=color, y=diameter)) +
+  geom_boxplot() +
   geom_point() +
-  labs(x = "Date", y = "Animals (Number per Liter)")
+  labs(x = "Color", y = "Diameter")
 
 ```
 
@@ -108,10 +108,10 @@ What I find really nice is being able to create formatted axes labels. You can d
 ```{r}
 # Label expressions -----
 # Adding special formatting to labels
-ggplot(south.df, aes(x=date, y=cladoceran)) +
-  geom_line() +
+ggplot(mm.df, aes(x=color, y=diameter)) +
+  geom_boxplot() +
   geom_point() +
-  labs(x = "Date", y = expression(bold("Animals (No. L"^-1*")")))
+  labs(x = "color", y = expression(bold("Diameter ("*mu*"*1000)")))
 
 ```
 

@@ -61,10 +61,7 @@ are below:
 
 the key is that you should have no spaces or special characters. If you do have spaces you use the back tick **`abc xyz` **on either side of the variable to call it.     
   
-
 Special characters are often coded differently in mac and pc computers and will cause more headaches than you have after St. Patricks Day.   
-
-  
 
 ### Transformations    
 Keeping a list of transformations and conversions can be helpful in coding and if it is in the meta data file, you can copy the transformations out of the document and if there are mistakes people can track it down fast. 
@@ -72,7 +69,6 @@ Keeping a list of transformations and conversions can be helpful in coding and i
 ### Data structure and format
 R uses a column format and all the data in a column has to be of the same type. You can, however, reference data by row and column as in excel.      
 
- 
 The most common data formats you will run into are:   
 
   + Numeric - can be double or integer but that is not as important      
@@ -93,31 +89,23 @@ This format is often more difficult to work with in R and GGPlot so it is conver
   
   
 wide format:    
-This is how you would likely enter it in excel    
-Columns would be:  
+For the M&M data set this would look like:    
+Columns across the top would be:  
 
-  * lake    
-  * datetime      
-  * depth      
-  * group   
-  * genus
-  * species      
-  * number_liter       
-  * biomass_liter         
+  * center - type of center - peanut or chocolate etc
+  * color - the outter shell color
+  * diameter - the size
+  * mass    - the weight    
  
 
 long format:   
-This would condense this format to fewer columns:      
+This would condense this format to fewer columns repeating center and color and have a column called dimension and one called values. The dimension would be diameter or mass and the value woudl be the value. This is not that effective in this small data set but it invalualbe in larger data sets. It also makes summary stats and graphing easier:      
 
-   * lake    
-   * datetime      
-   * depth      
-   * group   
-   * genus
-   * species       
-   * variable_measured ( number_liter and biomass_liter)        
-   * value (the values of each of the respective varaibles)          
-
+   * center - type of center - peanut or chocolate etc
+   * color - the outter shell color   
+   * dimension - diameter or mass      
+   * value - either the diameter or weight   
+  
 ### Output     
 I find it useful to maintain a read only file of the original data and never write to this file other than the original QA/QC flagging of the data if even then. I usually read from this file and save it to the finalized data folder where the data has been cleaned formatted and basic calculations done on it.
 

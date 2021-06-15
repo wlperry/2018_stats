@@ -359,75 +359,412 @@ library(&quot;lubridate&quot;) # dates and times
 library(&quot;scales&quot;) # scales on ggplot ases
 library(&quot;skimr&quot;) # quick summary stats
 library(&quot;janitor&quot;) # clean up excel imports
-library(&quot;patchwork&quot;) # multipanel graphs</code></pre>
+library(&quot;patchwork&quot;) # multipanel graphs
+library(skimr) # great way to do summary stats</code></pre>
 <p>##Read files</p>
 <pre class="r"><code># lets read in a new file to add some complexity for fun
-lakes.df &lt;- read_csv(&quot;data/Reduced_Lake_Long_Genus_Species.csv&quot;)</code></pre>
+mm.df &lt;- read_csv(&quot;data/mms.csv&quot;)</code></pre>
 <pre><code>## 
 ## ── Column specification ────────────────────────────────────────────────────────
 ## cols(
-##   permanent_id = col_double(),
-##   lake_name = col_character(),
-##   date = col_date(format = &quot;&quot;),
-##   group = col_character(),
-##   genus_species = col_character(),
-##   org_l = col_double(),
-##   year = col_double()
+##   center = col_character(),
+##   color = col_character(),
+##   diameter = col_double(),
+##   mass = col_double()
 ## )</code></pre>
-<pre class="r"><code># now we can do some more fun stuff
-# what if we wanted to just look at the mean density by year?
-# we can do this in ggplot
-
-# lets make a year column
-lakes.df &lt;- lakes.df %&gt;%
-  mutate( year = year(date))</code></pre>
+</div>
+<div id="summary-stats" class="section level1">
+<h1>Summary Stats</h1>
+<p>Lets look at a few ways to get summary statistics The first is the simplist and uses base R</p>
+<pre class="r"><code>summary(mm.df)</code></pre>
+<pre><code>##     center             color              diameter          mass     
+##  Length:816         Length:816         Min.   :11.23   Min.   :0.72  
+##  Class :character   Class :character   1st Qu.:13.22   1st Qu.:0.86  
+##  Mode  :character   Mode  :character   Median :13.60   Median :0.92  
+##                                        Mean   :14.17   Mean   :1.42  
+##                                        3rd Qu.:15.30   3rd Qu.:1.93  
+##                                        Max.   :17.88   Max.   :3.62</code></pre>
+<p>A better way is using Skimr</p>
+<pre class="r"><code>mm.df %&gt;% 
+  skim()</code></pre>
+<table>
+<caption>Data summary</caption>
+<tbody>
+<tr class="odd">
+<td align="left">Name</td>
+<td align="left">Piped data</td>
+</tr>
+<tr class="even">
+<td align="left">Number of rows</td>
+<td align="left">816</td>
+</tr>
+<tr class="odd">
+<td align="left">Number of columns</td>
+<td align="left">4</td>
+</tr>
+<tr class="even">
+<td align="left">_______________________</td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">Column type frequency:</td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">character</td>
+<td align="left">2</td>
+</tr>
+<tr class="odd">
+<td align="left">numeric</td>
+<td align="left">2</td>
+</tr>
+<tr class="even">
+<td align="left">________________________</td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">Group variables</td>
+<td align="left">None</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Variable type: character</strong></p>
+<table>
+<thead>
+<tr class="header">
+<th align="left">skim_variable</th>
+<th align="right">n_missing</th>
+<th align="right">complete_rate</th>
+<th align="right">min</th>
+<th align="right">max</th>
+<th align="right">empty</th>
+<th align="right">n_unique</th>
+<th align="right">whitespace</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">center</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">5</td>
+<td align="right">13</td>
+<td align="right">0</td>
+<td align="right">3</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="left">color</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">3</td>
+<td align="right">6</td>
+<td align="right">0</td>
+<td align="right">6</td>
+<td align="right">0</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Variable type: numeric</strong></p>
+<table>
+<thead>
+<tr class="header">
+<th align="left">skim_variable</th>
+<th align="right">n_missing</th>
+<th align="right">complete_rate</th>
+<th align="right">mean</th>
+<th align="right">sd</th>
+<th align="right">p0</th>
+<th align="right">p25</th>
+<th align="right">p50</th>
+<th align="right">p75</th>
+<th align="right">p100</th>
+<th align="left">hist</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">diameter</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">14.17</td>
+<td align="right">1.22</td>
+<td align="right">11.23</td>
+<td align="right">13.22</td>
+<td align="right">13.60</td>
+<td align="right">15.30</td>
+<td align="right">17.88</td>
+<td align="left">▁▇▂▃▁</td>
+</tr>
+<tr class="even">
+<td align="left">mass</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">1.42</td>
+<td align="right">0.71</td>
+<td align="right">0.72</td>
+<td align="right">0.86</td>
+<td align="right">0.92</td>
+<td align="right">1.93</td>
+<td align="right">3.62</td>
+<td align="left">▇▂▂▂▁</td>
+</tr>
+</tbody>
+</table>
+<p>The cool part of skimr is that you can do groups</p>
+<pre class="r"><code>mm.df %&gt;% 
+  group_by(center) %&gt;% 
+  skim()</code></pre>
+<table>
+<caption>Data summary</caption>
+<tbody>
+<tr class="odd">
+<td align="left">Name</td>
+<td align="left">Piped data</td>
+</tr>
+<tr class="even">
+<td align="left">Number of rows</td>
+<td align="left">816</td>
+</tr>
+<tr class="odd">
+<td align="left">Number of columns</td>
+<td align="left">4</td>
+</tr>
+<tr class="even">
+<td align="left">_______________________</td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">Column type frequency:</td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">character</td>
+<td align="left">1</td>
+</tr>
+<tr class="odd">
+<td align="left">numeric</td>
+<td align="left">2</td>
+</tr>
+<tr class="even">
+<td align="left">________________________</td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">Group variables</td>
+<td align="left">center</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Variable type: character</strong></p>
+<table>
+<thead>
+<tr class="header">
+<th align="left">skim_variable</th>
+<th align="left">center</th>
+<th align="right">n_missing</th>
+<th align="right">complete_rate</th>
+<th align="right">min</th>
+<th align="right">max</th>
+<th align="right">empty</th>
+<th align="right">n_unique</th>
+<th align="right">whitespace</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">color</td>
+<td align="left">peanut</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">3</td>
+<td align="right">6</td>
+<td align="right">0</td>
+<td align="right">6</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="left">color</td>
+<td align="left">peanut butter</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">3</td>
+<td align="right">6</td>
+<td align="right">0</td>
+<td align="right">6</td>
+<td align="right">0</td>
+</tr>
+<tr class="odd">
+<td align="left">color</td>
+<td align="left">plain</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">3</td>
+<td align="right">6</td>
+<td align="right">0</td>
+<td align="right">6</td>
+<td align="right">0</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Variable type: numeric</strong></p>
+<table>
+<thead>
+<tr class="header">
+<th align="left">skim_variable</th>
+<th align="left">center</th>
+<th align="right">n_missing</th>
+<th align="right">complete_rate</th>
+<th align="right">mean</th>
+<th align="right">sd</th>
+<th align="right">p0</th>
+<th align="right">p25</th>
+<th align="right">p50</th>
+<th align="right">p75</th>
+<th align="right">p100</th>
+<th align="left">hist</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">diameter</td>
+<td align="left">peanut</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">14.77</td>
+<td align="right">0.98</td>
+<td align="right">12.45</td>
+<td align="right">14.13</td>
+<td align="right">14.69</td>
+<td align="right">15.47</td>
+<td align="right">17.88</td>
+<td align="left">▂▇▇▃▁</td>
+</tr>
+<tr class="even">
+<td align="left">diameter</td>
+<td align="left">peanut butter</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">15.77</td>
+<td align="right">0.63</td>
+<td align="right">13.91</td>
+<td align="right">15.32</td>
+<td align="right">15.72</td>
+<td align="right">16.19</td>
+<td align="right">17.61</td>
+<td align="left">▁▅▇▃▁</td>
+</tr>
+<tr class="odd">
+<td align="left">diameter</td>
+<td align="left">plain</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">13.28</td>
+<td align="right">0.34</td>
+<td align="right">11.23</td>
+<td align="right">13.08</td>
+<td align="right">13.28</td>
+<td align="right">13.48</td>
+<td align="right">14.38</td>
+<td align="left">▁▁▃▇▁</td>
+</tr>
+<tr class="even">
+<td align="left">mass</td>
+<td align="left">peanut</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">2.60</td>
+<td align="right">0.34</td>
+<td align="right">1.93</td>
+<td align="right">2.36</td>
+<td align="right">2.58</td>
+<td align="right">2.81</td>
+<td align="right">3.62</td>
+<td align="left">▃▇▆▃▁</td>
+</tr>
+<tr class="odd">
+<td align="left">mass</td>
+<td align="left">peanut butter</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">1.80</td>
+<td align="right">0.27</td>
+<td align="right">1.19</td>
+<td align="right">1.62</td>
+<td align="right">1.77</td>
+<td align="right">1.94</td>
+<td align="right">2.63</td>
+<td align="left">▂▇▇▂▁</td>
+</tr>
+<tr class="even">
+<td align="left">mass</td>
+<td align="left">plain</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">0.86</td>
+<td align="right">0.05</td>
+<td align="right">0.72</td>
+<td align="right">0.83</td>
+<td align="right">0.87</td>
+<td align="right">0.89</td>
+<td align="right">1.01</td>
+<td align="left">▁▃▇▃▁</td>
+</tr>
+</tbody>
+</table>
+<p>Finally you can get a summary a differnt way but is a bit longer</p>
+<pre class="r"><code>mm.df %&gt;% 
+  group_by(center, color) %&gt;% 
+  summarize(mean_diamter = mean(diameter, na.rm=TRUE),
+            mean_mass = mean(mass, na.rm=TRUE))</code></pre>
+<pre><code>## `summarise()` has grouped output by &#39;center&#39;. You can override using the `.groups` argument.</code></pre>
+<pre><code>## # A tibble: 18 x 4
+## # Groups:   center [3]
+##    center        color  mean_diamter mean_mass
+##    &lt;chr&gt;         &lt;chr&gt;         &lt;dbl&gt;     &lt;dbl&gt;
+##  1 peanut        blue           14.8     2.58 
+##  2 peanut        brown          14.7     2.57 
+##  3 peanut        green          15.0     2.68 
+##  4 peanut        orange         14.6     2.57 
+##  5 peanut        red            15.0     2.63 
+##  6 peanut        yellow         14.5     2.57 
+##  7 peanut butter blue           15.9     1.85 
+##  8 peanut butter brown          15.7     1.80 
+##  9 peanut butter green          16.0     1.92 
+## 10 peanut butter orange         15.7     1.73 
+## 11 peanut butter red            15.8     1.74 
+## 12 peanut butter yellow         15.7     1.74 
+## 13 plain         blue           13.2     0.860
+## 14 plain         brown          13.3     0.871
+## 15 plain         green          13.3     0.870
+## 16 plain         orange         13.3     0.865
+## 17 plain         red            13.3     0.854
+## 18 plain         yellow         13.4     0.865</code></pre>
+</div>
+<div id="graphing-mena-and-se" class="section level1">
+<h1>Graphing mena and SE</h1>
+<p>These are all well and good but looking at a graph is cool.</p>
 <pre class="r"><code># now for the plot
-ggplot(lakes.df, aes(year, color=group)) + 
-  stat_summary(aes(y = org_l),
-               fun.y = mean, na.rm = TRUE,
+ggplot(mm.df, aes(color, diameter, color=color)) + 
+  stat_summary(fun = mean, na.rm = TRUE,
                geom = &quot;point&quot;,
                size = 3) + 
-  stat_summary(aes(y = org_l),
-               fun.y = mean, na.rm = TRUE,
-               geom = &quot;line&quot;,
-               size = 1) +
-  stat_summary(aes(y = org_l),
-               fun.data = mean_se, na.rm = TRUE,
+  stat_summary(fun.data = mean_se, na.rm = TRUE,
                geom = &quot;errorbar&quot;,
                width = 0.2) +
-  labs(x = &quot;Date&quot;, y = &quot;Animals (Number per Liter)&quot;) +
-  scale_color_manual(name = &quot;Group&quot;, 
-                     values = c(&quot;blue&quot;, &quot;red&quot;),
-                     labels = c(&quot;Cladoceran&quot;, &quot;Copepod&quot;))</code></pre>
-<pre><code>## Warning: `fun.y` is deprecated. Use `fun` instead.
-
-## Warning: `fun.y` is deprecated. Use `fun` instead.</code></pre>
-<p><img src="05_Means_and_standarderror_plotting_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
-<pre class="r"><code># we can offset the points so they dont overlap
-ggplot(lakes.df, aes(year, color=group)) + 
-  stat_summary(aes(y = org_l),
-               fun.y = mean, na.rm = TRUE,
+  labs(x = &quot;color&quot;, y = &quot;Diamter (units&quot;) </code></pre>
+<p><img src="05_Means_and_standarderror_plotting_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
+<p>We can also add in shape as a grouping varaible for the center of the m&amp;m’s</p>
+<pre class="r"><code># now for the plot
+ggplot(mm.df, aes(color, diameter, group=center, shape=center, color=color)) + 
+  stat_summary(fun = mean, na.rm = TRUE,
                geom = &quot;point&quot;,
-               size = 3, 
-               position = position_dodge(0.2)) +
-  stat_summary(aes(y = org_l),
-               fun.y = mean, na.rm = TRUE,
-               geom = &quot;line&quot;,
-               size = 1, 
-               position = position_dodge(0.2)) +
-  stat_summary(aes(y = org_l),
-               fun.data = mean_se, na.rm = TRUE,
+               size = 3) + 
+  stat_summary(fun.data = mean_se, na.rm = TRUE,
                geom = &quot;errorbar&quot;,
-               width = 0.2, 
-               position = position_dodge(0.2)) +
-  labs(x = &quot;Date&quot;, y = &quot;Animals (Number per Liter)&quot;) +
-  scale_color_manual(name = &quot;Group&quot;, 
-                     values = c(&quot;blue&quot;, &quot;red&quot;),
-                     labels = c(&quot;Cladoceran&quot;, &quot;Copepod&quot;))</code></pre>
-<pre><code>## Warning: `fun.y` is deprecated. Use `fun` instead.
-
-## Warning: `fun.y` is deprecated. Use `fun` instead.</code></pre>
-<p><img src="05_Means_and_standarderror_plotting_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+               width = 0.2) +
+  labs(x = &quot;color&quot;, y = &quot;Diamter (units)&quot;) </code></pre>
+<p><img src="05_Means_and_standarderror_plotting_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
 <!-- Global site tag (gtag.js) - Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=UA-88373117-6"></script>
 <script>

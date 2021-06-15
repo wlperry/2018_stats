@@ -24,77 +24,77 @@ library("scales") # scales on ggplot ases
 library("skimr") # quick summary stats
 library("janitor") # clean up excel imports
 library("patchwork") # multipanel graphs
-```
+library(skimr) # great way to do summary stats
+``` 
 
 
 ##Read files
 
 ```{r}
 # lets read in a new file to add some complexity for fun
-lakes.df <- read_csv("data/Reduced_Lake_Long_Genus_Species.csv")
+mm.df <- read_csv("data/mms.csv")
 
 
 ```
 
+# Summary Stats
+Lets look at a few ways to get summary statistics
+The first is the simplist and uses base R
 ```{r}
-# now we can do some more fun stuff
-# what if we wanted to just look at the mean density by year?
-# we can do this in ggplot
-
-# lets make a year column
-lakes.df <- lakes.df %>%
-  mutate( year = year(date))
-
+summary(mm.df)
 ```
 
+A better way is using Skimr
+```{r}
+mm.df %>% 
+  skim()
+```
 
+The cool part of skimr is that you can do groups
+```{r}
+mm.df %>% 
+  group_by(center) %>% 
+  skim()
+```
+
+Finally you can get a summary a differnt way but is a bit longer
+```{r}
+mm.df %>% 
+  group_by(center, color) %>% 
+  summarize(mean_diamter = mean(diameter, na.rm=TRUE),
+            mean_mass = mean(mass, na.rm=TRUE))
+```
+
+# Graphing mena and SE
+
+These are all well and good but looking at a graph is cool.
 
 ```{r}
 # now for the plot
-ggplot(lakes.df, aes(year, color=group)) + 
-  stat_summary(aes(y = org_l),
-               fun.y = mean, na.rm = TRUE,
+ggplot(mm.df, aes(color, diameter, color=color)) + 
+  stat_summary(fun = mean, na.rm = TRUE,
                geom = "point",
                size = 3) + 
-  stat_summary(aes(y = org_l),
-               fun.y = mean, na.rm = TRUE,
-               geom = "line",
-               size = 1) +
-  stat_summary(aes(y = org_l),
-               fun.data = mean_se, na.rm = TRUE,
+  stat_summary(fun.data = mean_se, na.rm = TRUE,
                geom = "errorbar",
                width = 0.2) +
-  labs(x = "Date", y = "Animals (Number per Liter)") +
-  scale_color_manual(name = "Group", 
-                     values = c("blue", "red"),
-                     labels = c("Cladoceran", "Copepod"))
+  labs(x = "color", y = "Diamter (units") 
 ```
 
+We can also add in shape as a grouping varaible for the center of the m&m's
 
 ```{r}
-# we can offset the points so they dont overlap
-ggplot(lakes.df, aes(year, color=group)) + 
-  stat_summary(aes(y = org_l),
-               fun.y = mean, na.rm = TRUE,
+# now for the plot
+ggplot(mm.df, aes(color, diameter, group=center, shape=center, color=color)) + 
+  stat_summary(fun = mean, na.rm = TRUE,
                geom = "point",
-               size = 3, 
-               position = position_dodge(0.2)) +
-  stat_summary(aes(y = org_l),
-               fun.y = mean, na.rm = TRUE,
-               geom = "line",
-               size = 1, 
-               position = position_dodge(0.2)) +
-  stat_summary(aes(y = org_l),
-               fun.data = mean_se, na.rm = TRUE,
+               size = 3) + 
+  stat_summary(fun.data = mean_se, na.rm = TRUE,
                geom = "errorbar",
-               width = 0.2, 
-               position = position_dodge(0.2)) +
-  labs(x = "Date", y = "Animals (Number per Liter)") +
-  scale_color_manual(name = "Group", 
-                     values = c("blue", "red"),
-                     labels = c("Cladoceran", "Copepod"))
-
+               width = 0.2) +
+  labs(x = "color", y = "Diamter (units)") 
 ```
+
 
 
 

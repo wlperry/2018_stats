@@ -29,7 +29,7 @@ library(patchwork)
 ## Read in the file
 ```{r 03_read_data}
 # Read in file using tidyverse code-----
-south.df <- read_csv("data/South_Lake.csv", guess_max = 1000)
+mm.df <- read_csv("data/mms.csv")
 ```
 
 
@@ -37,7 +37,7 @@ south.df <- read_csv("data/South_Lake.csv", guess_max = 1000)
 Note that you can read in excel files in the same way.
 ```{r}
 # Note you can read in excel files just as easy
-south_excel.df <- read_excel("data/south_lake.xlsx", sheet = "south_lake")
+mm_excel.df <- read_excel("data/mms.xlsx")
 ```
 
 
@@ -46,56 +46,93 @@ south_excel.df <- read_excel("data/south_lake.xlsx", sheet = "south_lake")
 I feel that graphing is the key to all data analysis. If you can look at your data you can begin to see patterns that you may have predicted and want to test statistically. You will also be able to see outliers that exist that might affect resutls faster than looking at summary statistics.     
      
 Using proper GGPlot code you are supposed to have  data=, y= and x= ....      
-I have found that these are not necessary most of the time unless you put y= in differnet geom statements.       
+I have found that these are not necessary most of the time unless you put y= in different geom statements.   It is also helpful to put the name of the dataframe out front and feed it into the plotting command using a pipe operator or the `%>%`    
 ```{r}
-# GGplot layering ----
-# GGplot uses layers to build a graph
-ggplot(data=south.df, aes(x=date, y=cladoceran)) + # this sets up data 
-  geom_line() # this adds a geometry to present the data from above
- geom_point() 
+mm.df %>% 
+ggplot(aes(color, diameter)) +
+  geom_boxplot() +
+  labs(x = "color", y = "Diameter")
 ```
 
- 
-## Adding axes labels    
-You can add in simple axes labels that are not fromatted. Using the labs(x= " ", y = " ") statement.  You can add in line breaks by putting in a `\n`  in the statement that you have below.    
-
+## Modifying the attributes of geometries.     
+This  is where it gets interesting. If you want to add a color to the boxes as a fill or a color you can do the following. This maps a fill or color to the geometry based on the assigned variable you use
 ```{r}
-# Adding axes labels ----
-ggplot(south.df, aes(x=date, y=cladoceran)) +
-  geom_line() +
-  geom_point() +
-  labs(x = "Date", y = "Animals (Number per Liter)")
-
+mm.df %>% 
+ggplot(aes(color, diameter, color=color)) +
+  geom_boxplot() +
+  labs(x = "color", y = "Diameter")
 ```
 
-
-## Formatted axes labels      
-What I find really nice is being able to create formatted axes labels. You can do this a few ways but I have found the that the expression statement works the best for my needs. You can add in a `~` to add a space between symbols and a `*` will connect things without a space.    
+## Challenge     
+- Now modify the fill and not the color. What would you change? 
 ```{r}
-# Label expressions -----
-# Adding special formatting to labels
-ggplot(south.df, aes(x=date, y=cladoceran)) +
-  geom_line() +
-  geom_point() +
-  labs(x = "Date", y = expression(bold("Animals (No. L"^-1*")")))
+mm.df %>% 
+ggplot(aes(color, diameter, color=color)) +
+  geom_boxplot() +
+  labs(x = "color", y = "Diameter")
+```
+## Manually adjusting the mapped attributes   
+Now we can manually adjust the mapped attribute by adjusting it with a new command
 
+```{r}
+mm.df %>% 
+ggplot(aes(color, diameter, color=color)) +
+  geom_boxplot() +
+  labs(x = "color", y = "Diameter") +
+  scale_color_manual(
+    name = "Shell Color",
+    labels = c("Blue", "Brown", "Green", "Orange", "Red", "Yellow"),
+    values = c("blue", "brown", "green", "orange", "red", "yellow")
+  )
 ```
 
+## Adjusting scales - scales   
+This is how to adjust scales of say the Y axis. Note that if you use a range that is less than the data using this command you cut off the data an eliminate it. 
+```{r}
+mm.df %>% 
+ggplot(aes(color, diameter, color=color)) +
+  geom_boxplot() +
+  labs(x = "color", y = "Diameter") +
+  scale_color_manual(
+    name = "Shell Color",
+    labels = c("Blue", "Brown", "Green", "Orange", "Red", "Yellow"),
+    values = c("blue", "brown", "green", "orange", "red", "yellow")
+  ) +
+  scale_y_continuous(limits = c(10,20))
+```
+
+## Adjusting scales - coord_cartesian   
+Using the coord_cartesian you are zooming in on a section and not eliminating the data
+```{r}
+mm.df %>% 
+ggplot(aes(color, diameter, color=color)) +
+  geom_boxplot() +
+  labs(x = "color", y = "Diameter") +
+  scale_color_manual(
+    name = "Shell Color",
+    labels = c("Blue", "Brown", "Green", "Orange", "Red", "Yellow"),
+    values = c("blue", "brown", "green", "orange", "red", "yellow")
+  ) +
+  coord_cartesian(ylim=c(10,14))
+```
 
 ## Dates as the X Axis    
-This can be an issue for a lot of research and is often the most difficult 
-thing to deal with.  This is where the scales pacakge comes into its own.
+Dates  can be an issue for a lot of research and is often the most difficult thing to deal with.  This is where the scales package comes into its own. I have used a data set cleaned up from the [Vermillion River in Danvill from USGS](https://waterdata.usgs.gov/nwis/uv?site_no=03339000) . 
+
+Read in the data
+```{r}
+river.df <- read_csv("data/vermillion_danville.csv")
+```
+
+
+
 ```{r}
 # Dates on the X-Axis -----
 # So now you might want to change the axes scales
-# uses the scales pacakges
-ggplot(south.df, aes(x=date, y=cladoceran)) +
+# uses the scales package
+ggplot(river.df, aes(x=datetime, y=discharge_cfs)) +
   geom_line() +
-  geom_point() +
-  labs(x = "Date", y = expression(bold("Animals (No. L"^-1*")"))) +
-  scale_x_date(date_breaks = "6 month",
-           # limits = as_datetime(c('2017-06-01 00:00:00','2017-08-01 00:00:00')),
-        labels=date_format("%Y-%m-%d"), expand=c(0,0))
+  labs(x = "Date", y = expression(bold("Discharge (ft"^3*"sec"^-1*")")))
 ```
 
 The key for formatting axes with dates and times using the following abbreviations
@@ -120,6 +157,18 @@ CODE	  MEANING
    
   -  %S	    second (00-59)        
 
+```{r}
+# Dates on the X-Axis -----
+# So now you might want to change the axes scales
+# uses the scales package
+ggplot(river.df, aes(x=datetime, y=discharge_cfs)) +
+  geom_line() +
+  labs(x = "Date", y = expression(bold("Discharge (ft"^3*"sec"^-1*")"))) +
+  scale_x_datetime(date_breaks = "1 month",
+        limits = as_datetime(c('2017-01-01 00:00:00','2017-12-24 24:00:00')),
+        labels=date_format("%b"))
+```
+
 
 
 ## Modifying themes     
@@ -129,13 +178,12 @@ The appearance of graphs is modified using theme statements
 # Themes for graphs -----
 # Here we need to start setting the theme for the graph or appearance
 # There are built in theme 
-ggplot(south.df, aes(x=date, y=cladoceran)) +
+ggplot(river.df, aes(x=datetime, y=discharge_cfs)) +
   geom_line() +
-  geom_point() +
-  labs(x = "Date", y = expression(bold("Animals (No. L"^-1*")"))) +
-  scale_x_date(date_breaks = "6 month",
-          # limits = as_datetime(c('2017-06-01 00:00:00','2017-08-01 00:00:00')),
-         labels=date_format("%Y-%m-%d"), expand=c(0,0)) +
+  labs(x = "Date", y = expression(bold("Discharge (ft"^3*"sec"^-1*")"))) +
+  scale_x_datetime(date_breaks = "1 month",
+        limits = as_datetime(c('2017-01-01 00:00:00','2017-12-24 24:00:00')),
+        labels=date_format("%b"))+
   theme_light()
 ```
 
@@ -154,52 +202,30 @@ you can try a lot of other themes
      
 ```{r}
 # NOW - try a few different themes
-ggplot(south.df, aes(x=date, y=cladoceran)) +
+ggplot(river.df, aes(x=datetime, y=discharge_cfs)) +
   geom_line() +
-  geom_point() +
-  labs(x = "Date", y = expression(bold("Animals (No. L"^-1*")"))) +
-  scale_x_date(date_breaks = "6 month",
-       # limits = as_datetime(c('2017-06-01 00:00:00','2017-08-01 00:00:00')),
-        labels=date_format("%Y-%m-%d"), expand=c(0,0))
+  labs(x = "Date", y = expression(bold("Discharge (ft"^3*"sec"^-1*")"))) +
+  scale_x_datetime(date_breaks = "1 month",
+        limits = as_datetime(c('2017-01-01 00:00:00','2017-12-24 24:00:00')),
+        labels=date_format("%b"))
 
 ```
 
 ## Adusting themes
-You can manually adjust theme components
-
-```{r}
-
-# Adjusting graph themes ----
-# so now there is a formatted axis but we need to change the rotation of the font
-ggplot(south.df, aes(x=date, y=cladoceran)) +
-  geom_line() +
-  geom_point() +
-  labs(x = "Date", y = expression(bold("Animals (No. L"^-1*")"))) +
-  scale_x_date(date_breaks = "6 month",
-      limits = as_date(c('1994-06-01', '2006-12-31')),
-      labels=date_format("%Y-%m-%d"), expand=c(0,0)) + 
-  theme(
-    axis.text.x = element_text(size=12, face="bold", angle=45, hjust=1)
-    )
-```
-
-
-## GGThemeAssistant 
 So you could as Dr. Google every theme aspect and spend hours making grpahs
 Use ggtheme assistant - highlight code of graph and go to Addins    
-Select ggplot Theme Assistant     
+Select ggplot Theme Assistant      
 
-This will open a dialog box and then the code will appear below   
-It may not work in the markdown format though... only script files    
+This will open a dialog box and then the code will appear below     
+
 
 ```{r}
-ggplot(south.df, aes(x=date, y=cladoceran)) +
+ggplot(river.df, aes(x=datetime, y=discharge_cfs)) +
   geom_line() +
-  geom_point() +
-  labs(x = "Date", y = expression(bold("Animals (No. L"^-1*")"))) +
-  scale_x_date(date_breaks = "6 month",
-               limits = as_date(c('1994-06-01', '2006-12-31')),
-               labels=date_format("%Y-%m-%d"), expand=c(0,0))
+  labs(x = "Date", y = expression(bold("Discharge (ft"^3*"sec"^-1*")"))) +
+  scale_x_datetime(date_breaks = "1 month",
+        limits = as_datetime(c('2017-01-01 00:00:00','2017-12-24 24:00:00')),
+        labels=date_format("%b")) 
 ```
 
 
@@ -209,13 +235,12 @@ This is a list or statement that I use for a lot of my graphs
 # Commonly used theme settings ------
 # This is the set of theme settings I use
 
-ggplot(south.df, aes(x=date, y=cladoceran)) +
+ggplot(river.df, aes(x=datetime, y=discharge_cfs)) +
   geom_line() +
-  geom_point() +
   labs(x = "Date", y = expression(bold("Animals (No. L"^-1*")"))) +
-  scale_x_date(date_breaks = "6 month",
-               limits = as_date(c('1994-06-01', '2006-12-31')),
-               labels=date_format("%Y-%m-%d"), expand=c(0,0))+
+  scale_x_datetime(date_breaks = "2 month",
+               limits = as_datetime(c('2017-01-01 00:00:00','2017-12-24 24:00:00')),
+        labels=date_format("%b")) +
   theme(
     # LABLES APPEARANCE
     axis.title.x=element_text(size=14, face="bold"),
@@ -257,7 +282,7 @@ Theme for Graphs
 Make a new default theme
 ```{r}
 # Run this and it will store it as an object for use later
-theme_gleon <- function(base_size = 14, base_family = "Times")
+theme_class <- function(base_size = 14, base_family = "Times")
 {
   theme(
     # LABLES APPEARANCE
@@ -299,14 +324,13 @@ theme_gleon <- function(base_size = 14, base_family = "Times")
 This is how you use your own theme   
 ```{r}
 # using the new theme
-ggplot(south.df, aes(x=date, y=cladoceran)) +
+ggplot(river.df, aes(x=datetime, y=discharge_cfs)) +
   geom_line() +
-  geom_point() +
   labs(x = "Date", y = expression(bold("Animals (No. L"^-1*")"))) +
-  scale_x_date(date_breaks = "6 month",
-               limits = as_date(c('1994-06-01', '2006-12-31')),
-               labels=date_format("%Y-%m-%d"), expand=c(0,0)) +
-  theme_gleon()
+  scale_x_datetime(date_breaks = "2 month",
+               limits = as_datetime(c('2017-01-01 00:00:00','2017-12-24 24:00:00')),
+        labels=date_format("%b"))+
+  theme_class()
 ```
 
 
@@ -329,9 +353,13 @@ You can save plots as an object and then call it back or use the name to save it
 ```{r}
 # Saving named plots-----
 # you can also save the plot and save by name----
-plot1.plot <-  ggplot(south.df, aes(x=date, y=cladoceran)) +
+plot1.plot <-  ggplot(river.df, aes(x=datetime, y=discharge_cfs)) +
   geom_line() +
-  geom_point() 
+  labs(x = "Date", y = expression(bold("Animals (No. L"^-1*")"))) +
+  scale_x_datetime(date_breaks = "2 month",
+               limits = as_datetime(c('2017-01-01 00:00:00','2017-12-24 24:00:00')),
+        labels=date_format("%b"))+
+  theme_class()
 plot1.plot
 
 ggsave(plot1.plot, 
@@ -346,25 +374,23 @@ ggsave(plot1.plot,
 ## Shapes of Points     
 We could also map the type of point shape to the species   
 ```{r}
-ggplot(south.df, aes(x=date, y=cladoceran)) +
-  geom_point(size=4, shape=6)
+ggplot(river.df, aes(x=datetime, y=discharge_cfs)) +
+  geom_point(size=.19, shape=6)
 ```
 
 The shapes of the various options are:   
 ![Shapes of various points.](images/point_shapes.png)
-```{r}
-ggplot(south.df, aes(x=date, y=cladoceran)) +
-  geom_point(size=4, shape=6) +
-  geom_line( linetype ="longdash")
-```
+
 
 The types of lines you can have are:    
 ![Types of lines.](images/line_types.png)
 
 
+```{r}
+ggplot(river.df, aes(x=datetime, y=discharge_cfs)) +
+  geom_line( linetype ="longdash")
+```
 
-
-   
    
 
 <!-- Global Site Tag (gtag.js) - Google Analytics -->
